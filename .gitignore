@@ -3,5 +3,5 @@ env
 /**/.old
 /**/.ipynb_checkpoints
 **/.DS_Store
-cache
+/cache
 .idea
