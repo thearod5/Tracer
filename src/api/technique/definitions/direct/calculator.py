@@ -1,0 +1,59 @@
+from api.datasets.dataset import Dataset
+from api.technique.definitions.direct.definition import DirectTechniqueDefinition
+from api.technique.parser.data import TechniqueData
+from api.technique.parser.itechnique_calculator import ITechniqueCalculator
+from api.technique.variationpoints.algebraicmodel.CalculateSimilarityMatrix import \
+    calculate_similarity_matrix_for_nlp_technique
+from api.technique.variationpoints.scalers.Scalers import scale_with_technique
+from api.technique.variationpoints.tracetype.TraceType import TraceType
+
+
+class DirectTechniqueData(TechniqueData):
+    def __init__(self, dataset: Dataset, technique: DirectTechniqueDefinition):
+        super().__init__(dataset, technique)
+
+
+def create_direct_algebraic_model(data: DirectTechniqueData):
+    """
+    Directly compares the datasets layers defined in technique with set algebraic model
+    :param data: Data describing the technique and dataset to calculate
+    :return: None
+    """
+    assert len(data.technique.artifact_paths) == 2
+
+    if data.technique.trace_type == TraceType.TRACED:
+        trace_id = "-".join(list(map(lambda num: repr(num), data.technique.artifact_paths)))
+        data.similarity_matrix = data.dataset.traced_matrices[trace_id]
+    else:
+        upper_level_index, lower_level_index = data.technique.artifact_paths
+        upper_artifacts = data.dataset.artifacts.levels[upper_level_index]
+        lower_artifacts = data.dataset.artifacts.levels[lower_level_index]
+        similarity_matrix = calculate_similarity_matrix_for_nlp_technique(data.technique.algebraic_model,
+                                                                          upper_artifacts,
+                                                                          lower_artifacts)
+        data.similarity_matrix = similarity_matrix
+
+
+def scaling_direct_algebraic_model(data: DirectTechniqueData):
+    """
+    Scales algebraic matrix according to set scaling type
+    :param data:
+    :return:
+    """
+    scaled_matrix = scale_with_technique(data.technique.scaling_type, data.similarity_matrix)
+    data.similarity_matrix = scaled_matrix
+
+
+DIRECT_TECHNIQUE_PIPELINE = [create_direct_algebraic_model]
+
+
+class DirectTechniqueCalculator(ITechniqueCalculator[DirectTechniqueData]):
+
+    def __init__(self, technique_definition: DirectTechniqueDefinition, pipeline=None):
+        super().__init__(technique_definition, pipeline)
+        if pipeline is None:
+            pipeline = DIRECT_TECHNIQUE_PIPELINE
+        self.pipeline = pipeline
+
+    def create_pipeline_data(self, dataset: Dataset) -> DirectTechniqueData:
+        return DirectTechniqueData(dataset, self.definition)
