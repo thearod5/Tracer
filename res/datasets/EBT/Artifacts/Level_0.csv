@@ -1,0 +1,40 @@
+id,text
+102,regist subscrib allow establish trace
+103,user regist subscrib
+104,registr subscrib regist control subscribermanag
+105,user establish trace requir type artifact establish subscript artifact relev requir
+106,artifact place control subscribermanag
+107,user abl delet subscript
+108,subscribermanag regist eventserv receiv relev event messag
+109,subscribermanag onlin push model use send event notif real time
+110,subscribermanag first come line implement pull model retriev outstand event messag eventserv
+111,subscribermanag receiv event notif behalf artifact manag
+112,subscribermanag manag trace artifact
+113,receipt event messag subscribermanag differenti specul evolutionari event
+114,subscribermanag store inform evolutionari event eventlog
+115,user abl construct specul queri use gui
+116,subscribermanag immedi process specul event
+117,subscribermanag execut model use specul valu
+118,subscribermanag report result indic specul chang neg impact requir constraint
+119,subscribermanag restor execut model prior state
+120,prototyp system util driver trigger event
+121,event type includ ad new requir
+122,event type includ decompos requir requir
+123,event type includ refin requir ad addit requir exist
+124,event type includ modifi requir
+125,event type includ delet requir
+126,event type includ merg requir
+127,eventserv receiv event messag requir chang
+128,receipt event messag eventserv record event eventlog
+129,receipt event eventserv identifi relev subscrib event
+130,eventserv differenti evolutionari specul event
+131,evolutionari event occur eventserv notifi subscrib event
+132,specul event eventserv construct composit event messag
+133,eventserv identifi relat requir constraint impact execut model
+134,eventserv retriev quantit valu relat addit requir constraint queri requir manag tool
+135,eventserv creat composit specul messag includ specul event plu relat requir constraint valu impact model
+136,eventserv send custom messag impact execut model
+137,user evolutionari event receiv specif artifact order receiv
+138,user updat relat artifact accord inform contain event messag
+139,user elimin unnecessari trace temporarili construct eventserv initi event process
+140,notif process system automat elimin event longer valid result user elimin temporari trace

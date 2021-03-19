@@ -1,0 +1,3 @@
+C1 - Performs automatic logout functionality after a threshold has been met
+C2 - the system shall allow a user to creat an account through googl facebook or through in hous servic
+C3 - the system shall allow a user to continu us our free servic without sign in

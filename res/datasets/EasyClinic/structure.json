@@ -1,0 +1,12 @@
+{
+	"artifacts": {
+		"0": "Originals/Definitions/Use_Cases",
+		"1": "Originals/Definitions/Interaction_Diagrams",
+		"2": "Originals/Definitions/Class_Descriptions"
+	},
+	"traces": {
+		"0-1": "Originals/TracedMatrices/UC_ID.txt",
+		"1-2": "Originals/TracedMatrices/ID_CC.txt",
+		"0-2": "Originals/TracedMatrices/UC_CC.txt"
+	}
+}
