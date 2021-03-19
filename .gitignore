@@ -1,5 +1,6 @@
 env
 /**/__pycache__
+/**/.old
 **/.DS_Store
 cache
 .idea
