@@ -1,1 +1,0 @@
-R1 - The system shall log out users after a HIPPA compliant timeout of inactivity
