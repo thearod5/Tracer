@@ -1,6 +1,7 @@
 env
 /**/__pycache__
 /**/.old
+/**/.ipynb_checkpoints
 **/.DS_Store
 cache
 .idea
