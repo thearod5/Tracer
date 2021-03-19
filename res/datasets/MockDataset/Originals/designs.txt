@@ -1,0 +1,3 @@
+D1 - Accounts will be managed by AWS cognito services
+D2 - Inactivity will be monitored will trigger log out after a specified time
+D3 - A wrapper class will exist for all methods of logging in (e.g. Google, Facebook, ect.)

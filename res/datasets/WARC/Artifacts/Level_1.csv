@@ -1,0 +1,22 @@
+id,text
+NFR06.txt,nfr librari tool extens document develop end user use man page common document form
+NFR12.txt,nfr librari function ap dynam languag bind avail softwar librari develop
+NFR13.txt,nfr function api enabl appropri function librari scriptabl programm
+NFR07.txt,nfr patch implement parti project document develop end user use man page common document form
+NFR11.txt,nfr warc tool implement librari
+NFR05.txt,nfr commun support provid open sourc commun support provid term project
+NFR04.txt,nfr util applic level function warc tool avail end user command line tool extens exist tool simpl web applic access warc content
+NFR10.txt,nfr instal script andor instruct librari tool target platform includ linux unix window apach lighttp instal script
+NFR14.txt,nfr web server plugin conform apach mod api oper correctli apach lighttp server compat appropri web sever program standard wsgi python servlet api java
+NFR01.txt,nfr core function warc tool specif warc writerread implement comprehens standalon gener purpos softwar librari libwarc
+NFR15.txt,nfr deliver avail sourc code name libwarcvers tar gz version version librari number binari distribut includ rpm deb exe
+NFR03.txt,nfr warc tool highli portabl run rang linux unix platform xp minimum man page build instal guid develop guid
+NFR17.txt,nfr final warc api code minimum depend extern librari gzip includ assembl code
+NFR16.txt,nfr deliver port follow platform linux free bsd mac os window
+NFR02.txt,nfr warc baselin version warc standard use project
+NFR18.txt,nfr librari develop way allow use simplifi wrapper interfac gener swig www swig org order wrap code allow call nativ wide varieti languag
+NFR19.txt,nfr interfac implement python allow librari use nativ python programm requir knowledg intern implement libwarc
+NFR09.txt,nfr code document licens use open sourc licens
+NFR21.txt,nfr function librari expos way fit metaphor paradigm specif implement languag java python
+NFR20.txt,nfr interfac implement java allow librari use nativ java programm requir knowledg intern implement libwarc
+NFR08.txt,nfr patch implement parti project contribut distribut appropri commun
