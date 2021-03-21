@@ -57,6 +57,8 @@ html_static_path = ['_static']
 import os
 import sys
 
+todo_include_todos = True
+
 default_imports = []
 delimiter_chars = ["=", ">", "<"]
 with open(os.path.join("..", "..", "requirements.txt")) as requirements_file:
