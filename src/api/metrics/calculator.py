@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import average_precision_score, roc_curve, auc
 
-from api.constants.preprocessing import CORE_METRIC_NAMES
+from api.constants.processing import CORE_METRIC_NAMES
 from api.metrics.models import ScoringTable, Metrics
 
 SINGLE_QUERY_METRIC_TABLE_COLUMNS = ['dataset', 'type'] + CORE_METRIC_NAMES

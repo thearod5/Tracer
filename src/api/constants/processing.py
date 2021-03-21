@@ -1,6 +1,9 @@
+"""
+This module stores the constants regarding the names of columns for any pre or post processing operations.
+"""
 import pandas as pd
 
-n_sig_figs = 3
+N_SIG_FIGS = 3
 
 DATASET_COLNAME = "dataset"
 NAME_COLNAME = "name"

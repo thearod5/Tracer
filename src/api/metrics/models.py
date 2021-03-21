@@ -5,8 +5,8 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import minmax_scale
 
-from api.constants.preprocessing import METRIC_COLNAME, SCORE_COLNAME, ALL_METRIC_NAMES, DATASET_COLNAME, \
-    DATASET_COLUMN_ORDER, AP_COLNAME, AUC_COLNAME, Data
+from api.constants.processing import METRIC_COLNAME, SCORE_COLNAME, ALL_METRIC_NAMES, DATASET_COLNAME, \
+    DATASET_COLUMN_ORDER, AP_COLNAME, AUC_COLNAME, Data, N_SIG_FIGS, LAG_NORMALIZED_INVERTED_COLNAME, COLUMN_ORDER
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
 
 SIMILARITY_MATRIX_EXTENSION = ".npy"
@@ -158,4 +158,4 @@ def format_data(data: Data, for_presentation=False):
             data[METRIC_COLNAME] = data[METRIC_COLNAME].replace(presentation_map)
         data.columns = list(map(lambda s: "".join(list(map(lambda s_0: s_0.title(), s.split("_")))), data.columns))
 
-    return data.round(n_sig_figs)
+    return data.round(N_SIG_FIGS)
