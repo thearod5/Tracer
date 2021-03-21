@@ -1,9 +1,9 @@
-from api.cache.cache import Cache
+from api.experiment.cache import Cache
 from api.technique.definitions.combined.technique import create_technique_by_name
 from api.technique.definitions.direct.calculator import DirectTechniqueCalculator, \
     create_direct_algebraic_model, DirectTechniqueData
 from api.technique.definitions.direct.definition import DirectTechniqueDefinition
-from api.technique.variationpoints.tracetype.TraceType import TraceType
+from api.technique.variationpoints.tracetype.trace_type import TraceType
 from tests.res.test_technique_helper import TestTechniqueHelper
 
 

@@ -1,8 +1,12 @@
+"""
+TODO
+"""
+
 from abc import abstractmethod
 from typing import Generic
 
-from api.cache.cache import Cache
 from api.datasets.dataset import Dataset
+from api.experiment.cache import Cache
 from api.technique.parser.itechnique_definition import ITechniqueDefinition
 from api.technique.parser.pipeline import TechniquePipeline, GenericOutputData
 
@@ -39,4 +43,8 @@ class ITechniqueCalculator(Generic[GenericOutputData], TechniquePipeline[Generic
 
     @abstractmethod
     def create_pipeline_data(self, dataset: Dataset) -> GenericOutputData:
-        pass
+        """
+        TODO
+        :param dataset:
+        :return:
+        """

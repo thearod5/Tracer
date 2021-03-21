@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 
-from api.technique.variationpoints.algebraicmodel.CalculateSimilarityMatrix import \
+from api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix import \
     calculate_similarity_matrix_for_nlp_technique, create_term_frequency_matrix, \
     calculate_similarity_matrix_from_term_frequencies, calculate_lsa_similarity_matrix, calculate_similarity_matrix
 from api.technique.variationpoints.algebraicmodel.models import AlgebraicModel

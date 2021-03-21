@@ -1,6 +1,8 @@
+"""
+TODO
+"""
 from abc import ABC, abstractmethod
 
-import numpy
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import minmax_scale
@@ -10,20 +12,31 @@ from api.constants.processing import METRIC_COLNAME, SCORE_COLNAME, ALL_METRIC_N
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
 
 SIMILARITY_MATRIX_EXTENSION = ".npy"
-SimilaritiesType = numpy.ndarray
+SimilaritiesType = np.ndarray
 
 
 class ITable(ABC):
+    """
+    TODO
+    """
+
     def __init__(self):
         self.table = pd.DataFrame()
 
     @abstractmethod
     def export(self, export_path: str):
-        pass
+        """
+        TODO
+        :param export_path:
+        :return:
+        """
 
     @abstractmethod
     def get_extension(self) -> str:
-        pass
+        """
+        TODO
+        :return:
+        """
 
 
 class ScoringTable(ITable):
@@ -36,36 +49,44 @@ class ScoringTable(ITable):
         self.values: SimilarityMatrix = np.vstack([y_pred, y_true]).T
 
     def flatten(self) -> SimilaritiesType:
+        """
+        TODO
+        :return:
+        """
         return self.values.flatten()
 
     def export(self, export_path: str):
+        """
+        TODO
+        :param export_path:
+        :return:
+        """
         raise NotImplementedError()
 
     def get_extension(self) -> str:
+        """
+        TODO
+        :return:
+        """
         raise NotImplementedError()
 
 
-class Metrics:
+class Metrics:  # pylint: disable=too-few-public-methods
     """
     Stores all metrics for some query.
+    TODO: Convert to named tuple
     """
 
     def __init__(self, ap: float, auc: float, lag: float):
-        self.ap = ap
+        self.ap = ap  # pylint: disable=invalid-name
         self.auc = auc
         self.lag = lag
 
-    def __sub__(self, other):
-        assert isinstance(other, Metrics)
-        ap_delta = self.ap - other.ap
-        auc_delta = self.auc - other.auc
-        lag_delta = self.lag - other.lag
-        return Metrics(ap=ap_delta, auc=auc_delta, lag=lag_delta)
 
-
-class Table(ITable):  # todo: move this into its own file
+class Table(ITable):
     """
     Wrapper class encapsulating common operations on data frames.
+    TODO: move this into its own file
     """
 
     def __init__(self):  # implements MT1
@@ -85,45 +106,69 @@ class Table(ITable):  # todo: move this into its own file
         if other is None:
             other = {}
 
-        entries_dict = list(map(lambda m: vars(m), entries))  # created dictionary from given object
-        for m_index, m in enumerate(entries_dict):
-            m.update(other)
+        entries_dict = list(map(vars, entries))  # created dictionary from given object
+        for item_index, metric_item in enumerate(entries_dict):
+            metric_item.update(other)
             if create_index:
-                m.update({index_name: m_index})
+                metric_item.update({index_name: item_index})
 
         self.table = self.table.append(entries_dict, ignore_index=True)
 
     def format_table(self):
+        """
+        TODO
+        :return:
+        """
         self.table = format_data(self.table)
 
-    def export(self, export_path):  # implements MT3
+    def export(self, export_path):
+        """
+        TODO
+        :param export_path:
+        :return:
+        """
         self.table.to_csv(export_path, index=False)
 
     def update(self, table: ITable):
+        """
+        TODO
+        :param table:
+        :return:
+        """
         return pd.concat([self.table, table.table])
 
     def get_extension(self) -> str:
+        """
+        TODO
+        :return:
+        """
         return ".csv"
 
     def melt_metrics(self):
+        """
+        TODO
+        :return:
+        """
         id_vars = [col for col in self.table.columns if col not in ALL_METRIC_NAMES]
         self.table = pd.melt(self.table, id_vars=id_vars, var_name=METRIC_COLNAME, value_name=SCORE_COLNAME)
 
-    def scale_col(self, col_name: str, by: [str], new_col_name=None, drop_old=False, inverted=False):
+    # pylint: disable=too-many-arguments
+    def scale_col(self, col_name: str, group_by_cols: [str], new_col_name=None, drop_old=False, inverted=False):
         """
         Performs min-max scaling on given column name, renames new values to scaled_col_name.
         If none is given appends `normalized` to metric_name
         :param col_name: the name of the metric in the table to scale
-        :param by: list of col name to group by before scaling
+        :param group_by_cols: list of col name to group by before scaling
         :param new_col_name: name of the column containing scaled values
         :param drop_old: if true removes the column without the scaled numbers
         :param inverted: metrics scores will be inverted so that new_score = 1 - old_score
         :return: None - MetricTable is modified
+        TODO: Separate into multiple functionality and remove linting bypass
         """
         new_col_name = new_col_name if new_col_name is not None else "%s_%s" % (col_name, "normalized")
-        sections = self.table.groupby(by).groups
+        sections = self.table.groupby(group_by_cols).groups
         new_sections = []
-        for group_id, group_indices in sections.items():
+        for _, group_indices in sections.items():
             dataset_df = self.table.iloc[group_indices].copy()
             dataset_df[new_col_name] = minmax_scale(dataset_df[col_name])
             new_sections.append(dataset_df)
@@ -141,6 +186,12 @@ class Table(ITable):  # todo: move this into its own file
 
 
 def format_data(data: Data, for_presentation=False):
+    """
+    TODO
+    :param data:
+    :param for_presentation:
+    :return:
+    """
     if DATASET_COLNAME in data.columns:
         dataset = list(set(DATASET_COLUMN_ORDER + list(data[DATASET_COLNAME].unique())))
         data[DATASET_COLNAME] = pd.Categorical(data[DATASET_COLNAME], categories=dataset)

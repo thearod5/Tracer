@@ -1,4 +1,4 @@
-from api.cache.cache import Cache
+from api.experiment.cache import Cache
 from api.technique.definitions.sampled.traces.technique import SampledTracesTechnique, SAMPLED_TRACED_COMMAND_SYMBOL
 from api.tracer import Tracer
 from tests.res.test_technique_helper import TestTechniqueHelper

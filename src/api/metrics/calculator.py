@@ -1,3 +1,6 @@
+"""
+TODO
+"""
 import numpy as np
 import pandas as pd
 from sklearn.metrics import average_precision_score, roc_curve, auc
@@ -9,11 +12,23 @@ SINGLE_QUERY_METRIC_TABLE_COLUMNS = ['dataset', 'type'] + CORE_METRIC_NAMES
 
 
 def calculate_auc(y_true, y_pred):
-    fpr, tpr, thresholds = roc_curve(y_true, y_pred, pos_label=1)
+    """
+    TODO
+    :param y_true:
+    :param y_pred:
+    :return:
+    """
+    fpr, tpr, _ = roc_curve(y_true, y_pred, pos_label=1)
     return auc(fpr, tpr)
 
 
 def number_of_fp_above_index(sorted_y_true, index):
+    """
+    TODO
+    :param sorted_y_true:
+    :param index:
+    :return:
+    """
     elements_above = list(sorted_y_true[:index])
     if len(elements_above) == 0:
         return 0
@@ -21,14 +36,19 @@ def number_of_fp_above_index(sorted_y_true, index):
 
 
 def calculate_lag(y_true, y_pred):
+    """
+    TODO
+    :param y_true:
+    :param y_pred:
+    :return:
+    """
     y_pred_series = pd.Series(y_pred)
     sorted_index = list(y_pred_series.sort_values(ascending=False).index)
     y_true_sorted = pd.Series(y_true)[sorted_index].reset_index(drop=True)
 
     lags = []
     prev_lag = 0
-    for i in range(len(y_true_sorted)):
-        value = y_true_sorted[i]
+    for _, value in enumerate(y_true_sorted):
         if value == 0:
             prev_lag = prev_lag + 1
         else:

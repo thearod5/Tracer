@@ -1,3 +1,6 @@
+"""
+TODO
+"""
 from api.datasets.dataset import Dataset
 from api.metrics.models import ScoringTable
 from api.technique.parser import itechnique_definition
@@ -17,6 +20,10 @@ class TechniqueData:
         self.similarity_matrix: SimilarityMatrix = None  # matrix of simlarity scores between source & target artifacts
 
     def get_scoring_table(self) -> ScoringTable:
+        """
+        TODO
+        :return:
+        """
         assert self.similarity_matrix is not None, "similarity table was not computed"
         return create_similarity_scoring_table_from_matrix(self.dataset,
                                                            self.technique.source_level,
@@ -24,9 +31,18 @@ class TechniqueData:
                                                            self.similarity_matrix)
 
     def get_similarity_matrix(self) -> SimilarityMatrix:
+        """
+        TODO
+        :return:
+        """
         return self.similarity_matrix
 
     def with_matrix(self, similarity_matrix: SimilarityMatrix):
+        """
+        TODO
+        :param similarity_matrix:
+        :return:
+        """
         self.similarity_matrix = similarity_matrix
         return self
 

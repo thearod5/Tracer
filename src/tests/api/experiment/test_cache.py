@@ -2,8 +2,8 @@ import os
 
 import numpy as np
 
-from api.cache.cache import Cache
 from api.datasets.dataset import Dataset
+from api.experiment.cache import Cache
 from api.metrics.models import SIMILARITY_MATRIX_EXTENSION
 from api.tracer import Tracer
 from tests.res.test_technique_helper import TestTechniqueHelper

@@ -1,8 +1,8 @@
 import numpy as np
 
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
-from api.technique.variationpoints.scalers.Scalers import scale_with_technique, independent_scaling, global_scaling
-from api.technique.variationpoints.scalers.ScalingMethod import ScalingMethod
+from api.technique.variationpoints.scalers.scalers import scale_with_technique, independent_scaling, global_scaling
+from api.technique.variationpoints.scalers.scaling_method import ScalingMethod
 from tests.res.smart_test import SmartTest
 
 

@@ -1,12 +1,19 @@
+"""
+TODO
+"""
 from api.technique.parser.itechnique_definition import ITechniqueDefinition
 from api.technique.variationpoints.algebraicmodel.models import AlgebraicModel
-from api.technique.variationpoints.scalers.ScalingMethod import ScalingMethod
-from api.technique.variationpoints.tracetype.TraceType import TraceType
+from api.technique.variationpoints.scalers.scaling_method import ScalingMethod
+from api.technique.variationpoints.tracetype.trace_type import TraceType
 
 DIRECT_COMMAND_SYMBOL = "."
 
 
 class DirectTechniqueDefinition(ITechniqueDefinition):
+    """
+    TODO
+    """
+
     def __init__(self, parameters: [str], components: [str]):
         self.artifact_paths: [int] = []
         self.algebraic_model: AlgebraicModel = None
@@ -15,6 +22,10 @@ class DirectTechniqueDefinition(ITechniqueDefinition):
         super().__init__(parameters, components)
 
     def parse(self):
+        """
+        TODO
+        :return:
+        """
         assert len(self.parameters) == 2
         self.algebraic_model = AlgebraicModel(self.parameters[0])
         self.trace_type = TraceType(self.parameters[1])
@@ -26,10 +37,18 @@ class DirectTechniqueDefinition(ITechniqueDefinition):
         self.artifact_paths = [self.source_level, self.target_level]
 
     def validate(self):
+        """
+        TODO
+        :return:
+        """
         assert len(self.artifact_paths) == 2
         assert self.algebraic_model is not None
         assert self.trace_type is not None
 
     @staticmethod
     def get_symbol() -> str:
+        """
+        TODO
+        :return:
+        """
         return DIRECT_COMMAND_SYMBOL

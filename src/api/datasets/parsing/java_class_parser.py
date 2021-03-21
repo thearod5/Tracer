@@ -1,5 +1,9 @@
+"""
+TODO
+"""
 import javac_parser
 from comment_parser import comment_parser
+from comment_parser.comment_parser import UnsupportedError
 
 from api.constants.paths import PATH_TO_RESERVED_WORDS
 from api.datasets.cleaning import cleaners
@@ -52,7 +56,7 @@ def extract_class_comments(class_text, mime_type="text/x-java-source"):
     """
     try:
         comments = comment_parser.extract_comments_from_str(str(class_text), mime_type)
-    except:
+    except UnsupportedError:
         return ""
 
     def get_clean_comment(comment):
