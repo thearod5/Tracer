@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to Tracer’s documentation! &#8212; Tracer 1 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-api.metrics.models">
+<span id="welcome-to-tracer-s-documentation"></span><h1>Welcome to Tracer’s documentation!<a class="headerlink" href="#module-api.metrics.models" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="api.metrics.models.ITable">
+<em class="property">class </em><code class="sig-prename descclassname">api.metrics.models.</code><code class="sig-name descname">ITable</code><a class="headerlink" href="#api.metrics.models.ITable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="api.metrics.models.Metrics">
+<em class="property">class </em><code class="sig-prename descclassname">api.metrics.models.</code><code class="sig-name descname">Metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ap</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">auc</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">lag</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.models.Metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores all metrics for some query.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="api.metrics.models.ScoringTable">
+<em class="property">class </em><code class="sig-prename descclassname">api.metrics.models.</code><code class="sig-name descname">ScoringTable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y_pred</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">y_true</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.models.ScoringTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data class for storing prediction and oracle values used for evaluation of techniques.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="api.metrics.models.Table">
+<em class="property">class </em><code class="sig-prename descclassname">api.metrics.models.</code><code class="sig-name descname">Table</code><a class="headerlink" href="#api.metrics.models.Table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper class encapsulating common operations on data frames.</p>
+<dl class="py method">
+<dt id="api.metrics.models.Table.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entries</span></em>, <em class="sig-param"><span class="n">other</span><span class="p">:</span> <span class="n">dict</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">create_index</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">index_name</span><span class="o">=</span><span class="default_value">'query_index'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.models.Table.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts given entries to dictionary values and appends dictionary in other before
+adding to the table.
+:param entries: list of objects each representing an entry
+:param other: key-value pairs that are appended to each entry in entries
+:param create_index: adds a columns specifying the index of each metric in given list
+:param index_name: the name of column that will hold the index
+:return: objects is modified None is returned</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.metrics.models.Table.scale_col">
+<code class="sig-name descname">scale_col</code><span class="sig-paren">(</span><em class="sig-param">col_name: str, by: [&lt;class 'str'&gt;], new_col_name=None, drop_old=False, inverted=False</em><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.models.Table.scale_col" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs min-max scaling on given column name, renames new values to scaled_col_name.
+If none is given appends <cite>normalized</cite> to metric_name
+:param col_name: the name of the metric in the table to scale
+:param by: list of col name to group by before scaling
+:param new_col_name: name of the column containing scaled values
+:param drop_old: if true removes the column without the scaled numbers
+:param inverted: metrics scores will be inverted so that new_score = 1 - old_score
+:return: None - MetricTable is modified</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">Tracer</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Alberto Rodriguez.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
