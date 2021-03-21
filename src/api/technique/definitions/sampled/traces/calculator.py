@@ -1,3 +1,6 @@
+"""
+TODO
+"""
 from typing import List, Callable
 
 import numpy as np
@@ -31,10 +34,22 @@ def replace_indices_in_matrix(indices_to_replace, source, target):
 
 
 def calc_row_col_index(index, n_cols):
+    """
+    TODO
+    :param index:
+    :param n_cols:
+    :return:
+    """
     return index // n_cols, index % n_cols
 
 
 def filter_array(lst: [int], cond: Callable[[int], bool]):
+    """
+    TODO
+    :param lst:
+    :param cond:
+    :return:
+    """
     good = []
     bad = []
     for value in lst:
@@ -46,6 +61,11 @@ def filter_array(lst: [int], cond: Callable[[int], bool]):
 
 
 def get_n_values_in_matrices(matrices: List[SimilarityMatrix]) -> int:
+    """
+    TODO
+    :param matrices:
+    :return:
+    """
     n_values = 0
     for matrix in matrices:
         n_values = matrix.shape[0] * matrix.shape[1]
@@ -67,8 +87,9 @@ def sample_transitive_matrices(technique_data: SampledTechniqueData):
     for matrix_index in range(len(technique_data.transitive_matrices)):
         transitive_matrix = technique_data.transitive_matrices[matrix_index]
 
-        a, b = technique_data.technique.get_component_techniques()[matrix_index].definition.artifact_paths
-        trace_matrix = technique_data.dataset.traced_matrices["%d-%d" % (a, b)]
+        top_level, bottom_level = technique_data.technique.get_component_techniques()[
+            matrix_index].definition.artifact_paths
+        trace_matrix = technique_data.dataset.traced_matrices["%d-%d" % (top_level, bottom_level)]
 
         sources.append(trace_matrix)
         targets.append(transitive_matrix)
@@ -108,8 +129,17 @@ SAMPLED_TRACES_PIPELINE.insert(1, sample_transitive_matrices)
 
 
 class SampledTracesTechniqueCalculator(TransitiveTechniqueCalculator):
+    """
+    TODO
+    """
+
     def __init__(self, definition: SampledTechniqueDefinition):
         super().__init__(definition, SAMPLED_TRACES_PIPELINE)
 
     def create_pipeline_data(self, dataset: Dataset) -> SampledTechniqueData:
+        """
+        TODO
+        :param dataset:
+        :return:
+        """
         return SampledTechniqueData(dataset, self.definition)

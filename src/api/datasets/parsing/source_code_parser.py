@@ -1,3 +1,6 @@
+"""
+TODO
+"""
 import os
 
 import pandas as pd
@@ -6,6 +9,11 @@ from api.datasets.parsing.java_class_parser import create_class_doc
 
 
 def parse_source_code(path_to_source_code):
+    """
+    TODO
+    :param path_to_source_code:
+    :return:
+    """
     file_paths = list(get_relative_path_to_files_from(path_to_source_code))
     ids = []
     contents = []
@@ -27,10 +35,10 @@ def parse_source_code(path_to_source_code):
                 ids.append(relative_file_path)
             else:
                 print("%s had no identifiers." % path_to_source_file)
-        except Exception as e:
-            if "not enough identifiers" in repr(e).lower():
+        except Exception as exception:
+            if "not enough identifiers" in repr(exception).lower():
                 continue
-            raise e
+            raise exception
 
     # Export
     result = pd.DataFrame()
@@ -47,7 +55,7 @@ def get_relative_path_to_files_from(root_dir):
     """
     file_set = set()
 
-    for full_path, subdirs, files in os.walk(root_dir):
+    for full_path, _, files in os.walk(root_dir):
         for file_name in files:
             if file_name[0] == ".":
                 continue

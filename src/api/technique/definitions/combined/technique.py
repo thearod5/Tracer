@@ -1,3 +1,7 @@
+"""
+TODO
+"""
+
 import numpy as np
 
 from api.datasets.dataset import Dataset
@@ -19,12 +23,20 @@ COMBINED_COMMAND_SYMBOL = "o"
 
 
 class CombinedTechniqueDefinition(ITechniqueDefinition):
+    """
+    TODO
+    """
+
     def __init__(self, parameters: [str], components: [str]):
         self.technique_aggregation = None
         self._component_techniques: [itechnique_definition] = []
         super().__init__(parameters, components)
 
     def parse(self):
+        """
+        TODO
+        :return:
+        """
         assert len(self.parameters) == 1
         self.technique_aggregation = AggregationMethod(self.parameters[0])
 
@@ -48,18 +60,35 @@ class CombinedTechniqueDefinition(ITechniqueDefinition):
             self._component_techniques.append(new_technique)
 
     def validate(self):
+        """
+        TODO
+        :return:
+        """
         assert self.technique_aggregation is not None
         assert len(self._component_techniques) > 0
 
     @staticmethod
     def get_symbol() -> str:
+        """
+        TODO
+        :return:
+        """
         return COMBINED_COMMAND_SYMBOL
 
     def get_component_techniques(self) -> [ITechniqueDefinition]:
+        """
+        TODO
+        :return:
+        """
         return self._component_techniques
 
 
 def create_technique_by_name(name: str) -> ITechnique:
+    """
+    TODO
+    :param name:
+    :return:
+    """
     technique_expressions = parse_technique_definition(name)
 
     assert len(
@@ -70,11 +99,20 @@ def create_technique_by_name(name: str) -> ITechnique:
 
 
 class CombinedTechniqueData(TechniqueData):
+    """
+    TODO
+    """
+
     def __init__(self, dataset: Dataset, technique: CombinedTechniqueDefinition):
         super().__init__(dataset, technique)
 
 
 def perform_technique_aggregation(data: CombinedTechniqueData):
+    """
+    TODO
+    :param data:
+    :return:
+    """
     similarity_matrices = []
     for technique in data.technique.get_component_techniques():
         similarity_matrix: SimilarityMatrix = technique.calculate_technique_data(
@@ -93,30 +131,62 @@ class CombinedTechniqueCalculator(ITechniqueCalculator[CombinedTechniqueData]):
     """
     A technique resulting from the combination of multiple techniques.
     Each each technique should be able to create a similarity matrix between the top and bottom datasets.
-    These technique_matrices are combined by applying the aggregation as an element-wise operation on all technique_matrices.
+    These technique_matrices are combined by applying the aggregation as an element-wise operation on all
+    technique_matrices.
     """
 
-    def __init__(self, technique_definition: CombinedTechniqueDefinition, pipeline=COMBINED_TECHNIQUE_PIPELINE):
+    def __init__(self, technique_definition: CombinedTechniqueDefinition, pipeline=None):
         super().__init__(technique_definition, pipeline)
+        if pipeline is None:
+            pipeline = COMBINED_TECHNIQUE_PIPELINE
         self.pipeline = pipeline
 
     def create_pipeline_data(self, dataset: Dataset) -> CombinedTechniqueData:
+        """
+        TODO
+        :param dataset:
+        :return:
+        """
         return CombinedTechniqueData(dataset, self.definition)
 
 
 def turn_aggregated_values_into_matrix(dataset: Dataset, values: np.ndarray):
+    """
+    TODO
+    :param dataset:
+    :param values:
+    :return:
+    """
     return np.reshape(values, newshape=(dataset.artifacts.n_top_artifacts, dataset.artifacts.n_bottom_artifacts))
 
 
 class CombinedTechnique(ITechnique):
+    """
+    TODO
+    """
+
     def create_definition(self, parameters: [str], components: [str]) -> CombinedTechniqueDefinition:
+        """
+        TODO
+        :param parameters:
+        :param components:
+        :return:
+        """
         return CombinedTechniqueDefinition(parameters, components)
 
     def create_calculator(self) -> CombinedTechniqueCalculator:
+        """
+        TODO
+        :return:
+        """
         return CombinedTechniqueCalculator(self.definition)
 
     @staticmethod
     def get_symbol() -> str:
+        """
+        TODO
+        :return:
+        """
         return CombinedTechniqueDefinition.get_symbol()
 
 
@@ -128,6 +198,13 @@ TECHNIQUES = [DirectTechnique,
 
 
 def create_technique(command: str, parameters: [str], components: [str]) -> ITechnique:
+    """
+    TODO
+    :param command:
+    :param parameters:
+    :param components:
+    :return:
+    """
     for technique in TECHNIQUES:
         if technique.get_symbol() == command:
             return technique(parameters, components)

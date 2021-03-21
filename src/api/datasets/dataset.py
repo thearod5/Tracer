@@ -1,3 +1,6 @@
+"""
+TODO
+"""
 import os
 
 import numpy as np
@@ -9,8 +12,7 @@ from api.datasets.multi_level_artifacts import MultiLevelArtifacts
 
 class Dataset:
     """
-
-    Represent the base datasets of a Experiment.TechniqueCalculations.Artifacts
+    TODO
     """
 
     def __init__(self, dataset_name: str):  # implements D1
@@ -25,6 +27,10 @@ class Dataset:
         self.assert_valid_artifacts()  # implements D2
 
     def load_trace_matrices(self):
+        """
+        TODO
+        :return:
+        """
         path_to_traced_matrices = os.path.join(PATH_TO_DATASETS, self.name, "Oracles", "TracedMatrices")
         trace_matrix_file_names = list(filter(lambda f: f[0] != ".", os.listdir(path_to_traced_matrices)))
         for file_name in trace_matrix_file_names:
@@ -33,6 +39,10 @@ class Dataset:
             self.traced_matrices[trace_id] = np.load(path)
 
     def assert_valid_artifacts(self):
+        """
+        TODO
+        :return:
+        """
         n_top_level = len(self.artifacts.levels[0])
         n_middle_level = len(self.artifacts.levels[1])
         n_bottom_level = len(self.artifacts.levels[2])
@@ -51,9 +61,19 @@ class Dataset:
         assert n_bottom_level == lower_shape[1]
 
     def get_y_true(self) -> np.ndarray:
+        """
+        TODO
+        :return:
+        """
         return self.relations.drop("id", axis=1).values.flatten()
 
     def get_oracle_matrix(self, source_level: int, target_level: int):
+        """
+        TODO
+        :param source_level:
+        :param target_level:
+        :return:
+        """
         oracle_id = "%s-%s" % (source_level, target_level)
 
         if oracle_id not in self.traced_matrices.keys():
@@ -62,8 +82,7 @@ class Dataset:
             if r_oracle_id not in self.traced_matrices.keys():
                 raise Exception("no oracle exists between levels: %s" % oracle_id)
             return self.traced_matrices[r_oracle_id].T
-        else:
-            return self.traced_matrices[oracle_id]
+        return self.traced_matrices[oracle_id]
 
 
 Relations = pd.DataFrame

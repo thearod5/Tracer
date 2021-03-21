@@ -11,27 +11,38 @@ Env = dict  # A Scheme environment (defined below)
 
 # is a mapping of {variable: value}
 def tokenize(chars: str) -> SList:
-    "Convert a string of characters into a list of tokens."
+    """
+    Convert a string of characters into a list of tokens.
+    :param chars: TODO
+    :return:
+    """
     return chars.replace('(', ' ( ').replace(')', ' ) ').split()
 
 
 def parse_technique_definition(program: str) -> Exp:
-    "Read a Scheme expression from a string."
+    """
+    Read a Scheme expression from a string.
+    :param program: TODO
+    :return:
+    """
     return read_from_tokens(tokenize(program))
 
 
 def read_from_tokens(tokens: list) -> Exp:
-    "Read an expression from a sequence of tokens."
+    """
+    Read an expression from a sequence of tokens.
+    :param tokens: TODO
+    :return:
+    """
     if len(tokens) == 0:
         raise SyntaxError('unexpected EOF')
     token = tokens.pop(0)
     if token == '(':
-        L = []
+        token_list = []
         while tokens[0] != ')':
-            L.append(read_from_tokens(tokens))
+            token_list.append(read_from_tokens(tokens))
         tokens.pop(0)  # pop off ')'
-        return L
-    elif token == ')':
+        return token_list
+    if token == ')':
         raise SyntaxError('unexpected )')
-    else:
-        return token
+    return token

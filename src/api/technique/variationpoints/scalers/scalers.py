@@ -1,8 +1,11 @@
+"""
+TODO
+"""
 import numpy as np
 from sklearn.preprocessing import minmax_scale
 
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
-from api.technique.variationpoints.scalers.ScalingMethod import ScalingMethod
+from api.technique.variationpoints.scalers.scaling_method import ScalingMethod
 
 
 def scale_with_technique(scaling_type: ScalingMethod,
@@ -16,10 +19,9 @@ def scale_with_technique(scaling_type: ScalingMethod,
     """
     if scaling_type == ScalingMethod.INDEPENDENT:
         return independent_scaling(matrices)
-    elif scaling_type == ScalingMethod.GLOBAL:
+    if scaling_type == ScalingMethod.GLOBAL:
         return global_scaling(matrices)
-    else:
-        raise Exception("Unrecognized Scaling type type: ", scaling_type)
+    raise Exception("Unrecognized Scaling type type: ", scaling_type)
 
 
 def global_scaling(matrices: [SimilarityMatrix]) -> [SimilarityMatrix]:
@@ -35,7 +37,7 @@ def global_scaling(matrices: [SimilarityMatrix]) -> [SimilarityMatrix]:
 
     scaled_matrices = []
     start_index = 0
-    for m_index, m in enumerate(matrices):
+    for m_index, _ in enumerate(matrices):
         values_in_matrix = n_matrix_values[m_index]
         end_index = start_index + values_in_matrix
         scaled_values = scaled_aggregate[start_index: end_index]

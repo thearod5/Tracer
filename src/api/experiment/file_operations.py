@@ -1,11 +1,24 @@
+"""
+This module is responsible for common operations defined on files.
+TODO: Extend description
+"""
 import ntpath
 import os
 
 import re
 import shutil
 
+DEFAULT_DELIMITERS = ["\n"]
+
 
 def rename_with_timestamp(path_to_file: str, file_name_delimiter="_", old_run_folder=".old"):
+    """
+    TODO
+    :param path_to_file:
+    :param file_name_delimiter:
+    :param old_run_folder:
+    :return:
+    """
     if not os.path.isfile(path_to_file):
         return
 
@@ -27,16 +40,34 @@ def rename_with_timestamp(path_to_file: str, file_name_delimiter="_", old_run_fo
 
 
 def remove_folder(path: str):
+    """
+    TODO
+    :param path:
+    :return:
+    """
     if os.path.isdir(path):
         shutil.rmtree(path)
 
 
-def get_non_empty_lines(file_content: str, delimiters=["\n"]):
+def get_non_empty_lines(file_content: str, delimiters=None):
+    """
+    TODO
+    :param file_content:
+    :param delimiters:
+    :return:
+    """
+    if delimiters is None:
+        delimiters = DEFAULT_DELIMITERS
     lines = re.split("|".join(delimiters), file_content)
     return list(filter(lambda line: len(line) > 1, lines))
 
 
 def get_index_after_number_with_extension(line: str):
+    """
+    TODO
+    :param line:
+    :return:
+    """
     stop_at = [" ", ":", "-", "\t"]
     index = get_index_after_numbers(line)
     if line[index] == ".":
@@ -44,11 +75,15 @@ def get_index_after_number_with_extension(line: str):
             if line[new_index] in stop_at:
                 return new_index
         return len(line)
-    else:
-        return index
+    return index
 
 
 def get_index_after_numbers(line):
+    """
+    TODO
+    :param line:
+    :return:
+    """
     for index, char in enumerate(line[:-1]):
         if char.isnumeric() and not line[index + 1].isnumeric():
             return index + 1
@@ -56,12 +91,22 @@ def get_index_after_numbers(line):
 
 
 def create_if_not_exist(path_to_folder):
+    """
+    TODO
+    :param path_to_folder:
+    :return:
+    """
     folder_exists = os.path.isdir(path_to_folder)
     if not folder_exists:
         os.mkdir(path_to_folder)
 
 
 def list_to_string(lst: [str]) -> str:
+    """
+    TODO
+    :param lst:
+    :return:
+    """
     result = ""
     for elem in lst:
 

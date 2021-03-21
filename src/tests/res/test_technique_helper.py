@@ -7,8 +7,8 @@ from api.technique.definitions.transitive.definition import TRANSITIVE_COMMAND_S
 from api.technique.parser.data import TechniqueData
 from api.technique.variationpoints.aggregation.aggregation_method import AggregationMethod
 from api.technique.variationpoints.algebraicmodel.models import AlgebraicModel, SimilarityMatrix
-from api.technique.variationpoints.scalers.ScalingMethod import ScalingMethod
-from api.technique.variationpoints.tracetype.TraceType import TraceType
+from api.technique.variationpoints.scalers.scaling_method import ScalingMethod
+from api.technique.variationpoints.tracetype.trace_type import TraceType
 from tests.res.smart_test import SmartTest
 
 

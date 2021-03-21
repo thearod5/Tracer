@@ -1,4 +1,25 @@
+"""
+TODO
+
+----------
+
+A DistanceMatrix is a
+
+multi-dimensional matrix containing similarity scores calculated
+via cosine_similarity.
+
+
+-----------
+
+A TermFrequencyMatrix is a
+
+multi-dimensional matrix containing as rows a set of
+textual documents and as CACHE_COLUMNS each word appearing in the aggregate vocabulary of
+the documents. Each entry in the matrix is a number meant to represent how much
+"weight" a given column (word) has in each row (text doc).
+"""
 import pandas as pd
+from scipy.sparse import csr_matrix
 from scipy.sparse import vstack
 from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -8,23 +29,6 @@ from api.datasets.multi_level_artifacts import ArtifactLevel
 from api.technique.variationpoints.algebraicmodel.models import AlgebraicModel
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
 
-"""
-A DistanceMatrix is a 
-
-multi-dimensional matrix containing similarity scores calculated
-via cosine_similarity.
-"""
-
-"""
-A TermFrequencyMatrix is a 
-
-multi-dimensional matrix containing as rows a set of 
-textual documents and as CACHE_COLUMNS each word appearing in the aggregate vocabulary of
-the documents. Each entry in the matrix is a number meant to represent how much
-"weight" a given column (word) has in each row (text doc).
-"""
-from scipy.sparse import csr_matrix
-
 DocumentTermMatrix = csr_matrix
 
 
@@ -32,6 +36,14 @@ def calculate_similarity_matrix_for_nlp_technique(nlp_type: AlgebraicModel,
                                                   upper_level: ArtifactLevel,
                                                   lower_level: ArtifactLevel,
                                                   return_vocab=False) -> SimilarityMatrix:
+    """
+    TODO
+    :param nlp_type:
+    :param upper_level:
+    :param lower_level:
+    :param return_vocab:
+    :return:
+    """
     similarity_matrix_calculators = {
         AlgebraicModel.VSM: calculate_similarity_matrix,
         AlgebraicModel.LSI: calculate_lsa_similarity_matrix,
@@ -86,6 +98,12 @@ def calculate_lsa_similarity_matrix(raw_a, raw_b) -> (SimilarityMatrix, dict):
 
 def calculate_similarity_matrix_from_term_frequencies(tf_a: DocumentTermMatrix,
                                                       tf_b: DocumentTermMatrix) -> SimilarityMatrix:
+    """
+    TODO
+    :param tf_a:
+    :param tf_b:
+    :return:
+    """
     return 1 - pairwise_distances(tf_a, Y=tf_b, metric="cosine", n_jobs=-1)
 
 

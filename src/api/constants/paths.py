@@ -21,6 +21,7 @@ PATH_TO_RESOURCES = os.path.join(PATH_TO_ROOT, "res")
 
 # Roots
 PATH_TO_DATA = os.path.join(PATH_TO_ROOT, "Data")
+# TODO: separate this into a TEST_DATASETS and read this from .env file
 PATH_TO_DATASETS = os.path.join(PATH_TO_RESOURCES, "datasets")
 PATH_TO_DATA_SOURCE = os.path.join(PATH_TO_DATA, "source")
 PATH_TO_DATA_PROCESSED = os.path.join(PATH_TO_DATA, "processed")

@@ -9,10 +9,12 @@ ENV_PATH = os.path.join(Path(__file__).parent.absolute(), "..", "..", ".env")
 assert os.path.isfile(ENV_PATH), "Make sure .env file is configured"
 load_dotenv(dotenv_path=ENV_PATH)
 PATH_TO_ROOT = os.environ.get("PATH_TO_ROOT")
+
+sys.path.remove(os.path.join(PATH_TO_ROOT, "src", "tests"))
 sys.path.append(os.path.join(PATH_TO_ROOT, "src"))
 
-from api.cache.cache import Cache
 from api.constants.paths import PATH_TO_CACHE_TEMP
+from api.experiment.cache import Cache
 from tests.api.datasets.builder.test_dataset_builder import TestDatasetBuilder
 from tests.api.datasets.builder.test_dataset_exporter import TestDatasetExporter
 from tests.api.datasets.builder.test_structure_definition_parser import TestStructureDefinitionParser

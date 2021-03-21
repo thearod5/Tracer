@@ -1,13 +1,13 @@
 from igraph import Graph
 
-from api.datasets.builder.structure_definition_parser import get_structure_definition
-from api.datasets.builder.trace_creator import get_document_delimiter, get_traces_in_line, \
+from api.datasets.builder.structure_definition import get_structure_definition
+from api.datasets.builder.trace_parser import get_document_delimiter, get_traces_in_line, \
     is_valid_trace_list, \
     parse_trace_file, create_trace_matrix_values_from_trace_list, get_index_of_next_alpha_char, \
     get_delimiter_in_segment, \
     get_traces_in_trace_file_content
 from api.datasets.builder.transitive_trace_matrix_creator import create_trace_matrix_graph, find_all_paths
-from api.util.file_operations import get_index_after_number_with_extension
+from api.experiment.file_operations import get_index_after_number_with_extension
 from tests.res.smart_test import SmartTest
 
 

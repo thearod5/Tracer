@@ -1,3 +1,6 @@
+"""
+TODO
+"""
 from abc import abstractmethod
 from typing import Callable, TypeVar, Generic
 
@@ -23,9 +26,18 @@ class TechniquePipeline(Generic[GenericOutputData]):
 
     @abstractmethod
     def create_pipeline_data(self, dataset: Dataset):
-        pass
+        """
+        TODO
+        :param dataset:
+        :return:
+        """
 
     def run_pipeline_on_dataset(self, dataset: Dataset) -> GenericOutputData:
+        """
+        TODO
+        :param dataset:
+        :return:
+        """
         data = self.create_pipeline_data(dataset)
         for p_func in self.pipeline:
             p_func(data)

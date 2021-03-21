@@ -1,3 +1,6 @@
+"""
+TODO
+"""
 from api.datasets.dataset import Dataset
 from api.technique.definitions.direct.calculator import DirectTechniqueCalculator
 from api.technique.definitions.transitive.definition import TransitiveTechniqueDefinition
@@ -6,10 +9,14 @@ from api.technique.parser.itechnique_calculator import ITechniqueCalculator
 from api.technique.variationpoints.aggregation.aggregation_method import AggregationMethod
 from api.technique.variationpoints.aggregation.transitive_path_aggregation import apply_transitive_aggregation
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrices, SimilarityMatrix
-from api.technique.variationpoints.scalers.Scalers import scale_with_technique
+from api.technique.variationpoints.scalers.scalers import scale_with_technique
 
 
 class TransitiveTechniqueData(TechniqueData):
+    """
+    TODO
+    """
+
     def __init__(self, dataset: Dataset, technique: TransitiveTechniqueDefinition):
         super().__init__(dataset, technique)
         self.transitive_matrices: [SimilarityMatrix] = []
@@ -32,16 +39,32 @@ def append_direct_component_matrices(technique_data: TransitiveTechniqueData):
 
 
 def perform_transitive_aggregation(data: TransitiveTechniqueData):
-    data.similarity_matrix = perform_transitive_aggregation_on_component_techniques(data.transitive_matrices,
-                                                                                    data.technique.transitive_aggregation)
+    """
+    TODO
+    :param data:
+    :return:
+    """
+    data.similarity_matrix = perform_transitive_aggregation_on_component_techniques(
+        data.transitive_matrices, data.technique.transitive_aggregation)
 
 
 def scale_transitive_matrices(data: TransitiveTechniqueData):
+    """
+    TODO
+    :param data:
+    :return:
+    """
     data.transitive_matrices = scale_with_technique(data.technique.scaling_method, data.transitive_matrices)
 
 
 def perform_transitive_aggregation_on_component_techniques(matrices: [SimilarityMatrix],
                                                            aggregation_type: AggregationMethod):
+    """
+    TODO
+    :param matrices:
+    :param aggregation_type:
+    :return:
+    """
     aggregate_matrix = matrices[0]
     for similarity_matrix_index in range(1, len(matrices)):
         matrix_b = matrices[similarity_matrix_index]

@@ -1,11 +1,14 @@
+"""
+Responsible for parsing trace links in user-defined datasets.
+"""
 import os
 
 import numpy as np
 import pandas as pd
 
 from api.datasets.trace_matrix import TraceMatrix
+from api.experiment.file_operations import get_non_empty_lines, get_index_after_number_with_extension
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
-from api.util.file_operations import get_non_empty_lines, get_index_after_number_with_extension
 
 
 def create_trace_matrix_from_path(top_artifacts_ids: pd.Series,
@@ -13,6 +16,15 @@ def create_trace_matrix_from_path(top_artifacts_ids: pd.Series,
                                   bottom_artifacts_ids: pd.Series,
                                   bottom_index: int,
                                   path_to_trace_list: str) -> TraceMatrix:
+    """
+    TODO
+    :param top_artifacts_ids:
+    :param top_index:
+    :param bottom_artifacts_ids:
+    :param bottom_index:
+    :param path_to_trace_list:
+    :return:
+    """
     trace_list = parse_trace_file(path_to_trace_list)
     trace_matrix_values = create_trace_matrix_values_from_trace_list(top_artifacts_ids,
                                                                      bottom_artifacts_ids,
@@ -24,6 +36,11 @@ def create_trace_matrix_from_path(top_artifacts_ids: pd.Series,
 
 
 def parse_trace_file(path_to_trace_file):
+    """
+    TODO
+    :param path_to_trace_file:
+    :return:
+    """
     assert os.path.isfile(path_to_trace_file), path_to_trace_file
 
     with open(path_to_trace_file) as trace_file:
@@ -33,6 +50,11 @@ def parse_trace_file(path_to_trace_file):
 
 
 def get_traces_in_trace_file_content(trace_file_content: str):
+    """
+    TODO
+    :param trace_file_content:
+    :return:
+    """
     file_lines = get_non_empty_lines(trace_file_content)
     traces = []
     for trace_line in file_lines:
@@ -41,6 +63,11 @@ def get_traces_in_trace_file_content(trace_file_content: str):
 
 
 def get_traces_in_line(trace_line):
+    """
+    TODO
+    :param trace_line:
+    :return:
+    """
     traces = []
     identifiers = get_non_empty_lines(trace_line, [" ", "\t", ":"])
 
@@ -54,6 +81,11 @@ def get_traces_in_line(trace_line):
 
 
 def is_valid_trace_list(trace_list):
+    """
+    TODO
+    :param trace_list:
+    :return:
+    """
     if not isinstance(trace_list, list):
         return False
 
@@ -66,6 +98,13 @@ def is_valid_trace_list(trace_list):
 
 
 def create_matrix_with_values(values, row_labels, column_labels):
+    """
+    TODO
+    :param values:
+    :param row_labels:
+    :param column_labels:
+    :return:
+    """
     trace_matrix = pd.DataFrame(values)
     trace_matrix.columns = column_labels
     trace_matrix["id"] = row_labels
@@ -77,6 +116,11 @@ def create_trace_matrix_values_from_trace_list(top_artifacts_ids: [str],
                                                trace_list: [(str, str)]) -> SimilarityMatrix:
     """
     Creates a DataFrame with CACHE_COLUMNS as bottom ids and id col containing top ids
+    TODO
+    :param top_artifacts_ids:
+    :param bottom_artifact_ids:
+    :param trace_list:
+    :return:
     """
     assert is_valid_trace_list(trace_list), "Received invalid trace list"
 
@@ -95,6 +139,13 @@ def create_trace_matrix_values_from_trace_list(top_artifacts_ids: [str],
 def get_document_delimiter(trace_file_content: str,
                            return_none_on_fail=False,
                            return_index=False):
+    """
+    TODO
+    :param trace_file_content:
+    :param return_none_on_fail:
+    :param return_index:
+    :return:
+    """
     assert isinstance(trace_file_content, str)
 
     file_lines = get_non_empty_lines(trace_file_content)
@@ -106,8 +157,7 @@ def get_document_delimiter(trace_file_content: str,
     if index_on_next_item == -1:
         if return_none_on_fail:
             return None
-        else:
-            raise Exception("Could not find the next alpha char in: %s:", first_line)
+        raise Exception("Could not find the next alpha char in: %s:" % first_line)
 
     segment = first_line[start_index:index_on_next_item]
     delimiter = get_delimiter_in_segment(segment)
@@ -147,14 +197,14 @@ def get_delimiter_in_segment(segment: str,
 
 
 def get_index_of_next_alpha_char(string: str, start_index=0) -> int:
+    """
+    TODO
+    :param string:
+    :param start_index:
+    :return:
+    """
     forbidden = [" ", "-"]
     for char_index, char in enumerate(string[start_index:]):
         if str.isalnum(char) and char not in forbidden:
             return start_index + char_index
     return -1
-
-
-def get_trace_matrix_values(trace_matrix: pd.DataFrame):
-    if trace_matrix is None:
-        return None
-    return trace_matrix.drop("id", axis=1).values
