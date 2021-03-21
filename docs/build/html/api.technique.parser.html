@@ -1,0 +1,342 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>api.technique.parser package &#8212; Tracer 1 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="api.technique.variationpoints package" href="api.technique.variationpoints.html" />
+    <link rel="prev" title="api.technique.definitions.transitive package" href="api.technique.definitions.transitive.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="api-technique-parser-package">
+<h1>api.technique.parser package<a class="headerlink" href="#api-technique-parser-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-api.technique.parser.data">
+<span id="api-technique-parser-data-module"></span><h2>api.technique.parser.data module<a class="headerlink" href="#module-api.technique.parser.data" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+<dl class="py class">
+<dt id="api.technique.parser.data.TechniqueData">
+<em class="property">class </em><code class="sig-prename descclassname">api.technique.parser.data.</code><code class="sig-name descname">TechniqueData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span><span class="p">:</span> <span class="n"><a class="reference internal" href="api.datasets.html#api.datasets.dataset.Dataset" title="api.datasets.dataset.Dataset">api.datasets.dataset.Dataset</a></span></em>, <em class="sig-param"><span class="n">technique</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#api.technique.parser.itechnique_definition.ITechniqueDefinition" title="api.technique.parser.itechnique_definition.ITechniqueDefinition">api.technique.parser.itechnique_definition.ITechniqueDefinition</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.parser.data.TechniqueData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The base class for describing the technique_data that persists between a technique’s
+computational steps.</p>
+<dl class="py method">
+<dt id="api.technique.parser.data.TechniqueData.get_scoring_table">
+<code class="sig-name descname">get_scoring_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="api.metrics.html#api.metrics.models.ScoringTable" title="api.metrics.models.ScoringTable">api.metrics.models.ScoringTable</a><a class="headerlink" href="#api.technique.parser.data.TechniqueData.get_scoring_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.technique.parser.data.TechniqueData.get_similarity_matrix">
+<code class="sig-name descname">get_similarity_matrix</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>scipy.sparse.csr_matrix<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="headerlink" href="#api.technique.parser.data.TechniqueData.get_similarity_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.technique.parser.data.TechniqueData.with_matrix">
+<code class="sig-name descname">with_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">similarity_matrix</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>scipy.sparse.csr_matrix<span class="p">, </span>numpy.ndarray<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.parser.data.TechniqueData.with_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param similarity_matrix:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.technique.parser.data.create_similarity_scoring_table_from_matrix">
+<code class="sig-prename descclassname">api.technique.parser.data.</code><code class="sig-name descname">create_similarity_scoring_table_from_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span><span class="p">:</span> <span class="n"><a class="reference internal" href="api.datasets.html#api.datasets.dataset.Dataset" title="api.datasets.dataset.Dataset">api.datasets.dataset.Dataset</a></span></em>, <em class="sig-param"><span class="n">source_level</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">target_level</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">similarity_matrix</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>scipy.sparse.csr_matrix<span class="p">, </span>numpy.ndarray<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="api.metrics.html#api.metrics.models.ScoringTable" title="api.metrics.models.ScoringTable">api.metrics.models.ScoringTable</a><a class="headerlink" href="#api.technique.parser.data.create_similarity_scoring_table_from_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns ScoringTable containing the predictions from similarity matrix and oracle values from given dataset
+:param dataset: dataset containing the oracle values
+:param source_level: the index of the level that queries are for
+:param target_level: the index of the level that is being queried against
+:param similarity_matrix: the predicted values between source and target levels
+:return: two columns table representing predicted and actual values for queries between source and target levels</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-api.technique.parser.definition_parser">
+<span id="api-technique-parser-definition-parser-module"></span><h2>api.technique.parser.definition_parser module<a class="headerlink" href="#module-api.technique.parser.definition_parser" title="Permalink to this headline">¶</a></h2>
+<p>Lisp parser copied from : <a class="reference external" href="https://norvig.com/lispy.html">https://norvig.com/lispy.html</a></p>
+<dl class="py function">
+<dt id="api.technique.parser.definition_parser.parse_technique_definition">
+<code class="sig-prename descclassname">api.technique.parser.definition_parser.</code><code class="sig-name descname">parse_technique_definition</code><span class="sig-paren">(</span><em class="sig-param">program: str) -&gt; ((&lt;class 'str'&gt;</em>, <em class="sig-param">(&lt;class 'int'&gt;</em>, <em class="sig-param">&lt;class 'float'&gt;))</em>, <em class="sig-param">&lt;class 'list'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.parser.definition_parser.parse_technique_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a Scheme expression from a string.
+:param program: TODO
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.technique.parser.definition_parser.read_from_tokens">
+<code class="sig-prename descclassname">api.technique.parser.definition_parser.</code><code class="sig-name descname">read_from_tokens</code><span class="sig-paren">(</span><em class="sig-param">tokens: list) -&gt; ((&lt;class 'str'&gt;</em>, <em class="sig-param">(&lt;class 'int'&gt;</em>, <em class="sig-param">&lt;class 'float'&gt;))</em>, <em class="sig-param">&lt;class 'list'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.parser.definition_parser.read_from_tokens" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read an expression from a sequence of tokens.
+:param tokens: TODO
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.technique.parser.definition_parser.tokenize">
+<code class="sig-prename descclassname">api.technique.parser.definition_parser.</code><code class="sig-name descname">tokenize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chars</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#api.technique.parser.definition_parser.tokenize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a string of characters into a list of tokens.
+:param chars: TODO
+:return:</p>
+</dd></dl>
+
+</div>
+<div class="section" id="api-technique-parser-itechnique-module">
+<h2>api.technique.parser.itechnique module<a class="headerlink" href="#api-technique-parser-itechnique-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="api-technique-parser-itechnique-calculator-module">
+<h2>api.technique.parser.itechnique_calculator module<a class="headerlink" href="#api-technique-parser-itechnique-calculator-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-api.technique.parser.itechnique_definition">
+<span id="api-technique-parser-itechnique-definition-module"></span><h2>api.technique.parser.itechnique_definition module<a class="headerlink" href="#module-api.technique.parser.itechnique_definition" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+<dl class="py class">
+<dt id="api.technique.parser.itechnique_definition.ITechniqueDefinition">
+<em class="property">class </em><code class="sig-prename descclassname">api.technique.parser.itechnique_definition.</code><code class="sig-name descname">ITechniqueDefinition</code><span class="sig-paren">(</span><em class="sig-param">parameters: [&lt;class 'str'&gt;], components: [&lt;class 'str'&gt;], is_stochastic=False</em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.parser.itechnique_definition.ITechniqueDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>TODO</p>
+<dl class="py method">
+<dt id="api.technique.parser.itechnique_definition.ITechniqueDefinition.contains_stochastic_technique">
+<code class="sig-name descname">contains_stochastic_technique</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.parser.itechnique_definition.ITechniqueDefinition.contains_stochastic_technique" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.technique.parser.itechnique_definition.ITechniqueDefinition.get_attributes">
+<code class="sig-name descname">get_attributes</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; [&lt;class ‘str’&gt;]<a class="headerlink" href="#api.technique.parser.itechnique_definition.ITechniqueDefinition.get_attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.technique.parser.itechnique_definition.ITechniqueDefinition.get_name">
+<code class="sig-name descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#api.technique.parser.itechnique_definition.ITechniqueDefinition.get_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.technique.parser.itechnique_definition.ITechniqueDefinition.get_properties_as_strings">
+<code class="sig-name descname">get_properties_as_strings</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; [&lt;class ‘str’&gt;]<a class="headerlink" href="#api.technique.parser.itechnique_definition.ITechniqueDefinition.get_properties_as_strings" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.technique.parser.itechnique_definition.ITechniqueDefinition.get_symbol">
+<em class="property">abstract static </em><code class="sig-name descname">get_symbol</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#api.technique.parser.itechnique_definition.ITechniqueDefinition.get_symbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.technique.parser.itechnique_definition.ITechniqueDefinition.parse">
+<em class="property">abstract </em><code class="sig-name descname">parse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.parser.itechnique_definition.ITechniqueDefinition.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.technique.parser.itechnique_definition.ITechniqueDefinition.to_dict">
+<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.parser.itechnique_definition.ITechniqueDefinition.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.technique.parser.itechnique_definition.ITechniqueDefinition.validate">
+<em class="property">abstract </em><code class="sig-name descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.parser.itechnique_definition.ITechniqueDefinition.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.technique.parser.itechnique_definition.get_missing_attributes">
+<code class="sig-prename descclassname">api.technique.parser.itechnique_definition.</code><code class="sig-name descname">get_missing_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#api.technique.parser.itechnique_definition.ITechniqueDefinition" title="api.technique.parser.itechnique_definition.ITechniqueDefinition">api.technique.parser.itechnique_definition.ITechniqueDefinition</a></span></em>, <em class="sig-param"><span class="n">target_class</span><span class="p">:</span> <span class="n">Type<span class="p">[</span>GenericClass<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; [&lt;class ‘str’&gt;]<a class="headerlink" href="#api.technique.parser.itechnique_definition.get_missing_attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param source:
+:param target_class:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.technique.parser.itechnique_definition.get_public_fields">
+<code class="sig-prename descclassname">api.technique.parser.itechnique_definition.</code><code class="sig-name descname">get_public_fields</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">some_class</span><span class="p">:</span> <span class="n">object</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.parser.itechnique_definition.get_public_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param some_class:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.technique.parser.itechnique_definition.get_public_variables">
+<code class="sig-prename descclassname">api.technique.parser.itechnique_definition.</code><code class="sig-name descname">get_public_variables</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">some_class</span><span class="p">:</span> <span class="n">object</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.parser.itechnique_definition.get_public_variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param some_class:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.technique.parser.itechnique_definition.stringify_paths">
+<code class="sig-prename descclassname">api.technique.parser.itechnique_definition.</code><code class="sig-name descname">stringify_paths</code><span class="sig-paren">(</span><em class="sig-param">artifact_paths: [[&lt;class 'int'&gt;]]</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#api.technique.parser.itechnique_definition.stringify_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param artifact_paths:
+:return:</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-api.technique.parser.pipeline">
+<span id="api-technique-parser-pipeline-module"></span><h2>api.technique.parser.pipeline module<a class="headerlink" href="#module-api.technique.parser.pipeline" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+<dl class="py class">
+<dt id="api.technique.parser.pipeline.TechniquePipeline">
+<em class="property">class </em><code class="sig-prename descclassname">api.technique.parser.pipeline.</code><code class="sig-name descname">TechniquePipeline</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pipeline</span><span class="p">:</span> <span class="n"><span class="p">[</span>typing.Callable<span class="p">[</span><span class="p">[</span><a class="reference internal" href="#api.technique.parser.data.TechniqueData" title="api.technique.parser.data.TechniqueData">api.technique.parser.data.TechniqueData</a><span class="p">]</span><span class="p">, </span>NoneType<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.parser.pipeline.TechniquePipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">typing.Generic</span></code></p>
+<p>Manages the series of steps for a technique. Allows for abstraction between steps
+so that new steps can be easily formulated or pipelines extended.</p>
+<dl class="py method">
+<dt id="api.technique.parser.pipeline.TechniquePipeline.create_pipeline_data">
+<em class="property">abstract </em><code class="sig-name descname">create_pipeline_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span><span class="p">:</span> <span class="n"><a class="reference internal" href="api.datasets.html#api.datasets.dataset.Dataset" title="api.datasets.dataset.Dataset">api.datasets.dataset.Dataset</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.parser.pipeline.TechniquePipeline.create_pipeline_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param dataset:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.technique.parser.pipeline.TechniquePipeline.run_pipeline_on_dataset">
+<code class="sig-name descname">run_pipeline_on_dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span><span class="p">:</span> <span class="n"><a class="reference internal" href="api.datasets.html#api.datasets.dataset.Dataset" title="api.datasets.dataset.Dataset">api.datasets.dataset.Dataset</a></span></em><span class="sig-paren">)</span> &#x2192; GenericOutputData<a class="headerlink" href="#api.technique.parser.pipeline.TechniquePipeline.run_pipeline_on_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param dataset:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-api.technique.parser">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-api.technique.parser" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Tracer</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">api package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="api.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="api.constants.html">api.constants package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.datasets.html">api.datasets package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.experiment.html">api.experiment package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.metrics.html">api.metrics package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="api.technique.html">api.technique package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="api.technique.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.technique.html#module-api.technique">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#api-tracer-module">api.tracer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-api">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="api.html">api package</a><ul>
+  <li><a href="api.technique.html">api.technique package</a><ul>
+      <li>Previous: <a href="api.technique.definitions.transitive.html" title="previous chapter">api.technique.definitions.transitive package</a></li>
+      <li>Next: <a href="api.technique.variationpoints.html" title="next chapter">api.technique.variationpoints package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Alberto Rodriguez.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/api.technique.parser.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

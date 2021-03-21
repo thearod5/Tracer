@@ -1,0 +1,317 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>api.datasets.builder package &#8212; Tracer 1 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="api.datasets.cleaning package" href="api.datasets.cleaning.html" />
+    <link rel="prev" title="api.datasets package" href="api.datasets.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="api-datasets-builder-package">
+<h1>api.datasets.builder package<a class="headerlink" href="#api-datasets-builder-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="api-datasets-builder-dataset-builder-module">
+<h2>api.datasets.builder.dataset_builder module<a class="headerlink" href="#api-datasets-builder-dataset-builder-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="api-datasets-builder-dataset-exporter-module">
+<h2>api.datasets.builder.dataset_exporter module<a class="headerlink" href="#api-datasets-builder-dataset-exporter-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-api.datasets.builder.level_parser">
+<span id="api-datasets-builder-level-parser-module"></span><h2>api.datasets.builder.level_parser module<a class="headerlink" href="#module-api.datasets.builder.level_parser" title="Permalink to this headline">¶</a></h2>
+<p>Responsible for reading artifact levels in user-defined datasets and cleaning for information retrieval techniques.
+TODO: Define a typesafe implementation of a artifact_level_df</p>
+<dl class="py function">
+<dt id="api.datasets.builder.level_parser.parse_artifact_txt_file">
+<code class="sig-prename descclassname">api.datasets.builder.level_parser.</code><code class="sig-name descname">parse_artifact_txt_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path_to_file</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.datasets.builder.level_parser.parse_artifact_txt_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a file defining a list of artifacts, extracts the id and text of each artifact.
+:param path_to_file: path to file containing artifact definitions.
+:return: DataFrame - containing <cite>id</cite> and <cite>text</cite> columns for each artifact found.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.datasets.builder.level_parser.read_artifact_level">
+<code class="sig-prename descclassname">api.datasets.builder.level_parser.</code><code class="sig-name descname">read_artifact_level</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path_to_artifacts</span></em>, <em class="sig-param"><span class="n">contains_ids_in_file</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.datasets.builder.level_parser.read_artifact_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a DataFrame containing the id and text of each artifact found in given path.
+:param path_to_artifacts: The path to the folder or file containing the artifacts.
+:param contains_ids_in_file: If given path to artifacts is a file, defines whether the given path to file also
+contains the ids of the artifacts.
+:return: DataFrame - containing <cite>id</cite> and <cite>text</cite> of artifacts</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-api.datasets.builder.structure_definition">
+<span id="api-datasets-builder-structure-definition-module"></span><h2>api.datasets.builder.structure_definition module<a class="headerlink" href="#module-api.datasets.builder.structure_definition" title="Permalink to this headline">¶</a></h2>
+<p>The following module provides an API for parsing and reading <cite>structure.json</cite> files. These files are intended
+to allow <cite>DatasetBuilder</cite> to find the necessary artifacts and traces in order to standardize the dataset’s structure
+so that the functions in this project can be used.</p>
+<p>TODO: Define what is required in structure.json file</p>
+<dl class="py function">
+<dt id="api.datasets.builder.structure_definition.contains_fields">
+<code class="sig-prename descclassname">api.datasets.builder.structure_definition.</code><code class="sig-name descname">contains_fields</code><span class="sig-paren">(</span><em class="sig-param">some_dict: dict, required_fields: [&lt;class 'str'&gt;]</em><span class="sig-paren">)</span><a class="headerlink" href="#api.datasets.builder.structure_definition.contains_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether given dictionary contains required fields.
+:param some_dict: a python dictionary
+:param required_fields: list of fields that must be in given dictionary
+:return: boolean</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.datasets.builder.structure_definition.get_path_to_dataset">
+<code class="sig-prename descclassname">api.datasets.builder.structure_definition.</code><code class="sig-name descname">get_path_to_dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset_name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.datasets.builder.structure_definition.get_path_to_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the path to given user-defined dataset_name
+:param dataset_name: The name of the folder containing the artifacts, traces, and structure.json file
+:return: str - path to dataset</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.datasets.builder.structure_definition.get_structure_definition">
+<code class="sig-prename descclassname">api.datasets.builder.structure_definition.</code><code class="sig-name descname">get_structure_definition</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset_name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.datasets.builder.structure_definition.get_structure_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads and validates the structure.json file of the given dataset assumed to be in that “Datasets” root folder.
+:param dataset_name: the name of the folder in “Datasets” root folder containing the dataset assets
+:return: dict</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.datasets.builder.structure_definition.is_valid_structure_file">
+<code class="sig-prename descclassname">api.datasets.builder.structure_definition.</code><code class="sig-name descname">is_valid_structure_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">structure_file</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.datasets.builder.structure_definition.is_valid_structure_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether given structure file contains all of required fields for structure.json files.
+:param structure_file: the contents of a dataset’s structure.json file
+:return: boolean - true if valid, false otherwise</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.datasets.builder.structure_definition.read_structure_file">
+<code class="sig-prename descclassname">api.datasets.builder.structure_definition.</code><code class="sig-name descname">read_structure_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset_name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#api.datasets.builder.structure_definition.read_structure_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to load structure.json file in given dataset_name under the PATH_TO_DATASETS directory.
+:param dataset_name: the name of the folder containing the structure.json file
+:return: dict containing the contents of the structure.json file.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-api.datasets.builder.trace_parser">
+<span id="api-datasets-builder-trace-parser-module"></span><h2>api.datasets.builder.trace_parser module<a class="headerlink" href="#module-api.datasets.builder.trace_parser" title="Permalink to this headline">¶</a></h2>
+<p>Responsible for parsing trace links in user-defined datasets.</p>
+<dl class="py function">
+<dt id="api.datasets.builder.trace_parser.create_matrix_with_values">
+<code class="sig-prename descclassname">api.datasets.builder.trace_parser.</code><code class="sig-name descname">create_matrix_with_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span></em>, <em class="sig-param"><span class="n">row_labels</span></em>, <em class="sig-param"><span class="n">column_labels</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.datasets.builder.trace_parser.create_matrix_with_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param values:
+:param row_labels:
+:param column_labels:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.datasets.builder.trace_parser.create_trace_matrix_from_path">
+<code class="sig-prename descclassname">api.datasets.builder.trace_parser.</code><code class="sig-name descname">create_trace_matrix_from_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">top_artifacts_ids</span><span class="p">:</span> <span class="n">pandas.Series</span></em>, <em class="sig-param"><span class="n">top_index</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">bottom_artifacts_ids</span><span class="p">:</span> <span class="n">pandas.Series</span></em>, <em class="sig-param"><span class="n">bottom_index</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">path_to_trace_list</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="api.datasets.html#api.datasets.trace_matrix.TraceMatrix" title="api.datasets.trace_matrix.TraceMatrix">api.datasets.trace_matrix.TraceMatrix</a><a class="headerlink" href="#api.datasets.builder.trace_parser.create_trace_matrix_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param top_artifacts_ids:
+:param top_index:
+:param bottom_artifacts_ids:
+:param bottom_index:
+:param path_to_trace_list:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.datasets.builder.trace_parser.create_trace_matrix_values_from_trace_list">
+<code class="sig-prename descclassname">api.datasets.builder.trace_parser.</code><code class="sig-name descname">create_trace_matrix_values_from_trace_list</code><span class="sig-paren">(</span><em class="sig-param">top_artifacts_ids: [&lt;class 'str'&gt;], bottom_artifact_ids: [&lt;class 'str'&gt;], trace_list: [(&lt;class 'str'&gt;, &lt;class 'str'&gt;)]</em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>scipy.sparse.csr_matrix<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="headerlink" href="#api.datasets.builder.trace_parser.create_trace_matrix_values_from_trace_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a DataFrame with CACHE_COLUMNS as bottom ids and id col containing top ids
+TODO
+:param top_artifacts_ids:
+:param bottom_artifact_ids:
+:param trace_list:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.datasets.builder.trace_parser.get_delimiter_in_segment">
+<code class="sig-prename descclassname">api.datasets.builder.trace_parser.</code><code class="sig-name descname">get_delimiter_in_segment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">segment</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">high_precedence</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">low_precedence</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.datasets.builder.trace_parser.get_delimiter_in_segment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Searches segment for highest precedence delimiters.
+:param low_precedence: delimiters with low precedence (default is space)
+:param high_precedence: delimiters which if found return immediately
+:param segment: the string to search
+:return: char representing the delimiter</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.datasets.builder.trace_parser.get_document_delimiter">
+<code class="sig-prename descclassname">api.datasets.builder.trace_parser.</code><code class="sig-name descname">get_document_delimiter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">trace_file_content</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">return_none_on_fail</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">return_index</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.datasets.builder.trace_parser.get_document_delimiter" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param trace_file_content:
+:param return_none_on_fail:
+:param return_index:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.datasets.builder.trace_parser.get_index_of_next_alpha_char">
+<code class="sig-prename descclassname">api.datasets.builder.trace_parser.</code><code class="sig-name descname">get_index_of_next_alpha_char</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">string</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">start_index</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#api.datasets.builder.trace_parser.get_index_of_next_alpha_char" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param string:
+:param start_index:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.datasets.builder.trace_parser.get_traces_in_line">
+<code class="sig-prename descclassname">api.datasets.builder.trace_parser.</code><code class="sig-name descname">get_traces_in_line</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">trace_line</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.datasets.builder.trace_parser.get_traces_in_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param trace_line:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.datasets.builder.trace_parser.get_traces_in_trace_file_content">
+<code class="sig-prename descclassname">api.datasets.builder.trace_parser.</code><code class="sig-name descname">get_traces_in_trace_file_content</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">trace_file_content</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.datasets.builder.trace_parser.get_traces_in_trace_file_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param trace_file_content:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.datasets.builder.trace_parser.is_valid_trace_list">
+<code class="sig-prename descclassname">api.datasets.builder.trace_parser.</code><code class="sig-name descname">is_valid_trace_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">trace_list</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.datasets.builder.trace_parser.is_valid_trace_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param trace_list:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.datasets.builder.trace_parser.parse_trace_file">
+<code class="sig-prename descclassname">api.datasets.builder.trace_parser.</code><code class="sig-name descname">parse_trace_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path_to_trace_file</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.datasets.builder.trace_parser.parse_trace_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param path_to_trace_file:
+:return:</p>
+</dd></dl>
+
+</div>
+<div class="section" id="api-datasets-builder-transitive-trace-matrix-creator-module">
+<h2>api.datasets.builder.transitive_trace_matrix_creator module<a class="headerlink" href="#api-datasets-builder-transitive-trace-matrix-creator-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-api.datasets.builder">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-api.datasets.builder" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Tracer</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">api package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="api.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="api.constants.html">api.constants package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="api.datasets.html">api.datasets package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="api.datasets.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.datasets.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.datasets.html#module-api.datasets.dataset">api.datasets.dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.datasets.html#module-api.datasets.multi_level_artifacts">api.datasets.multi_level_artifacts module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.datasets.html#module-api.datasets.trace_matrix">api.datasets.trace_matrix module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.datasets.html#module-api.datasets">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api.experiment.html">api.experiment package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.metrics.html">api.metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.technique.html">api.technique package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#api-tracer-module">api.tracer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-api">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="api.html">api package</a><ul>
+  <li><a href="api.datasets.html">api.datasets package</a><ul>
+      <li>Previous: <a href="api.datasets.html" title="previous chapter">api.datasets package</a></li>
+      <li>Next: <a href="api.datasets.cleaning.html" title="next chapter">api.datasets.cleaning package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Alberto Rodriguez.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/api.datasets.builder.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
