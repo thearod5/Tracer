@@ -105,6 +105,8 @@ def get_path_to_dataset(dataset_name: str) -> str:
     possible_folders = [PATH_TO_DATASETS, PATH_TO_SAMPLE_DATASETS]
     datasets_found: List[str] = []
     for p_folder in possible_folders:
+        if not os.path.isdir(p_folder):
+            continue
         datasets_found = datasets_found + os.listdir(p_folder)
         if dataset_name in datasets_found:
             return os.path.join(to_string(p_folder), dataset_name)
