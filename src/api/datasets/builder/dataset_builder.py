@@ -20,7 +20,7 @@ from api.datasets.builder.transitive_trace_matrix_creator import (
     create_trace_matrix_map,
     create_trace_matrix_graph,
 )
-from api.experiment.file_operations import create_if_not_exist
+from api.extension.file_operations import create_if_not_exist
 
 
 class DatasetBuilder:
@@ -84,12 +84,12 @@ class DatasetBuilder:
         for trace_id in self.trace_matrices.keys():
             if "0-" in trace_id:
                 self.trace_matrices[trace_id].matrix = self.trace_matrices[
-                    trace_id
-                ].matrix[implemented_requirements, :]
+                                                           trace_id
+                                                       ].matrix[implemented_requirements, :]
             elif "-0" in trace_id:
                 self.trace_matrices[trace_id].matrix = self.trace_matrices[
-                    trace_id
-                ].matrix[:, implemented_requirements]
+                                                           trace_id
+                                                       ].matrix[:, implemented_requirements]
         self.levels[0] = (
             self.levels[0][implemented_requirements].dropna().reset_index(drop=True)
         )

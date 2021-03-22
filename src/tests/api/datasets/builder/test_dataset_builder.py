@@ -13,7 +13,7 @@ from api.datasets.builder.structure_definition import (
     is_valid_structure_file,
     contains_fields,
 )
-from api.experiment.file_operations import get_index_after_numbers
+from api.extension.file_operations import get_index_after_numbers
 from tests.res.smart_test import SmartTest
 
 VALID_PATH_PLACEHOLDER = "VALID_PATH_PLACEHOLDER"

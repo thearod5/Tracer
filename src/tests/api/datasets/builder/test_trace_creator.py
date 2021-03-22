@@ -15,7 +15,7 @@ from api.datasets.builder.transitive_trace_matrix_creator import (
     create_trace_matrix_graph,
     find_all_paths,
 )
-from api.experiment.file_operations import get_index_after_number_with_extension
+from api.extension.file_operations import get_index_after_number_with_extension
 from tests.res.smart_test import SmartTest
 
 

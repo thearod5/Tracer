@@ -12,7 +12,7 @@ from api.constants.techniques import (
     TECHNIQUE_DELIMITER,
     UNDEFINED_TECHNIQUE,
 )
-from api.experiment.file_operations import list_to_string
+from api.extension.file_operations import list_to_string
 
 
 class ITechniqueDefinition(ABC):
@@ -21,7 +21,7 @@ class ITechniqueDefinition(ABC):
     """
 
     def __init__(
-        self, parameters: List[str], components: List[str], is_stochastic=False
+            self, parameters: List[str], components: List[str], is_stochastic=False
     ):
         self.parameters = parameters
         self.components = components
@@ -160,7 +160,7 @@ GenericClass = TypeVar("GenericClass")
 
 
 def get_missing_attributes(
-    source: ITechniqueDefinition, target_class: Type[GenericClass]
+        source: ITechniqueDefinition, target_class: Type[GenericClass]
 ) -> List[str]:
     """
     TODO

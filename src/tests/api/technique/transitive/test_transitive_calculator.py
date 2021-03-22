@@ -1,6 +1,6 @@
 import numpy as np
 
-from api.experiment.cache import Cache
+from api.extension.cache import Cache
 from api.technique.definitions.direct.calculator import DirectTechniqueData
 from api.technique.definitions.transitive.calculator import (
     TransitiveTechniqueCalculator,

@@ -49,7 +49,7 @@ class Cache:
     be found in api.constants.paths.
 
     Example:
-        When running an experiment using intermediate techniques it is recommended to use the cache for performance
+        When running an extension using intermediate techniques it is recommended to use the cache for performance
         boosts; namely, the sub-components of intermediate techniques can be reused and one can escape redundant
         calculation.
 
@@ -79,7 +79,7 @@ class Cache:
         return Cache.stored_similarities_df[
             (Cache.stored_similarities_df["dataset"] == dataset.name)
             & (Cache.stored_similarities_df["technique"] == technique.get_name())
-        ]
+            ]
 
     @staticmethod
     def is_cached(dataset: Dataset, technique: ITechniqueDefinition):
@@ -96,9 +96,9 @@ class Cache:
 
     @staticmethod
     def store_similarities(
-        dataset: Dataset,
-        technique: ITechniqueDefinition,
-        similarity_matrix: SimilarityMatrix,
+            dataset: Dataset,
+            technique: ITechniqueDefinition,
+            similarity_matrix: SimilarityMatrix,
     ):
         """
         Stored similarities in cache if never seen, updates cache otherwise
@@ -126,7 +126,7 @@ class Cache:
 
     @staticmethod
     def get_similarities(
-        dataset: Dataset, technique: ITechniqueDefinition
+            dataset: Dataset, technique: ITechniqueDefinition
     ) -> SimilarityMatrix:
         """
         Returns similarity matrix for given technique on given Dataset
@@ -135,7 +135,7 @@ class Cache:
         :return: numpy.ndarray containing similarity values
         """
         assert Cache.is_cached(dataset, technique), (
-            "given technique has not been cached: %s" % technique.get_name()
+                "given technique has not been cached: %s" % technique.get_name()
         )
         assert Cache.CACHE_ON
         query = Cache.query(dataset, technique)

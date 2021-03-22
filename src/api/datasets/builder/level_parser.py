@@ -8,7 +8,7 @@ import os
 import pandas as pd
 
 from api.datasets.builder.trace_parser import get_document_delimiter
-from api.experiment.file_operations import get_non_empty_lines
+from api.extension.file_operations import get_non_empty_lines
 
 
 def read_artifact_level(path_to_artifacts, contains_ids_in_file=False):
@@ -29,7 +29,7 @@ def read_artifact_level(path_to_artifacts, contains_ids_in_file=False):
     else:
 
         assert os.path.isdir(path_to_artifacts), (
-            "Given path is not a directory: %s" % path_to_artifacts
+                "Given path is not a directory: %s" % path_to_artifacts
         )
         artifact_level = pd.DataFrame(columns=["id", "text"])
         files_in_folder = list(

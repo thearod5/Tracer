@@ -1,4 +1,4 @@
-from api.experiment.cache import Cache
+from api.extension.cache import Cache
 from api.technique.definitions.combined.technique import create_technique_by_name
 from api.technique.definitions.direct.calculator import (
     DirectTechniqueCalculator,
