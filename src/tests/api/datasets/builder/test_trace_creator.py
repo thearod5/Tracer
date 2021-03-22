@@ -81,12 +81,12 @@ class TestTraceCreator(SmartTest):
 
     def test_get_traces_ec(self):
         dataset_name = "EasyClinic"
-        traces = test_get_traces_for_dataset(dataset_name)
+        traces = assert_traces_for_dataset(dataset_name)
         assert len(traces) > 25, len(traces)
 
     def test_get_traces_warc(self):
         dataset_name = "WARC"
-        test_get_traces_for_dataset(dataset_name)
+        assert_traces_for_dataset(dataset_name)
 
     """
     get_traces_in_trace_file_content
@@ -212,7 +212,7 @@ class TestTraceCreator(SmartTest):
         self.assertTrue([1, 3, 0, 2] in paths)
 
 
-def test_get_traces_for_dataset(dataset_name: str):
+def assert_traces_for_dataset(dataset_name: str):
     structure: dict = get_structure_definition(dataset_name)
     traces = parse_trace_file(structure["traces"]["0-1"])
 
