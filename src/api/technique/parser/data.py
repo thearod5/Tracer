@@ -17,7 +17,9 @@ class TechniqueData:
     def __init__(self, dataset: Dataset, technique: ITechniqueDefinition):
         self.dataset: Dataset = dataset
         self.technique: itechnique_definition = technique
-        self.similarity_matrix: SimilarityMatrix = None  # matrix of simlarity scores between source & target artifacts
+        self.similarity_matrix: SimilarityMatrix = (
+            None  # matrix of simlarity scores between source & target artifacts
+        )
 
     def get_scoring_table(self) -> ScoringTable:
         """
@@ -25,10 +27,12 @@ class TechniqueData:
         :return:
         """
         assert self.similarity_matrix is not None, "similarity table was not computed"
-        return create_similarity_scoring_table_from_matrix(self.dataset,
-                                                           self.technique.source_level,
-                                                           self.technique.target_level,
-                                                           self.similarity_matrix)
+        return create_similarity_scoring_table_from_matrix(
+            self.dataset,
+            self.technique.source_level,
+            self.technique.target_level,
+            self.similarity_matrix,
+        )
 
     def get_similarity_matrix(self) -> SimilarityMatrix:
         """
@@ -47,10 +51,12 @@ class TechniqueData:
         return self
 
 
-def create_similarity_scoring_table_from_matrix(dataset: Dataset,
-                                                source_level: int,
-                                                target_level: int,
-                                                similarity_matrix: SimilarityMatrix) -> ScoringTable:
+def create_similarity_scoring_table_from_matrix(
+    dataset: Dataset,
+    source_level: int,
+    target_level: int,
+    similarity_matrix: SimilarityMatrix,
+) -> ScoringTable:
     """
     Returns ScoringTable containing the predictions from similarity matrix and oracle values from given dataset
     :param dataset: dataset containing the oracle values
@@ -63,6 +69,8 @@ def create_similarity_scoring_table_from_matrix(dataset: Dataset,
     oracle_matrix = dataset.get_oracle_matrix(source_level, target_level)
     oracle_values = oracle_matrix.flatten()
 
-    assert len(oracle_values) == len(predicted_values), "oracle values does not match predicted values"
+    assert len(oracle_values) == len(
+        predicted_values
+    ), "oracle values does not match predicted values"
 
     return ScoringTable(predicted_values, oracle_values)

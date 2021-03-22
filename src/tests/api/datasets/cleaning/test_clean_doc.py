@@ -1,10 +1,16 @@
-from api.datasets.cleaning.cleaners import split_chained_calls, separate_camel_case, \
-    remove_non_alphanumeric_characters, remove_stop_words, to_lower, stem_doc, clean_doc
+from api.datasets.cleaning.cleaners import (
+    split_chained_calls,
+    separate_camel_case,
+    remove_non_alphanumeric_characters,
+    remove_stop_words,
+    to_lower,
+    stem_doc,
+    clean_doc,
+)
 from tests.res.smart_test import SmartTest
 
 
 class TestCleanDoc(SmartTest):
-
     def test_separate_chained_calls(self):
         doc = "helloWorld.thisMyThing"
         cleaned_doc = split_chained_calls(doc)

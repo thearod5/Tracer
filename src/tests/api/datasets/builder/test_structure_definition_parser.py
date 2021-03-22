@@ -18,4 +18,7 @@ class TestStructureDefinitionParser(SmartTest):
         level = read_artifact_level(structure["artifacts"]["1"])
         assert len(level) > 1, "Could not load top datasets: %d" % len(level)
         for col in self.level_cols:
-            assert col in level.columns, "Expected %s in CACHE_COLUMNS: %s" % (col, level.columns)
+            assert col in level.columns, "Expected %s in CACHE_COLUMNS: %s" % (
+                col,
+                level.columns,
+            )

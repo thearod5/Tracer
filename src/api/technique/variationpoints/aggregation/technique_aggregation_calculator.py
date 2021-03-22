@@ -4,14 +4,20 @@ TODO
 import numpy as np
 from sklearn.preprocessing import minmax_scale
 
-from api.technique.variationpoints.aggregation.aggregation_functions import arithmetic_aggregation_functions
-from api.technique.variationpoints.aggregation.aggregation_method import AggregationMethod
+from api.technique.variationpoints.aggregation.aggregation_functions import (
+    arithmetic_aggregation_functions,
+)
+from api.technique.variationpoints.aggregation.aggregation_method import (
+    AggregationMethod,
+)
 from api.technique.variationpoints.aggregation.pca_aggregation import aggregate_pca
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
 
 
-def aggregate_techniques(technique_similarity_matrices: [SimilarityMatrix],
-                         aggregation_method: AggregationMethod) -> SimilarityMatrix:
+def aggregate_techniques(
+    technique_similarity_matrices: [SimilarityMatrix],
+    aggregation_method: AggregationMethod,
+) -> SimilarityMatrix:
     """
     Performs an element-wise aggregation on similarity technique_matrices (representing techniques) with given method
     :param technique_similarity_matrices: all the similarity technique_matrices assumed to be of same shape

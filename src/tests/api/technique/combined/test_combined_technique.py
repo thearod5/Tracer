@@ -1,5 +1,8 @@
-from api.technique.definitions.combined.technique import create_technique, \
-    CombinedTechnique, COMBINED_COMMAND_SYMBOL
+from api.technique.definitions.combined.technique import (
+    create_technique,
+    CombinedTechnique,
+    COMBINED_COMMAND_SYMBOL,
+)
 from api.technique.definitions.direct.definition import DIRECT_COMMAND_SYMBOL
 from api.technique.definitions.direct.technique import DirectTechnique
 from tests.res.test_technique_helper import TestTechniqueHelper
@@ -13,9 +16,9 @@ class TestCombinedTechnique(TestTechniqueHelper):
     """
 
     def test_combined_technique(self):
-        combined_technique = CombinedTechnique(["SUM"],
-                                               [self.direct_definition,
-                                                self.transitive_technique_definition])
+        combined_technique = CombinedTechnique(
+            ["SUM"], [self.direct_definition, self.transitive_technique_definition]
+        )
         self.assertEqual(COMBINED_COMMAND_SYMBOL, combined_technique.get_symbol())
 
     """
@@ -27,4 +30,6 @@ class TestCombinedTechnique(TestTechniqueHelper):
         self.assertTrue(isinstance(technique, DirectTechnique))
 
     def test_parse_techniques_unknown_symbol(self):
-        self.assertRaises(Exception, lambda: create_technique("!", ["VSM", "NT"], ["0", "2"]))
+        self.assertRaises(
+            Exception, lambda: create_technique("!", ["VSM", "NT"], ["0", "2"])
+        )

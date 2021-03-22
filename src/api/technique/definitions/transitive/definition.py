@@ -5,7 +5,9 @@ from typing import List
 
 from api.technique.definitions.direct.technique import DirectTechnique
 from api.technique.parser.itechnique_definition import ITechniqueDefinition
-from api.technique.variationpoints.aggregation.aggregation_method import AggregationMethod
+from api.technique.variationpoints.aggregation.aggregation_method import (
+    AggregationMethod,
+)
 from api.technique.variationpoints.algebraicmodel.models import AlgebraicModel
 from api.technique.variationpoints.scalers.scaling_method import ScalingMethod
 

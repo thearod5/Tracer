@@ -11,9 +11,15 @@ import os
 from igraph import Graph
 
 from api.datasets.builder.level_parser import read_artifact_level
-from api.datasets.builder.structure_definition import get_structure_definition, get_path_to_dataset
-from api.datasets.builder.transitive_trace_matrix_creator import TraceId2TraceMatrixMap, create_trace_matrix_map, \
-    create_trace_matrix_graph
+from api.datasets.builder.structure_definition import (
+    get_structure_definition,
+    get_path_to_dataset,
+)
+from api.datasets.builder.transitive_trace_matrix_creator import (
+    TraceId2TraceMatrixMap,
+    create_trace_matrix_map,
+    create_trace_matrix_graph,
+)
 from api.experiment.file_operations import create_if_not_exist
 
 
@@ -29,10 +35,14 @@ class DatasetBuilder:
         self.levels = []
         self.trace_matrices: TraceId2TraceMatrixMap = {}
         self.structure_file = get_structure_definition(dataset_name)
-        self.defined_trace_matrices = [key for key in self.structure_file["traces"].keys() if
-                                       self.structure_file["traces"][key] is not None]
-        self.trace_graph: Graph = create_trace_matrix_graph(self.defined_trace_matrices,
-                                                            len(self.structure_file["artifacts"]))
+        self.defined_trace_matrices = [
+            key
+            for key in self.structure_file["traces"].keys()
+            if self.structure_file["traces"][key] is not None
+        ]
+        self.trace_graph: Graph = create_trace_matrix_graph(
+            self.defined_trace_matrices, len(self.structure_file["artifacts"])
+        )
         if create:
             self.create_dataset()
 
@@ -43,8 +53,9 @@ class DatasetBuilder:
         """
         self.create_levels()
         # create trace matrices
-        trace_matrix_map, trace_graph = create_trace_matrix_map(self.structure_file,
-                                                                self.levels)
+        trace_matrix_map, trace_graph = create_trace_matrix_map(
+            self.structure_file, self.levels
+        )
         self.trace_matrices = trace_matrix_map
         self.trace_graph = trace_graph
         self.remove_unimplemented_requirements()
@@ -69,13 +80,19 @@ class DatasetBuilder:
         to level 0.
         :return: None
         """
-        implemented_requirements = self.trace_matrices['0-2'].matrix.sum(axis=1) > 0
+        implemented_requirements = self.trace_matrices["0-2"].matrix.sum(axis=1) > 0
         for trace_id in self.trace_matrices.keys():
             if "0-" in trace_id:
-                self.trace_matrices[trace_id].matrix = self.trace_matrices[trace_id].matrix[implemented_requirements, :]
+                self.trace_matrices[trace_id].matrix = self.trace_matrices[
+                    trace_id
+                ].matrix[implemented_requirements, :]
             elif "-0" in trace_id:
-                self.trace_matrices[trace_id].matrix = self.trace_matrices[trace_id].matrix[:, implemented_requirements]
-        self.levels[0] = self.levels[0][implemented_requirements].dropna().reset_index(drop=True)
+                self.trace_matrices[trace_id].matrix = self.trace_matrices[
+                    trace_id
+                ].matrix[:, implemented_requirements]
+        self.levels[0] = (
+            self.levels[0][implemented_requirements].dropna().reset_index(drop=True)
+        )
 
     def create_dataset_export_folder(self):
         """
@@ -85,8 +102,10 @@ class DatasetBuilder:
         * Oracles/TracedMatrices
         :return:
         """
-        required_folder = [os.path.join(self.path, "Artifacts"),
-                           os.path.join(self.path, "Oracles"),
-                           os.path.join(self.path, "Oracles", "TracedMatrices")]
+        required_folder = [
+            os.path.join(self.path, "Artifacts"),
+            os.path.join(self.path, "Oracles"),
+            os.path.join(self.path, "Oracles", "TracedMatrices"),
+        ]
         for folder in required_folder:
             create_if_not_exist(folder)

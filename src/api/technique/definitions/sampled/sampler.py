@@ -15,7 +15,7 @@ def sample_indices(n_indices: int, percent: float) -> List[int]:
     :return:
     """
     n_indices_to_select = math.floor(percent * n_indices)
-    selected_indices = choice(range(0, n_indices),
-                              size=n_indices_to_select,
-                              replace=False)
+    selected_indices = choice(
+        range(0, n_indices), size=n_indices_to_select, replace=False
+    )
     return selected_indices

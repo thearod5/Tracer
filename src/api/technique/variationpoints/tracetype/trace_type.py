@@ -8,5 +8,6 @@ class TraceType(Enum):
     """
     TODO
     """
+
     NOT_TRACED = "NT"
     TRACED = "T"

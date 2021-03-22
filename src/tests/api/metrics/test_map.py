@@ -12,7 +12,6 @@ if not sys.warnoptions:
 
 
 class TestMap(SmartTest):
-
     def test_basic_100_precision(self):
         y_pred = np.array([0, 1])
         y_true = np.array([0, 1])

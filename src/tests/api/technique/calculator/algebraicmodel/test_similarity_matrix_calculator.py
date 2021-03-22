@@ -1,9 +1,13 @@
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 
-from api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix import \
-    calculate_similarity_matrix_for_nlp_technique, create_term_frequency_matrix, \
-    calculate_similarity_matrix_from_term_frequencies, calculate_lsa_similarity_matrix, calculate_similarity_matrix
+from api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix import (
+    calculate_similarity_matrix_for_nlp_technique,
+    create_term_frequency_matrix,
+    calculate_similarity_matrix_from_term_frequencies,
+    calculate_lsa_similarity_matrix,
+    calculate_similarity_matrix,
+)
 from api.technique.variationpoints.algebraicmodel.models import AlgebraicModel
 from tests.res.smart_test import SmartTest
 
@@ -26,18 +30,16 @@ class TestSimilarityMatrixCalculator(SmartTest):
     """
 
     def test_calculate_similarity_matrix_for_nlp_technique(self):
-        similarity_matrix = calculate_similarity_matrix_for_nlp_technique(AlgebraicModel.VSM,
-                                                                          self.upper,
-                                                                          self.lower,
-                                                                          False)
+        similarity_matrix = calculate_similarity_matrix_for_nlp_technique(
+            AlgebraicModel.VSM, self.upper, self.lower, False
+        )
         self.assertEqual((1, 1), similarity_matrix.shape)
         self.assertGreater(similarity_matrix[0][0], 0)
 
     def test_calculate_similarity_matrix_for_nlp_technique_with_vocab(self):
-        similarity_matrix, vocab = calculate_similarity_matrix_for_nlp_technique(AlgebraicModel.VSM,
-                                                                                 self.upper,
-                                                                                 self.lower,
-                                                                                 True)
+        similarity_matrix, vocab = calculate_similarity_matrix_for_nlp_technique(
+            AlgebraicModel.VSM, self.upper, self.lower, True
+        )
         self.check_vocab(vocab)
         self.assertEqual((1, 1), similarity_matrix.shape)
         self.assertGreater(similarity_matrix[0][0], 0)
@@ -47,8 +49,9 @@ class TestSimilarityMatrixCalculator(SmartTest):
     """
 
     def test_calculate_similarity_matrix(self):
-        similarity_matrix, vocab = calculate_similarity_matrix(self.words_a,
-                                                               self.words_b)
+        similarity_matrix, vocab = calculate_similarity_matrix(
+            self.words_a, self.words_b
+        )
 
         self.assertEqual((1, 1), similarity_matrix.shape)
         self.assertGreater(similarity_matrix[0][0], 0)
@@ -58,8 +61,9 @@ class TestSimilarityMatrixCalculator(SmartTest):
     """
 
     def test_calculate_lsa_similarity_matrix(self):
-        similarity_matrix, vocab = calculate_lsa_similarity_matrix(self.words_a,
-                                                                   self.words_b)
+        similarity_matrix, vocab = calculate_lsa_similarity_matrix(
+            self.words_a, self.words_b
+        )
 
         self.assertEqual((1, 1), similarity_matrix.shape)
         self.assertGreater(similarity_matrix[0][0], 0)
@@ -71,7 +75,9 @@ class TestSimilarityMatrixCalculator(SmartTest):
     def test_calculate_similarity_matrix_from_term_frequencies(self):
         raw_a, raw_b = self.words_a, self.words_b
         set_a, set_b, vocab = create_term_frequency_matrix(raw_a, raw_b)
-        distance_matrix = calculate_similarity_matrix_from_term_frequencies(set_a, set_b)
+        distance_matrix = calculate_similarity_matrix_from_term_frequencies(
+            set_a, set_b
+        )
         self.assertEqual((1, 1), distance_matrix.shape)
         self.assertGreater(distance_matrix[0][0], 0)
 
@@ -92,7 +98,9 @@ class TestSimilarityMatrixCalculator(SmartTest):
 
     def test_create_term_frequency_matrix_with_count_vectorizer(self):
         raw_a, raw_b = self.words_a, self.words_b
-        set_a, set_b, vocab = create_term_frequency_matrix(raw_a, raw_b, CountVectorizer)
+        set_a, set_b, vocab = create_term_frequency_matrix(
+            raw_a, raw_b, CountVectorizer
+        )
 
         self.check_vocab(vocab)
         self.assertEqual((1, 3), set_a.shape)

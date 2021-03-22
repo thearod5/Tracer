@@ -6,7 +6,9 @@ import numpy as np
 
 from api.datasets.dataset import Dataset
 from api.technique.definitions.direct.technique import DirectTechnique
-from api.technique.definitions.sampled.artifacts.technique import SampledIntermediateTechnique
+from api.technique.definitions.sampled.artifacts.technique import (
+    SampledIntermediateTechnique,
+)
 from api.technique.definitions.sampled.traces.technique import SampledTracesTechnique
 from api.technique.definitions.transitive.technique import TransitiveTechnique
 from api.technique.parser import itechnique_definition
@@ -15,8 +17,12 @@ from api.technique.parser.definition_parser import parse_technique_definition
 from api.technique.parser.itechnique import ITechnique
 from api.technique.parser.itechnique_calculator import ITechniqueCalculator
 from api.technique.parser.itechnique_definition import ITechniqueDefinition
-from api.technique.variationpoints.aggregation.aggregation_method import AggregationMethod
-from api.technique.variationpoints.aggregation.technique_aggregation_calculator import aggregate_techniques
+from api.technique.variationpoints.aggregation.aggregation_method import (
+    AggregationMethod,
+)
+from api.technique.variationpoints.aggregation.technique_aggregation_calculator import (
+    aggregate_techniques,
+)
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
 
 COMBINED_COMMAND_SYMBOL = "o"
@@ -50,12 +56,18 @@ class CombinedTechniqueDefinition(ITechniqueDefinition):
                 self.source_level = new_technique.definition.source_level
                 self.target_level = new_technique.definition.target_level
             else:
-                assert self.source_level == new_technique.definition.source_level, \
-                    'source level mismatch. expected %d but got %d' % (self.source_level,
-                                                                       new_technique.definition.source_level)
-                assert self.target_level == new_technique.definition.target_level, \
-                    'target level mismatch. expected %d but got %d' % (self.target_level,
-                                                                       new_technique.definition.target_level)
+                assert (
+                    self.source_level == new_technique.definition.source_level
+                ), "source level mismatch. expected %d but got %d" % (
+                    self.source_level,
+                    new_technique.definition.source_level,
+                )
+                assert (
+                    self.target_level == new_technique.definition.target_level
+                ), "target level mismatch. expected %d but got %d" % (
+                    self.target_level,
+                    new_technique.definition.target_level,
+                )
 
             self._component_techniques.append(new_technique)
 
@@ -91,9 +103,11 @@ def create_technique_by_name(name: str) -> ITechnique:
     """
     technique_expressions = parse_technique_definition(name)
 
-    assert len(
-        technique_expressions) == 3, "expected ([command] [parameters] [components]) got %s" % len(
-        technique_expressions)
+    assert (
+        len(technique_expressions) == 3
+    ), "expected ([command] [parameters] [components]) got %s" % len(
+        technique_expressions
+    )
     command, parameters, components = technique_expressions
     return create_technique(command, parameters, components)
 
@@ -116,7 +130,8 @@ def perform_technique_aggregation(data: CombinedTechniqueData):
     similarity_matrices = []
     for technique in data.technique.get_component_techniques():
         similarity_matrix: SimilarityMatrix = technique.calculate_technique_data(
-            data.dataset).get_similarity_matrix()
+            data.dataset
+        ).get_similarity_matrix()
         similarity_matrices.append(similarity_matrix)
 
     aggregation_type = data.technique.technique_aggregation
@@ -135,7 +150,9 @@ class CombinedTechniqueCalculator(ITechniqueCalculator[CombinedTechniqueData]):
     technique_matrices.
     """
 
-    def __init__(self, technique_definition: CombinedTechniqueDefinition, pipeline=None):
+    def __init__(
+        self, technique_definition: CombinedTechniqueDefinition, pipeline=None
+    ):
         super().__init__(technique_definition, pipeline)
         if pipeline is None:
             pipeline = COMBINED_TECHNIQUE_PIPELINE
@@ -157,7 +174,13 @@ def turn_aggregated_values_into_matrix(dataset: Dataset, values: np.ndarray):
     :param values:
     :return:
     """
-    return np.reshape(values, newshape=(dataset.artifacts.n_top_artifacts, dataset.artifacts.n_bottom_artifacts))
+    return np.reshape(
+        values,
+        newshape=(
+            dataset.artifacts.n_top_artifacts,
+            dataset.artifacts.n_bottom_artifacts,
+        ),
+    )
 
 
 class CombinedTechnique(ITechnique):
@@ -165,7 +188,9 @@ class CombinedTechnique(ITechnique):
     TODO
     """
 
-    def create_definition(self, parameters: [str], components: [str]) -> CombinedTechniqueDefinition:
+    def create_definition(
+        self, parameters: [str], components: [str]
+    ) -> CombinedTechniqueDefinition:
         """
         TODO
         :param parameters:
@@ -190,11 +215,13 @@ class CombinedTechnique(ITechnique):
         return CombinedTechniqueDefinition.get_symbol()
 
 
-TECHNIQUES = [DirectTechnique,
-              TransitiveTechnique,
-              SampledIntermediateTechnique,
-              SampledTracesTechnique,
-              CombinedTechnique]
+TECHNIQUES = [
+    DirectTechnique,
+    TransitiveTechnique,
+    SampledIntermediateTechnique,
+    SampledTracesTechnique,
+    CombinedTechnique,
+]
 
 
 def create_technique(command: str, parameters: [str], components: [str]) -> ITechnique:

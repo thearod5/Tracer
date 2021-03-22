@@ -28,8 +28,9 @@ def parse_source_code(path_to_source_code):
 
         try:
             source_code_identifiers_doc = create_class_doc(source_content)
-            assert source_code_identifiers_doc is not None, "Received None for identifiers of source code: %s" % \
-                                                            path_to_source_file
+            assert source_code_identifiers_doc is not None, (
+                "Received None for identifiers of source code: %s" % path_to_source_file
+            )
             if len(source_code_identifiers_doc) > 0:
                 contents.append(source_code_identifiers_doc)
                 ids.append(relative_file_path)

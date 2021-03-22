@@ -1,7 +1,11 @@
 import numpy as np
 
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
-from api.technique.variationpoints.scalers.scalers import scale_with_technique, independent_scaling, global_scaling
+from api.technique.variationpoints.scalers.scalers import (
+    scale_with_technique,
+    independent_scaling,
+    global_scaling,
+)
 from api.technique.variationpoints.scalers.scaling_method import ScalingMethod
 from tests.res.smart_test import SmartTest
 
@@ -10,6 +14,7 @@ class TestScalers(SmartTest):
     """
     Tests the scaling is resulting in the proper upper and lower values
     """
+
     upper = np.array([[0.4, 0.3, 0.2]])
     lower = np.array([[0.6], [0.2], [0.4]])
     matrices = (upper, lower)
@@ -55,9 +60,9 @@ class TestScalers(SmartTest):
         self.assert_matrices_equal(self.multi_upper, scaled_matrices[0])
         self.assert_matrices_equal(self.multi_lower, scaled_matrices[1])
 
-    def assert_matrices_equal(self,
-                              expected_matrix: SimilarityMatrix,
-                              matrix: SimilarityMatrix):
+    def assert_matrices_equal(
+        self, expected_matrix: SimilarityMatrix, matrix: SimilarityMatrix
+    ):
         self.assertEqual(matrix.shape, expected_matrix.shape)
         for r in range(matrix.shape[0]):
             for c in range(matrix.shape[1]):

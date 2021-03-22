@@ -24,16 +24,27 @@ def get_structure_definition(dataset_name: str):
 
     top_level_branches = ["artifacts", "traces"]
     for top_branch in top_level_branches:
-        assert top_branch in structure_json, "Could not find %s in %s" % (top_branch, dataset_name)
+        assert top_branch in structure_json, "Could not find %s in %s" % (
+            top_branch,
+            dataset_name,
+        )
 
     for key in structure_json["artifacts"]:
         relative_path = structure_json["artifacts"][key]
-        final_path = None if relative_path == "" else os.path.join(path_to_dataset, relative_path)
+        final_path = (
+            None
+            if relative_path == ""
+            else os.path.join(path_to_dataset, relative_path)
+        )
         structure_json["artifacts"][key] = final_path
 
     for t_branch in structure_json["traces"]:
         relative_path = structure_json["traces"][t_branch]
-        final_path = None if relative_path == "" else os.path.join(path_to_dataset, relative_path)
+        final_path = (
+            None
+            if relative_path == ""
+            else os.path.join(path_to_dataset, relative_path)
+        )
         structure_json["traces"][t_branch] = final_path
     return structure_json
 
@@ -70,13 +81,14 @@ def is_valid_structure_file(structure_file: dict):
     artifact_branches = ["top", "middle", "bottom"]
     trace_branches = ["top-middle", "middle-bottom", "top-bottom"]
 
-    return contains_fields(structure_file, top_branches) \
-           and contains_fields(structure_file["datasets"], artifact_branches) \
-           and contains_fields(structure_file["traces"], trace_branches)
+    return (
+        contains_fields(structure_file, top_branches)
+        and contains_fields(structure_file["datasets"], artifact_branches)
+        and contains_fields(structure_file["traces"], trace_branches)
+    )
 
 
-def contains_fields(some_dict: dict,
-                    required_fields: [str]):
+def contains_fields(some_dict: dict, required_fields: [str]):
     """
     Returns whether given dictionary contains required fields.
     :param some_dict: a python dictionary

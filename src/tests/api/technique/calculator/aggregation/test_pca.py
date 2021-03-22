@@ -3,32 +3,29 @@ import warnings
 import numpy as np
 from sklearn.decomposition import PCA
 
-from api.technique.variationpoints.aggregation.pca_aggregation import get_weights, aggregate_pca
+from api.technique.variationpoints.aggregation.pca_aggregation import (
+    get_weights,
+    aggregate_pca,
+)
 from tests.res.smart_test import SmartTest
 
 
 class TestPCA(SmartTest):
-
     def test_weights_na(self):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            x_train = np.array([[1, 2, 3],
-                                [1, 2, 3],
-                                [1, 2, 3],
-                                [1, 2, 3]])
+            x_train = np.array([[1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3]])
             weights = get_weights(x_train)
             self.assertEqual(3, len(weights))
-            self.assertEqual(.33, round(weights[0], 2))
-            self.assertEqual(.33, round(weights[1], 2))
-            self.assertEqual(.33, round(weights[2], 2))
+            self.assertEqual(0.33, round(weights[0], 2))
+            self.assertEqual(0.33, round(weights[1], 2))
+            self.assertEqual(0.33, round(weights[2], 2))
             self.assertEqual(1, sum(weights), "Sum of weights")
 
     def test_weights_use_case(self):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            x_train = np.array([[1, 2, 3],
-                                [2, 2, 3],
-                                [3, 2, 3]])
+            x_train = np.array([[1, 2, 3], [2, 2, 3], [3, 2, 3]])
             weights = get_weights(x_train)
             self.assertEqual(1, sum(weights))
             self.assertGreater(weights[0], weights[1])

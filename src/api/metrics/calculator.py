@@ -8,7 +8,7 @@ from sklearn.metrics import average_precision_score, roc_curve, auc
 from api.constants.processing import CORE_METRIC_NAMES
 from api.metrics.models import ScoringTable, Metrics
 
-SINGLE_QUERY_METRIC_TABLE_COLUMNS = ['dataset', 'type'] + CORE_METRIC_NAMES
+SINGLE_QUERY_METRIC_TABLE_COLUMNS = ["dataset", "type"] + CORE_METRIC_NAMES
 
 
 def calculate_auc(y_true, y_pred):
@@ -68,7 +68,9 @@ def calculate_ap(y_true, y_pred):
     return average_precision_score(y_true=y_true, y_score=y_pred)
 
 
-def calculate_metrics_for_scoring_table(scoring_table: ScoringTable, n_queries: int) -> [Metrics]:
+def calculate_metrics_for_scoring_table(
+    scoring_table: ScoringTable, n_queries: int
+) -> [Metrics]:
     """
     Returns list of Metrics per query in scoring table
     :param scoring_table: contains flattened list of predicted and oracle values
@@ -78,24 +80,30 @@ def calculate_metrics_for_scoring_table(scoring_table: ScoringTable, n_queries: 
     y_pred = scoring_table.values[:, 0]
     y_true = scoring_table.values[:, 1]
 
-    assert len(y_true) % n_queries == 0, \
-        'given number of queries (%d) does not divide into values (%d)' % (n_queries, len(y_true))
+    assert (
+        len(y_true) % n_queries == 0
+    ), "given number of queries (%d) does not divide into values (%d)" % (
+        n_queries,
+        len(y_true),
+    )
     query_length = int(len(y_true) / n_queries)
-    assert query_length != 0, 'length of y true %d' % len(y_true)
+    assert query_length != 0, "length of y true %d" % len(y_true)
     m_entries = []
 
     for query_index in range(n_queries):
         start_i = query_index * query_length
         end_i = start_i + query_length
-        query_y_pred = y_pred[start_i: end_i]
+        query_y_pred = y_pred[start_i:end_i]
         query_length = len(query_y_pred)
         start_index = query_index * query_length
         end_index = start_index + query_length
-        query_y_true = y_true[start_index: end_index]
+        query_y_true = y_true[start_index:end_index]
 
-        m_entry = Metrics(ap=calculate_ap(query_y_true, query_y_pred),
-                          auc=calculate_auc(query_y_true, query_y_pred),
-                          lag=calculate_lag(query_y_true, query_y_pred))
+        m_entry = Metrics(
+            ap=calculate_ap(query_y_true, query_y_pred),
+            auc=calculate_auc(query_y_true, query_y_pred),
+            lag=calculate_lag(query_y_true, query_y_pred),
+        )
 
         m_entries.append(m_entry)
     return m_entries

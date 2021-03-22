@@ -11,7 +11,9 @@ import shutil
 DEFAULT_DELIMITERS = ["\n"]
 
 
-def rename_with_timestamp(path_to_file: str, file_name_delimiter="_", old_run_folder=".old"):
+def rename_with_timestamp(
+    path_to_file: str, file_name_delimiter="_", old_run_folder=".old"
+):
     """
     TODO
     :param path_to_file:
@@ -23,7 +25,9 @@ def rename_with_timestamp(path_to_file: str, file_name_delimiter="_", old_run_fo
         return
 
     # Extract original information
-    original_folder_container = "/".join(os.path.split(path_to_file)[:-1])  # TODO: Replace with generic function
+    original_folder_container = "/".join(
+        os.path.split(path_to_file)[:-1]
+    )  # TODO: Replace with generic function
     original_file_name, file_extension = ntpath.basename(path_to_file).split(".")
 
     # Create dir for old runs
@@ -33,7 +37,9 @@ def rename_with_timestamp(path_to_file: str, file_name_delimiter="_", old_run_fo
 
     # Create new file path
     time_created = os.path.getmtime(path_to_file)
-    new_file_name = file_name_delimiter.join([original_file_name, repr(time_created) + "." + file_extension])
+    new_file_name = file_name_delimiter.join(
+        [original_file_name, repr(time_created) + "." + file_extension]
+    )
     new_path_to_file = os.path.join(path_to_old_run_folder, new_file_name)
 
     os.rename(path_to_file, new_path_to_file)

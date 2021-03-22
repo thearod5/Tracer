@@ -11,7 +11,12 @@ from api.constants.paths import PATH_TO_STOP_WORDS
 ps = PorterStemmer()
 
 with open(PATH_TO_STOP_WORDS) as stop_word_file:
-    stop_words = list(filter(lambda w: w != "", map(lambda w: w.lower(), stop_word_file.read().split("\n"))))
+    stop_words = list(
+        filter(
+            lambda w: w != "",
+            map(lambda w: w.lower(), stop_word_file.read().split("\n")),
+        )
+    )
 assert len(stop_words) > 0, "Could not load stop words file"
 
 
@@ -30,7 +35,7 @@ def separate_camel_case(doc: str):
     :param doc:
     :return:
     """
-    split_doc = re.sub('([A-Z][a-z]+)', r' \1', re.sub('([A-Z]+)', r' \1', doc)).split()
+    split_doc = re.sub("([A-Z][a-z]+)", r" \1", re.sub("([A-Z]+)", r" \1", doc)).split()
     return " ".join(split_doc)
 
 
@@ -61,7 +66,7 @@ def remove_non_alphanumeric_characters(doc):
     :param doc:
     :return:
     """
-    return ''.join(filter(is_alpha_or_space, doc))
+    return "".join(filter(is_alpha_or_space, doc))
 
 
 def to_lower(doc):
@@ -100,7 +105,8 @@ CLEANING_PIPELINE = [
     remove_one_name_words,
     to_lower,
     remove_stop_words,
-    stem_doc]
+    stem_doc,
+]
 
 
 def clean_doc(doc, stop_at_index=None):

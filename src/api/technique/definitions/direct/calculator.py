@@ -5,8 +5,9 @@ from api.datasets.dataset import Dataset
 from api.technique.definitions.direct.definition import DirectTechniqueDefinition
 from api.technique.parser.data import TechniqueData
 from api.technique.parser.itechnique_calculator import ITechniqueCalculator
-from api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix import \
-    calculate_similarity_matrix_for_nlp_technique
+from api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix import (
+    calculate_similarity_matrix_for_nlp_technique,
+)
 from api.technique.variationpoints.scalers.scalers import scale_with_technique
 from api.technique.variationpoints.tracetype.trace_type import TraceType
 
@@ -35,9 +36,9 @@ def create_direct_algebraic_model(data: DirectTechniqueData):
         upper_level_index, lower_level_index = data.technique.artifact_paths
         upper_artifacts = data.dataset.artifacts.levels[upper_level_index]
         lower_artifacts = data.dataset.artifacts.levels[lower_level_index]
-        similarity_matrix = calculate_similarity_matrix_for_nlp_technique(data.technique.algebraic_model,
-                                                                          upper_artifacts,
-                                                                          lower_artifacts)
+        similarity_matrix = calculate_similarity_matrix_for_nlp_technique(
+            data.technique.algebraic_model, upper_artifacts, lower_artifacts
+        )
         data.similarity_matrix = similarity_matrix
 
 
@@ -47,7 +48,9 @@ def scaling_direct_algebraic_model(data: DirectTechniqueData):
     :param data:
     :return:
     """
-    scaled_matrix = scale_with_technique(data.technique.scaling_type, data.similarity_matrix)
+    scaled_matrix = scale_with_technique(
+        data.technique.scaling_type, data.similarity_matrix
+    )
     data.similarity_matrix = scaled_matrix
 
 

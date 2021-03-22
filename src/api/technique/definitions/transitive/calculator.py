@@ -3,12 +3,21 @@ TODO
 """
 from api.datasets.dataset import Dataset
 from api.technique.definitions.direct.calculator import DirectTechniqueCalculator
-from api.technique.definitions.transitive.definition import TransitiveTechniqueDefinition
+from api.technique.definitions.transitive.definition import (
+    TransitiveTechniqueDefinition,
+)
 from api.technique.parser.data import TechniqueData
 from api.technique.parser.itechnique_calculator import ITechniqueCalculator
-from api.technique.variationpoints.aggregation.aggregation_method import AggregationMethod
-from api.technique.variationpoints.aggregation.transitive_path_aggregation import apply_transitive_aggregation
-from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrices, SimilarityMatrix
+from api.technique.variationpoints.aggregation.aggregation_method import (
+    AggregationMethod,
+)
+from api.technique.variationpoints.aggregation.transitive_path_aggregation import (
+    apply_transitive_aggregation,
+)
+from api.technique.variationpoints.algebraicmodel.models import (
+    SimilarityMatrices,
+    SimilarityMatrix,
+)
 from api.technique.variationpoints.scalers.scalers import scale_with_technique
 
 
@@ -34,7 +43,8 @@ def append_direct_component_matrices(technique_data: TransitiveTechniqueData):
     for technique in technique_data.technique.get_component_techniques():
         direct_calculator = DirectTechniqueCalculator(technique.definition)
         similarity_matrix = direct_calculator.calculate_technique_data(
-            technique_data.dataset).similarity_matrix
+            technique_data.dataset
+        ).similarity_matrix
         technique_data.transitive_matrices.append(similarity_matrix)
 
 
@@ -45,7 +55,8 @@ def perform_transitive_aggregation(data: TransitiveTechniqueData):
     :return:
     """
     data.similarity_matrix = perform_transitive_aggregation_on_component_techniques(
-        data.transitive_matrices, data.technique.transitive_aggregation)
+        data.transitive_matrices, data.technique.transitive_aggregation
+    )
 
 
 def scale_transitive_matrices(data: TransitiveTechniqueData):
@@ -54,11 +65,14 @@ def scale_transitive_matrices(data: TransitiveTechniqueData):
     :param data:
     :return:
     """
-    data.transitive_matrices = scale_with_technique(data.technique.scaling_method, data.transitive_matrices)
+    data.transitive_matrices = scale_with_technique(
+        data.technique.scaling_method, data.transitive_matrices
+    )
 
 
-def perform_transitive_aggregation_on_component_techniques(matrices: [SimilarityMatrix],
-                                                           aggregation_type: AggregationMethod):
+def perform_transitive_aggregation_on_component_techniques(
+    matrices: [SimilarityMatrix], aggregation_type: AggregationMethod
+):
     """
     TODO
     :param matrices:
@@ -69,25 +83,30 @@ def perform_transitive_aggregation_on_component_techniques(matrices: [Similarity
     for similarity_matrix_index in range(1, len(matrices)):
         matrix_b = matrices[similarity_matrix_index]
         similarity_matrix_pair = SimilarityMatrices(aggregate_matrix, matrix_b)
-        aggregate_matrix = apply_transitive_aggregation(similarity_matrix_pair,
-                                                        aggregation_type)
+        aggregate_matrix = apply_transitive_aggregation(
+            similarity_matrix_pair, aggregation_type
+        )
     return aggregate_matrix
 
 
-INTERMEDIATE_TECHNIQUE_PIPELINE = [append_direct_component_matrices,
-                                   scale_transitive_matrices,
-                                   perform_transitive_aggregation]
+INTERMEDIATE_TECHNIQUE_PIPELINE = [
+    append_direct_component_matrices,
+    scale_transitive_matrices,
+    perform_transitive_aggregation,
+]
 
 
 class TransitiveTechniqueCalculator(ITechniqueCalculator[TransitiveTechniqueData]):
     """
-        A technique resulting from the combination of multiple datasets.
-        For artifact layers l0, l1, ..., ln this technique calculates the matrix multiplication result of:
-        l0-l1 x l1-l2 x ... x ln-1-ln for n artifact layers. The multiplication is modified so that instead of
-        summing the col-row element multiplication results we use the defined aggregator in the technique.
-        """
+    A technique resulting from the combination of multiple datasets.
+    For artifact layers l0, l1, ..., ln this technique calculates the matrix multiplication result of:
+    l0-l1 x l1-l2 x ... x ln-1-ln for n artifact layers. The multiplication is modified so that instead of
+    summing the col-row element multiplication results we use the defined aggregator in the technique.
+    """
 
-    def __init__(self, technique_definition: TransitiveTechniqueDefinition, pipeline=None):
+    def __init__(
+        self, technique_definition: TransitiveTechniqueDefinition, pipeline=None
+    ):
         super().__init__(technique_definition, pipeline)
         if pipeline is None:
             pipeline = INTERMEDIATE_TECHNIQUE_PIPELINE

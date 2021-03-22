@@ -1,12 +1,20 @@
 from igraph import Graph
 
 from api.datasets.builder.structure_definition import get_structure_definition
-from api.datasets.builder.trace_parser import get_document_delimiter, get_traces_in_line, \
-    is_valid_trace_list, \
-    parse_trace_file, create_trace_matrix_values_from_trace_list, get_index_of_next_alpha_char, \
-    get_delimiter_in_segment, \
-    get_traces_in_trace_file_content
-from api.datasets.builder.transitive_trace_matrix_creator import create_trace_matrix_graph, find_all_paths
+from api.datasets.builder.trace_parser import (
+    get_document_delimiter,
+    get_traces_in_line,
+    is_valid_trace_list,
+    parse_trace_file,
+    create_trace_matrix_values_from_trace_list,
+    get_index_of_next_alpha_char,
+    get_delimiter_in_segment,
+    get_traces_in_trace_file_content,
+)
+from api.datasets.builder.transitive_trace_matrix_creator import (
+    create_trace_matrix_graph,
+    find_all_paths,
+)
 from api.experiment.file_operations import get_index_after_number_with_extension
 from tests.res.smart_test import SmartTest
 
@@ -60,10 +68,12 @@ class TestTraceCreator(SmartTest):
         self.assertEqual(7, get_index_of_next_alpha_char("31.txt 32.txt", 6))
 
     def test_get_index_after_number_with_space_with_extension(self):
-        self.assertEqual(6, get_index_after_number_with_extension('31.txt 32.txt'))
+        self.assertEqual(6, get_index_after_number_with_extension("31.txt 32.txt"))
 
     def test_get_index_after_number_with_tab_with_extension(self):
-        self.assertEqual(9, get_index_after_number_with_extension('NFR01.txt\tSRS49.txt'))
+        self.assertEqual(
+            9, get_index_after_number_with_extension("NFR01.txt\tSRS49.txt")
+        )
 
     """
     get_delimiter_in_segment
@@ -159,7 +169,9 @@ class TestTraceCreator(SmartTest):
         top_ids = ["R1", "R2"]
         bottom_ids = ["C1", "C2"]
         trace_list = [("R2", "C1")]
-        trace_matrix = create_trace_matrix_values_from_trace_list(top_ids, bottom_ids, trace_list)
+        trace_matrix = create_trace_matrix_values_from_trace_list(
+            top_ids, bottom_ids, trace_list
+        )
 
         self.assertEqual(0, trace_matrix[0][0])
         self.assertEqual(0, trace_matrix[0][1])

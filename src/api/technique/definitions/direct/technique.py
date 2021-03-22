@@ -12,7 +12,9 @@ class DirectTechnique(ITechnique):
     TODO
     """
 
-    def create_definition(self, parameters: [str], components: [str]) -> ITechniqueDefinition:
+    def create_definition(
+        self, parameters: [str], components: [str]
+    ) -> ITechniqueDefinition:
         return DirectTechniqueDefinition(parameters, components)
 
     def create_calculator(self) -> DirectTechniqueCalculator:

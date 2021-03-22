@@ -1,7 +1,10 @@
 from api.experiment.cache import Cache
 from api.technique.definitions.combined.technique import create_technique_by_name
-from api.technique.definitions.direct.calculator import DirectTechniqueCalculator, \
-    create_direct_algebraic_model, DirectTechniqueData
+from api.technique.definitions.direct.calculator import (
+    DirectTechniqueCalculator,
+    create_direct_algebraic_model,
+    DirectTechniqueData,
+)
 from api.technique.definitions.direct.definition import DirectTechniqueDefinition
 from api.technique.variationpoints.tracetype.trace_type import TraceType
 from tests.res.test_technique_helper import TestTechniqueHelper
@@ -43,7 +46,9 @@ class DirectCalculator(TestTechniqueHelper):
     def test_direct_pipeline(self):
         counter_func, counter_dict = self.create_counter_func(self.t_name)
         pipeline_funcs = [counter_func, counter_func]
-        pipeline = DirectTechniqueCalculator(self.get_direct_definition(), pipeline_funcs)
+        pipeline = DirectTechniqueCalculator(
+            self.get_direct_definition(), pipeline_funcs
+        )
         pipeline.run_pipeline_on_dataset(self.dataset)
         self.assertEqual(len(pipeline_funcs), counter_dict["value"])
 
@@ -65,7 +70,9 @@ class DirectCalculator(TestTechniqueHelper):
             data.similarity_matrix = -1
 
         pipeline_funcs = [counter_func]
-        calculator = DirectTechniqueCalculator(self.get_direct_definition(), pipeline_funcs)
+        calculator = DirectTechniqueCalculator(
+            self.get_direct_definition(), pipeline_funcs
+        )
         technique_data = calculator.calculate_technique_data(self.dataset)
         self.assertEqual(self.technique.get_name(), technique_data.technique.get_name())
         self.assertEqual(self.dataset.name, technique_data.dataset.name)

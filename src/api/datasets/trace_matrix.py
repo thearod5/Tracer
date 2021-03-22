@@ -9,6 +9,7 @@ class TraceMatrix:  # pylint: disable=too-few-public-methods
     TODO: Documentation
     TODO: Add public methods or used a namedtuple. Then, remove pylint bypass
     """
+
     matrix: SimilarityMatrix
     top_name: str
     top_index: int
@@ -19,7 +20,9 @@ class TraceMatrix:  # pylint: disable=too-few-public-methods
     bottom_artifact_ids: [int]
 
     # pylint: disable=too-many-arguments
-    def __init__(self, top_index, top_artifacts_ids, bottom_index, bottom_artifact_ids, matrix):
+    def __init__(
+        self, top_index, top_artifacts_ids, bottom_index, bottom_artifact_ids, matrix
+    ):
         # TODO: Too many arguments, separate for modularity
         self.top_index = top_index
         self.top_artifact_ids = top_artifacts_ids

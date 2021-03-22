@@ -23,7 +23,9 @@ class TestDatasetExporter(SmartTest):
         export_dataset(builder)
         folders = ["Artifacts", "Oracles"]
         for folder_rel_path in folders:
-            path_to_folder = os.path.join(PATH_TO_DATASETS, dataset_name, folder_rel_path)
+            path_to_folder = os.path.join(
+                PATH_TO_DATASETS, dataset_name, folder_rel_path
+            )
             check_folder_has_updated(path_to_folder)
 
 

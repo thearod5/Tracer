@@ -2,16 +2,19 @@ import numpy as np
 from igraph import Graph
 
 from api.datasets.builder.dataset_builder import DatasetBuilder
-from api.datasets.builder.transitive_trace_matrix_creator import create_trace_matrix_graph, \
-    create_trace_id_2_trace_matrix_map_from_definition, \
-    get_graph_paths_map_to_missing_paths, contains_trace_id, create_trace_matrix_map, \
-    create_similarity_matrix_map_for_graph_paths
+from api.datasets.builder.transitive_trace_matrix_creator import (
+    create_trace_matrix_graph,
+    create_trace_id_2_trace_matrix_map_from_definition,
+    get_graph_paths_map_to_missing_paths,
+    contains_trace_id,
+    create_trace_matrix_map,
+    create_similarity_matrix_map_for_graph_paths,
+)
 from api.datasets.trace_matrix import TraceMatrix
 from tests.res.smart_test import SmartTest
 
 
 class TestTransitiveTraceMatrixCreator(SmartTest):
-
     def test_create_transitive_trace_matrices_with_fake_dataset(self):
         dataset_builder = DatasetBuilder("MockDataset")
         dataset_builder.create_levels()
@@ -19,8 +22,9 @@ class TestTransitiveTraceMatrixCreator(SmartTest):
         # erase trace matrix
         dataset_builder.structure_file["traces"]["0-2"] = None
         dataset_builder.defined_trace_matrices.remove("0-2")
-        new_trace_map, graph = create_trace_matrix_map(dataset_builder.structure_file,
-                                                       dataset_builder.levels)
+        new_trace_map, graph = create_trace_matrix_map(
+            dataset_builder.structure_file, dataset_builder.levels
+        )
 
         self.assertEqual(3, len(new_trace_map.keys()))
         self.assertIsNotNone(new_trace_map["0-2"])
@@ -35,8 +39,9 @@ class TestTransitiveTraceMatrixCreator(SmartTest):
         dataset_builder.create_levels()
 
         # erase trace matrix
-        new_trace_map, graph = create_trace_matrix_map(dataset_builder.structure_file,
-                                                       dataset_builder.levels)
+        new_trace_map, graph = create_trace_matrix_map(
+            dataset_builder.structure_file, dataset_builder.levels
+        )
 
         self.assertIsNotNone(new_trace_map["1-2"])
         self.assertEqual(3, len(graph.es))
@@ -50,11 +55,19 @@ class TestTransitiveTraceMatrixCreator(SmartTest):
     reqs2tasks = TraceMatrix(None, None, None, None, matrix=np.array([[1]]))
     tasks2code = TraceMatrix(None, None, None, None, matrix=np.array([[0, 1, 0]]))
 
-    trace_matrix_map = {"0-1": req2design, "1-2": design2code, "0-2": reqs2code, "0-3": tasks2code, "3-2": tasks2code}
+    trace_matrix_map = {
+        "0-1": req2design,
+        "1-2": design2code,
+        "0-2": reqs2code,
+        "0-3": tasks2code,
+        "3-2": tasks2code,
+    }
 
     def test_create_similarity_matrix_map_for_graph_paths_with_four_levels(self):
         graph_paths = {"0-2": [[0, 2], [0, 1, 2], [0, 3, 2]]}
-        similarity_matrix_map = create_similarity_matrix_map_for_graph_paths(graph_paths, self.trace_matrix_map)
+        similarity_matrix_map = create_similarity_matrix_map_for_graph_paths(
+            graph_paths, self.trace_matrix_map
+        )
         values = similarity_matrix_map["0-2"]
         self.assertEqual(1, values[0, 0])
         self.assertEqual(1, values[0, 1])
@@ -91,8 +104,9 @@ class TestTransitiveTraceMatrixCreator(SmartTest):
         dataset_builder.structure_file["traces"]["0-2"] = None
         dataset_builder.create_levels()
 
-        trace_matrix_map = create_trace_id_2_trace_matrix_map_from_definition(dataset_builder.structure_file,
-                                                                              dataset_builder.levels)
+        trace_matrix_map = create_trace_id_2_trace_matrix_map_from_definition(
+            dataset_builder.structure_file, dataset_builder.levels
+        )
 
         self.assertEqual(2, len(trace_matrix_map.keys()))
         self.assertTrue("0-1" in trace_matrix_map.keys())
@@ -109,8 +123,7 @@ class TestTransitiveTraceMatrixCreator(SmartTest):
     def test_normalize_original_matrices(self):
         db = DatasetBuilder("MockDataset")
         db.create_levels()
-        trace_matrix_map, graph = create_trace_matrix_map(db.structure_file,
-                                                          db.levels)
+        trace_matrix_map, graph = create_trace_matrix_map(db.structure_file, db.levels)
 
         self.assertEqual(1, trace_matrix_map["0-2"].matrix[0][2])
 
@@ -134,12 +147,11 @@ class TestTransitiveTraceMatrixCreator(SmartTest):
         dataset_builder = DatasetBuilder("MockDataset")
         dataset_builder.create_levels()
         dataset_builder.defined_trace_matrices.remove("0-2")
-        graph = create_trace_matrix_graph(dataset_builder.defined_trace_matrices,
-                                          3)
+        graph = create_trace_matrix_graph(dataset_builder.defined_trace_matrices, 3)
 
-        paths = get_graph_paths_map_to_missing_paths(dataset_builder.defined_trace_matrices,
-                                                     graph,
-                                                     3)
+        paths = get_graph_paths_map_to_missing_paths(
+            dataset_builder.defined_trace_matrices, graph, 3
+        )
 
         self.assertEqual(1, len(paths.keys()))
         self.assertEqual(1, len(paths["0-2"]))
@@ -148,11 +160,10 @@ class TestTransitiveTraceMatrixCreator(SmartTest):
     def test_get_paths_to_missing_traces_with_warc(self):
         dataset_builder = DatasetBuilder("WARC")
         dataset_builder.create_levels()
-        graph = create_trace_matrix_graph(dataset_builder.defined_trace_matrices,
-                                          3)
-        paths = get_graph_paths_map_to_missing_paths(dataset_builder.defined_trace_matrices,
-                                                     graph,
-                                                     3)
+        graph = create_trace_matrix_graph(dataset_builder.defined_trace_matrices, 3)
+        paths = get_graph_paths_map_to_missing_paths(
+            dataset_builder.defined_trace_matrices, graph, 3
+        )
         self.assertEqual(1, len(paths.keys()))
         self.assertEqual(1, len(paths["1-2"]))
         self.assertEqual([1, 0, 2], paths["1-2"][0])

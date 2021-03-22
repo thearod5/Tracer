@@ -6,4 +6,5 @@ lint:
 	env/bin/pylint src/api
 checklist:
 	lint typehint test
-
+format:
+	env/bin/black src/**/*.py
