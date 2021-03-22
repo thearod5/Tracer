@@ -2,13 +2,8 @@
 TODO
 """
 from enum import Enum
-from typing import Union
 
-import numpy as np
-from scipy.sparse import csr_matrix
-
-SimilarityMatrix = Union[csr_matrix, np.ndarray]
-Similarities = np.ndarray
+from api.constants.dataset import SimilarityMatrix
 
 
 class AlgebraicModel(Enum):

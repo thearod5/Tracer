@@ -25,7 +25,7 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import pairwise_distances
 
-from api.datasets.multi_level_artifacts import ArtifactLevel
+from api.constants.techniques import ArtifactLevel
 from api.technique.variationpoints.algebraicmodel.models import AlgebraicModel
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
 
@@ -33,10 +33,10 @@ DocumentTermMatrix = csr_matrix
 
 
 def calculate_similarity_matrix_for_nlp_technique(
-    nlp_type: AlgebraicModel,
-    upper_level: ArtifactLevel,
-    lower_level: ArtifactLevel,
-    return_vocab=False,
+        nlp_type: AlgebraicModel,
+        upper_level: ArtifactLevel,
+        lower_level: ArtifactLevel,
+        return_vocab=False,
 ) -> SimilarityMatrix:
     """
     TODO
@@ -103,7 +103,7 @@ def calculate_lsa_similarity_matrix(raw_a, raw_b) -> (SimilarityMatrix, dict):
 
 
 def calculate_similarity_matrix_from_term_frequencies(
-    tf_a: DocumentTermMatrix, tf_b: DocumentTermMatrix
+        tf_a: DocumentTermMatrix, tf_b: DocumentTermMatrix
 ) -> SimilarityMatrix:
     """
     TODO
@@ -115,7 +115,7 @@ def calculate_similarity_matrix_from_term_frequencies(
 
 
 def create_term_frequency_matrix(
-    raw_a: pd.Series, raw_b: pd.Series, vectorizer=TfidfVectorizer
+        raw_a: pd.Series, raw_b: pd.Series, vectorizer=TfidfVectorizer
 ) -> (DocumentTermMatrix, DocumentTermMatrix, dict):
     """
     Creates 2 TermFrequencyMatrices (one for A another for B) where the weight of

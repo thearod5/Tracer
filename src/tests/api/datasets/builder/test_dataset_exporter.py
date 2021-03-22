@@ -1,7 +1,7 @@
 import os
 import time
 
-from api.constants.paths import PATH_TO_DATASETS
+from api.constants.paths import PATH_TO_SAMPLE_DATASETS
 from api.datasets.builder.dataset_builder import DatasetBuilder
 from api.datasets.builder.dataset_exporter import export_dataset
 from tests.res.smart_test import SmartTest
@@ -24,7 +24,7 @@ class TestDatasetExporter(SmartTest):
         folders = ["Artifacts", "Oracles"]
         for folder_rel_path in folders:
             path_to_folder = os.path.join(
-                PATH_TO_DATASETS, dataset_name, folder_rel_path
+                PATH_TO_SAMPLE_DATASETS, dataset_name, folder_rel_path
             )
             check_folder_has_updated(path_to_folder)
 

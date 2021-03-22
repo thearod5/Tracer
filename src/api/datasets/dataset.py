@@ -2,42 +2,43 @@
 TODO
 """
 import os
+from typing import List
 
 import numpy as np
 import pandas as pd
 
-from api.constants.paths import PATH_TO_ROOT, PATH_TO_DATASETS
+from api.constants.paths import PATH_TO_DATASETS, PATH_TO_SAMPLE_DATASETS
 from api.datasets.multi_level_artifacts import MultiLevelArtifacts
+from api.experiment.type_checks import to_string
 
 
 class Dataset:
     """
-    TODO
+    Responsible for accessing parsed dataset resources (e.g. artifacts,  trace matrices).
     """
 
-    def __init__(self, dataset_name: str):  # implements D1
+    def __init__(self, dataset_name: str):
         self.name = dataset_name
-        self.artifacts = MultiLevelArtifacts(dataset_name)  # implements D3
-        self.relations: Relations = pd.read_csv(
-            os.path.join(PATH_TO_DATASETS, dataset_name, "Oracles", "Relations.csv")
+        self.path_to_dataset = get_path_to_dataset(dataset_name)
+        print("PATH:", self.path_to_dataset)
+
+        self.artifacts = MultiLevelArtifacts(self.path_to_dataset)
+        self.relations: pd.DataFrame = pd.read_csv(
+            os.path.join(self.path_to_dataset, "Oracles", "Relations.csv")  # TODO: NOW
         )
         self.traced_matrices = {}
-        self.path_to_dataset = os.path.join(PATH_TO_ROOT, dataset_name)
+
         self.load_trace_matrices()
 
         self.assert_valid_artifacts()  # implements D2
 
     def load_trace_matrices(self):
         """
-        TODO
-        :return:
+        Read and stores the trace matrices of the parsed dataset
+        :return: None
         """
-        path_to_traced_matrices = os.path.join(
-            PATH_TO_DATASETS, self.name, "Oracles", "TracedMatrices"
-        )
-        trace_matrix_file_names = list(
-            filter(lambda f: f[0] != ".", os.listdir(path_to_traced_matrices))
-        )
+        path_to_traced_matrices = os.path.join(self.path_to_dataset, "Oracles", "TracedMatrices")
+        trace_matrix_file_names = list(filter(lambda f: f[0] != ".", os.listdir(path_to_traced_matrices)))
         for file_name in trace_matrix_file_names:
             trace_id = file_name[:-4]
             path = os.path.join(path_to_traced_matrices, file_name)
@@ -48,9 +49,9 @@ class Dataset:
         TODO
         :return:
         """
-        n_top_level = len(self.artifacts.levels[0])
-        n_middle_level = len(self.artifacts.levels[1])
-        n_bottom_level = len(self.artifacts.levels[2])
+        n_top_level = len(self.artifacts[0])
+        n_middle_level = len(self.artifacts[1])
+        n_bottom_level = len(self.artifacts[2])
 
         upper_shape = self.traced_matrices["0-1"].shape
         lower_shape = self.traced_matrices["1-2"].shape
@@ -92,4 +93,21 @@ class Dataset:
         return self.traced_matrices[oracle_id]
 
 
-Relations = pd.DataFrame
+def get_path_to_dataset(dataset_name: str) -> str:
+    """
+    Returns the path to given dataset by looking in PATH_TO_DATASETS then in PATH_TO_SAMPLE_DATASETS if not found.
+    If not dataset exist,
+    :param dataset_name: The name of the folder containing the artifacts, traces, and structure.json file
+    :return: str - path to dataset
+    :raises:
+        ValueError: if no dataset is found in PATH_TO_DATASETS or PATH_TO_SAMPLE_DATASETS
+    """
+    possible_folders = [PATH_TO_DATASETS, PATH_TO_SAMPLE_DATASETS]
+    datasets_found: List[str] = []
+    for p_folder in possible_folders:
+        if not os.path.isdir(p_folder):
+            continue
+        datasets_found = datasets_found + os.listdir(p_folder)
+        if dataset_name in datasets_found:
+            return os.path.join(to_string(p_folder), dataset_name)
+    raise ValueError("%s is not one of %s" % (dataset_name, ",".join(datasets_found)))
