@@ -1,4 +1,3 @@
-import numpy as np
 from pandas import DataFrame
 
 from api.constants.paths import PATH_TO_TEST_REQUIREMENTS
@@ -90,24 +89,20 @@ class TestDatasetBuilder(SmartTest):
         expected_middle_bottom_shape = (len(middle), len(bottom))
         expected_top_bottom_shape = (len(top), len(bottom))
 
-        test_matrix_shape(dataset_structure.trace_matrices["0-1"].matrix,
-                          expected_top_middle_shape)
-        test_matrix_shape(dataset_structure.trace_matrices["0-2"].matrix,
-                          expected_top_bottom_shape)
+        assert_shapes_equal(dataset_structure.trace_matrices["0-1"].matrix,
+                            expected_top_middle_shape)
+        assert_shapes_equal(dataset_structure.trace_matrices["0-2"].matrix,
+                            expected_top_bottom_shape)
 
-        test_matrix_shape(dataset_structure.trace_matrices["1-2"].matrix,
-                          expected_middle_bottom_shape)
+        assert_shapes_equal(dataset_structure.trace_matrices["1-2"].matrix,
+                            expected_middle_bottom_shape)
         self.assertEqual(dataset_structure.trace_matrices["1-2"].matrix.shape, expected_middle_bottom_shape)
 
 
-def test_matrix_shape(trace_matrix: np.ndarray, expected: (int, int)):
-    assert trace_matrix.shape == expected, "Expected %s but got %s" % (expected, trace_matrix.shape)
-
-
-def test_data_frame_shape(trace_matrix: DataFrame, expected: (int, int)):
+def assert_dataframe_shape_equals(trace_matrix: DataFrame, expected: (int, int)):
     result = trace_matrix.drop("id", axis=1).values
     assert result.shape == expected, "Expected %s but got %s" % (expected, result)
 
 
-def test_matrix_shape(result, expected: (int, int)):
+def assert_shapes_equal(result, expected: (int, int)):
     assert result.shape == expected, "Expected %s but got %s" % (expected, result)
