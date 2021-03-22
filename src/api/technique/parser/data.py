@@ -1,6 +1,3 @@
-"""
-TODO
-"""
 from api.datasets.dataset import Dataset
 from api.metrics.models import ScoringTable
 from api.technique.parser import itechnique_definition
