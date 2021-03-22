@@ -4,7 +4,7 @@ TODO
 import inspect
 from abc import abstractmethod, ABC
 from enum import Enum
-from typing import Type, TypeVar
+from typing import Type, TypeVar, List
 
 from api.constants.techniques import (
     ArtifactPathType,
@@ -20,7 +20,9 @@ class ITechniqueDefinition(ABC):
     TODO
     """
 
-    def __init__(self, parameters: [str], components: [str], is_stochastic=False):
+    def __init__(
+        self, parameters: List[str], components: List[str], is_stochastic=False
+    ):
         self.parameters = parameters
         self.components = components
         self._component_techniques = (
@@ -66,7 +68,7 @@ class ITechniqueDefinition(ABC):
             list_to_string(self.components),
         )
 
-    def get_attributes(self) -> [str]:
+    def get_attributes(self) -> List[str]:
         """
         TODO
         :return:
@@ -84,7 +86,7 @@ class ITechniqueDefinition(ABC):
         property_values = self.get_properties_as_strings()
         return dict(zip(property_names, property_values))
 
-    def get_properties_as_strings(self) -> [str]:
+    def get_properties_as_strings(self) -> List[str]:
         """
         TODO
         :return:
@@ -159,7 +161,7 @@ GenericClass = TypeVar("GenericClass")
 
 def get_missing_attributes(
     source: ITechniqueDefinition, target_class: Type[GenericClass]
-) -> [str]:
+) -> List[str]:
     """
     TODO
     :param source:

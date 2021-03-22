@@ -1,6 +1,8 @@
 """
 TODO
 """
+from typing import Union
+
 from api.datasets.dataset import Dataset
 from api.metrics.models import ScoringTable
 from api.technique.parser import itechnique_definition
@@ -17,9 +19,9 @@ class TechniqueData:
     def __init__(self, dataset: Dataset, technique: ITechniqueDefinition):
         self.dataset: Dataset = dataset
         self.technique: itechnique_definition = technique
-        self.similarity_matrix: SimilarityMatrix = (
-            None  # matrix of simlarity scores between source & target artifacts
-        )
+        self.similarity_matrix: Union[
+            SimilarityMatrix, None
+        ] = None  # matrix of simlarity scores between source & target artifacts
 
     def get_scoring_table(self) -> ScoringTable:
         """

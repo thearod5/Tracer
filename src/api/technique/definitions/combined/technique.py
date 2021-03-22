@@ -1,6 +1,7 @@
 """
 TODO
 """
+from typing import List
 
 import numpy as np
 
@@ -11,7 +12,6 @@ from api.technique.definitions.sampled.artifacts.technique import (
 )
 from api.technique.definitions.sampled.traces.technique import SampledTracesTechnique
 from api.technique.definitions.transitive.technique import TransitiveTechnique
-from api.technique.parser import itechnique_definition
 from api.technique.parser.data import TechniqueData
 from api.technique.parser.definition_parser import parse_technique_definition
 from api.technique.parser.itechnique import ITechnique
@@ -25,7 +25,7 @@ from api.technique.variationpoints.aggregation.technique_aggregation_calculator 
 )
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
 
-COMBINED_COMMAND_SYMBOL = "o"
+COMBINED_COMMAND_SYMBOL: str = "o"
 
 
 class CombinedTechniqueDefinition(ITechniqueDefinition):
@@ -33,9 +33,9 @@ class CombinedTechniqueDefinition(ITechniqueDefinition):
     TODO
     """
 
-    def __init__(self, parameters: [str], components: [str]):
+    def __init__(self, parameters: List[str], components: List[str]):
         self.technique_aggregation = None
-        self._component_techniques: [itechnique_definition] = []
+        self._component_techniques: List[ITechniqueDefinition] = []
         super().__init__(parameters, components)
 
     def parse(self):
@@ -87,7 +87,7 @@ class CombinedTechniqueDefinition(ITechniqueDefinition):
         """
         return COMBINED_COMMAND_SYMBOL
 
-    def get_component_techniques(self) -> [ITechniqueDefinition]:
+    def get_component_techniques(self) -> List[ITechniqueDefinition]:
         """
         TODO
         :return:

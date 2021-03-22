@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from pandas import DataFrame
 
 from api.constants.paths import PATH_TO_TEST_REQUIREMENTS
@@ -117,10 +119,10 @@ class TestDatasetBuilder(SmartTest):
         )
 
 
-def assert_dataframe_shape_equals(trace_matrix: DataFrame, expected: (int, int)):
+def assert_dataframe_shape_equals(trace_matrix: DataFrame, expected: Tuple[int, int]):
     result = trace_matrix.drop("id", axis=1).values
     assert result.shape == expected, "Expected %s but got %s" % (expected, result)
 
 
-def assert_shapes_equal(result, expected: (int, int)):
+def assert_shapes_equal(result, expected: Tuple[int, int]):
     assert result.shape == expected, "Expected %s but got %s" % (expected, result)
