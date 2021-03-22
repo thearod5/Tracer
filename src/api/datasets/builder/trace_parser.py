@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 from api.datasets.trace_matrix import TraceMatrix
-from api.experiment.file_operations import (
+from api.extension.file_operations import (
     get_non_empty_lines,
     get_index_after_number_with_extension,
 )
@@ -15,11 +15,11 @@ from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
 
 
 def create_trace_matrix_from_path(
-    top_artifacts_ids: pd.Series,
-    top_index: int,
-    bottom_artifacts_ids: pd.Series,
-    bottom_index: int,
-    path_to_trace_list: str,
+        top_artifacts_ids: pd.Series,
+        top_index: int,
+        bottom_artifacts_ids: pd.Series,
+        bottom_index: int,
+        path_to_trace_list: str,
 ) -> TraceMatrix:
     """
     TODO
@@ -121,7 +121,7 @@ def create_matrix_with_values(values, row_labels, column_labels):
 
 
 def create_trace_matrix_values_from_trace_list(
-    top_artifacts_ids: [str], bottom_artifact_ids: [str], trace_list: [(str, str)]
+        top_artifacts_ids: [str], bottom_artifact_ids: [str], trace_list: [(str, str)]
 ) -> SimilarityMatrix:
     """
     Creates a DataFrame with CACHE_COLUMNS as bottom ids and id col containing top ids
@@ -148,7 +148,7 @@ def create_trace_matrix_values_from_trace_list(
 
 
 def get_document_delimiter(
-    trace_file_content: str, return_none_on_fail=False, return_index=False
+        trace_file_content: str, return_none_on_fail=False, return_index=False
 ):
     """
     TODO

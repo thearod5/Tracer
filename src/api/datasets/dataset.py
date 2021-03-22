@@ -9,7 +9,7 @@ import pandas as pd
 
 from api.constants.paths import PATH_TO_DATASETS, PATH_TO_SAMPLE_DATASETS
 from api.datasets.multi_level_artifacts import MultiLevelArtifacts
-from api.experiment.type_checks import to_string
+from api.extension.type_checks import to_string
 
 
 class Dataset:
@@ -105,7 +105,7 @@ def get_path_to_dataset(dataset_name: str) -> str:
     possible_folders = [PATH_TO_DATASETS, PATH_TO_SAMPLE_DATASETS]
     datasets_found: List[str] = []
     for p_folder in possible_folders:
-        if not os.path.isdir(p_folder):
+        if not os.path.isdir(to_string(p_folder)):
             continue
         datasets_found = datasets_found + os.listdir(p_folder)
         if dataset_name in datasets_found:
