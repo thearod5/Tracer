@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>api.metrics package &#8212; Tracer 1 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="api.technique package" href="api.technique.html" />
+    <link rel="prev" title="api.experiment package" href="api.experiment.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="api-metrics-package">
+<h1>api.metrics package<a class="headerlink" href="#api-metrics-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-api.metrics.calculator">
+<span id="api-metrics-calculator-module"></span><h2>api.metrics.calculator module<a class="headerlink" href="#module-api.metrics.calculator" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+<dl class="py function">
+<dt id="api.metrics.calculator.calculate_ap">
+<code class="sig-prename descclassname">api.metrics.calculator.</code><code class="sig-name descname">calculate_ap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y_true</span></em>, <em class="sig-param"><span class="n">y_pred</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.calculator.calculate_ap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the AP scores for given query.
+:param y_true: flattened oracle values
+:param y_pred: flattened predicted values
+:return AP score</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.metrics.calculator.calculate_auc">
+<code class="sig-prename descclassname">api.metrics.calculator.</code><code class="sig-name descname">calculate_auc</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y_true</span></em>, <em class="sig-param"><span class="n">y_pred</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.calculator.calculate_auc" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param y_true:
+:param y_pred:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.metrics.calculator.calculate_lag">
+<code class="sig-prename descclassname">api.metrics.calculator.</code><code class="sig-name descname">calculate_lag</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y_true</span></em>, <em class="sig-param"><span class="n">y_pred</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.calculator.calculate_lag" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param y_true:
+:param y_pred:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.metrics.calculator.calculate_metrics_for_scoring_table">
+<code class="sig-prename descclassname">api.metrics.calculator.</code><code class="sig-name descname">calculate_metrics_for_scoring_table</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scoring_table</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#api.metrics.models.ScoringTable" title="api.metrics.models.ScoringTable">api.metrics.models.ScoringTable</a></span></em>, <em class="sig-param"><span class="n">n_queries</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; [&lt;class ‘api.metrics.models.Metrics’&gt;]<a class="headerlink" href="#api.metrics.calculator.calculate_metrics_for_scoring_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns list of Metrics per query in scoring table
+:param scoring_table: contains flattened list of predicted and oracle values
+:param n_queries: number of queries in scoring table, table length must be divisible by n_queries
+:return: Metrics corresponding 1-1 with query indices in scoring table</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.metrics.calculator.number_of_fp_above_index">
+<code class="sig-prename descclassname">api.metrics.calculator.</code><code class="sig-name descname">number_of_fp_above_index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sorted_y_true</span></em>, <em class="sig-param"><span class="n">index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.calculator.number_of_fp_above_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param sorted_y_true:
+:param index:
+:return:</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-api.metrics.models">
+<span id="api-metrics-models-module"></span><h2>api.metrics.models module<a class="headerlink" href="#module-api.metrics.models" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+<dl class="py class">
+<dt id="api.metrics.models.ITable">
+<em class="property">class </em><code class="sig-prename descclassname">api.metrics.models.</code><code class="sig-name descname">ITable</code><a class="headerlink" href="#api.metrics.models.ITable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>TODO</p>
+<dl class="py method">
+<dt id="api.metrics.models.ITable.export">
+<em class="property">abstract </em><code class="sig-name descname">export</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">export_path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.models.ITable.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param export_path:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.metrics.models.ITable.get_extension">
+<em class="property">abstract </em><code class="sig-name descname">get_extension</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#api.metrics.models.ITable.get_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="api.metrics.models.Metrics">
+<em class="property">class </em><code class="sig-prename descclassname">api.metrics.models.</code><code class="sig-name descname">Metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ap</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">auc</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">lag</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.models.Metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Stores all metrics for some query.
+TODO: Convert to named tuple</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="api.metrics.models.ScoringTable">
+<em class="property">class </em><code class="sig-prename descclassname">api.metrics.models.</code><code class="sig-name descname">ScoringTable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y_pred</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">y_true</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.models.ScoringTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#api.metrics.models.ITable" title="api.metrics.models.ITable"><code class="xref py py-class docutils literal notranslate"><span class="pre">api.metrics.models.ITable</span></code></a></p>
+<p>Data class for storing prediction and oracle values used for evaluation of techniques.</p>
+<dl class="py method">
+<dt id="api.metrics.models.ScoringTable.export">
+<code class="sig-name descname">export</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">export_path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.models.ScoringTable.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param export_path:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.metrics.models.ScoringTable.flatten">
+<code class="sig-name descname">flatten</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#api.metrics.models.ScoringTable.flatten" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.metrics.models.ScoringTable.get_extension">
+<code class="sig-name descname">get_extension</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#api.metrics.models.ScoringTable.get_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="api.metrics.models.Table">
+<em class="property">class </em><code class="sig-prename descclassname">api.metrics.models.</code><code class="sig-name descname">Table</code><a class="headerlink" href="#api.metrics.models.Table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#api.metrics.models.ITable" title="api.metrics.models.ITable"><code class="xref py py-class docutils literal notranslate"><span class="pre">api.metrics.models.ITable</span></code></a></p>
+<p>Wrapper class encapsulating common operations on data frames.
+TODO: move this into its own file</p>
+<dl class="py method">
+<dt id="api.metrics.models.Table.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entries</span></em>, <em class="sig-param"><span class="n">other</span><span class="p">:</span> <span class="n">dict</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">create_index</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">index_name</span><span class="o">=</span><span class="default_value">'query_index'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.models.Table.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts given entries to dictionary values and appends dictionary in other before
+adding to the table.
+:param entries: list of objects each representing an entry
+:param other: key-value pairs that are appended to each entry in entries
+:param create_index: adds a columns specifying the index of each metric in given list
+:param index_name: the name of column that will hold the index
+:return: objects is modified None is returned</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.metrics.models.Table.export">
+<code class="sig-name descname">export</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">export_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.models.Table.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param export_path:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.metrics.models.Table.format_table">
+<code class="sig-name descname">format_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.models.Table.format_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.metrics.models.Table.get_extension">
+<code class="sig-name descname">get_extension</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#api.metrics.models.Table.get_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.metrics.models.Table.melt_metrics">
+<code class="sig-name descname">melt_metrics</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.models.Table.melt_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.metrics.models.Table.scale_col">
+<code class="sig-name descname">scale_col</code><span class="sig-paren">(</span><em class="sig-param">col_name: str, group_by_cols: [&lt;class 'str'&gt;], new_col_name=None, drop_old=False, inverted=False</em><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.models.Table.scale_col" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs min-max scaling on given column name, renames new values to scaled_col_name.
+If none is given appends <cite>normalized</cite> to metric_name
+:param col_name: the name of the metric in the table to scale
+:param group_by_cols: list of col name to group by before scaling
+:param new_col_name: name of the column containing scaled values
+:param drop_old: if true removes the column without the scaled numbers
+:param inverted: metrics scores will be inverted so that new_score = 1 - old_score
+:return: None - MetricTable is modified
+TODO: Separate into multiple functionality and remove linting bypass</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="api.metrics.models.Table.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#api.metrics.models.ITable" title="api.metrics.models.ITable">api.metrics.models.ITable</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.models.Table.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param table:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.metrics.models.format_data">
+<code class="sig-prename descclassname">api.metrics.models.</code><code class="sig-name descname">format_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">pandas.DataFrame</span></em>, <em class="sig-param"><span class="n">for_presentation</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.metrics.models.format_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param data:
+:param for_presentation:
+:return:</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-api.metrics">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-api.metrics" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Tracer</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">api package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="api.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="api.constants.html">api.constants package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.datasets.html">api.datasets package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.experiment.html">api.experiment package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">api.metrics package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-api.metrics.calculator">api.metrics.calculator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-api.metrics.models">api.metrics.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-api.metrics">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api.technique.html">api.technique package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#api-tracer-module">api.tracer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-api">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="api.html">api package</a><ul>
+      <li>Previous: <a href="api.experiment.html" title="previous chapter">api.experiment package</a></li>
+      <li>Next: <a href="api.technique.html" title="next chapter">api.technique package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Alberto Rodriguez.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/api.metrics.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

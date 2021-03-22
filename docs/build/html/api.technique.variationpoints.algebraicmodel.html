@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>api.technique.variationpoints.algebraicmodel package &#8212; Tracer 1 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="api.technique.variationpoints.scalers package" href="api.technique.variationpoints.scalers.html" />
+    <link rel="prev" title="api.technique.variationpoints.aggregation package" href="api.technique.variationpoints.aggregation.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="api-technique-variationpoints-algebraicmodel-package">
+<h1>api.technique.variationpoints.algebraicmodel package<a class="headerlink" href="#api-technique-variationpoints-algebraicmodel-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix">
+<span id="api-technique-variationpoints-algebraicmodel-calculate-similarity-matrix-module"></span><h2>api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix module<a class="headerlink" href="#module-api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+<hr class="docutils" />
+<p>A DistanceMatrix is a</p>
+<p>multi-dimensional matrix containing similarity scores calculated
+via cosine_similarity.</p>
+<hr class="docutils" />
+<p>A TermFrequencyMatrix is a</p>
+<p>multi-dimensional matrix containing as rows a set of
+textual documents and as CACHE_COLUMNS each word appearing in the aggregate vocabulary of
+the documents. Each entry in the matrix is a number meant to represent how much
+“weight” a given column (word) has in each row (text doc).</p>
+<dl class="py function">
+<dt id="api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix.calculate_lsa_similarity_matrix">
+<code class="sig-prename descclassname">api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix.</code><code class="sig-name descname">calculate_lsa_similarity_matrix</code><span class="sig-paren">(</span><em class="sig-param">raw_a, raw_b) -&gt; (typing.Union[scipy.sparse.csr_matrix, numpy.ndarray], &lt;class 'dict'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix.calculate_lsa_similarity_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a Distance Matrix (calc. via cosine-similarity)
+where the given matrix is first reduced via lsa.</p>
+<p>Note, the resulting dimensions of the singular value decomposition is (a, a) where
+a = min(number of documents, number components, number of features). In our case,
+requirements + designs normally will not satisfy 100 records. In means that our
+number of resulting components varying between the upper and lower technique_matrices.</p>
+<p>:param raw_a {Listof String} - Represents the rows of the matrix
+:param raw_b {Listof String} - Represents the cols of the matrix
+:return {Experiment.Technique.AlgebraicModel} From every doc in A to B</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix.calculate_similarity_matrix">
+<code class="sig-prename descclassname">api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix.</code><code class="sig-name descname">calculate_similarity_matrix</code><span class="sig-paren">(</span><em class="sig-param">raw_a, raw_b) -&gt; (typing.Union[scipy.sparse.csr_matrix, numpy.ndarray], &lt;class 'dict'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix.calculate_similarity_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates DistanceMatrix by transforming given documents into
+term frequency technique_matrices (weighted via TF-IDF).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raw_a</strong> – {Listof String} - docs representing the rows of the matrix</p></li>
+<li><p><strong>raw_b</strong> – {Listof String} - docs representing the CACHE_COLUMNS of the matrix</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>{DistanceMatrix} From A to B</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix.calculate_similarity_matrix_for_nlp_technique">
+<code class="sig-prename descclassname">api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix.</code><code class="sig-name descname">calculate_similarity_matrix_for_nlp_technique</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">nlp_type</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#api.technique.variationpoints.algebraicmodel.models.AlgebraicModel" title="api.technique.variationpoints.algebraicmodel.models.AlgebraicModel">api.technique.variationpoints.algebraicmodel.models.AlgebraicModel</a></span></em>, <em class="sig-param"><span class="n">upper_level</span><span class="p">:</span> <span class="n">pandas.DataFrame</span></em>, <em class="sig-param"><span class="n">lower_level</span><span class="p">:</span> <span class="n">pandas.DataFrame</span></em>, <em class="sig-param"><span class="n">return_vocab</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>scipy.sparse.csr_matrix<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="headerlink" href="#api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix.calculate_similarity_matrix_for_nlp_technique" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param nlp_type:
+:param upper_level:
+:param lower_level:
+:param return_vocab:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix.calculate_similarity_matrix_from_term_frequencies">
+<code class="sig-prename descclassname">api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix.</code><code class="sig-name descname">calculate_similarity_matrix_from_term_frequencies</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tf_a</span><span class="p">:</span> <span class="n">scipy.sparse.csr_matrix</span></em>, <em class="sig-param"><span class="n">tf_b</span><span class="p">:</span> <span class="n">scipy.sparse.csr_matrix</span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>scipy.sparse.csr_matrix<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="headerlink" href="#api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix.calculate_similarity_matrix_from_term_frequencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param tf_a:
+:param tf_b:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix.create_term_frequency_matrix">
+<code class="sig-prename descclassname">api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix.</code><code class="sig-name descname">create_term_frequency_matrix</code><span class="sig-paren">(</span><em class="sig-param">raw_a: pandas.Series</em>, <em class="sig-param">raw_b: pandas.Series</em>, <em class="sig-param">vectorizer=sklearn.feature_extraction.text.TfidfVectorizer) -&gt; (scipy.sparse.csr_matrix</em>, <em class="sig-param">scipy.sparse.csr_matrix</em>, <em class="sig-param">&lt;class 'dict'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix.create_term_frequency_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates 2 TermFrequencyMatrices (one for A another for B) where the weight of
+each (row, col) pair is calculated via TF-IDF
+:param vectorizer: vectorizer for assigning weights to words, must be one of sklearn.text.extraction
+:param raw_a : The documents whose matrix is the first element
+:param raw_b : The documents whose matrix is the second element
+:return: CountMatrix for raw_a and raw_b, and also the vocabulary used</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-api.technique.variationpoints.algebraicmodel.models">
+<span id="api-technique-variationpoints-algebraicmodel-models-module"></span><h2>api.technique.variationpoints.algebraicmodel.models module<a class="headerlink" href="#module-api.technique.variationpoints.algebraicmodel.models" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+<dl class="py class">
+<dt id="api.technique.variationpoints.algebraicmodel.models.AlgebraicModel">
+<em class="property">class </em><code class="sig-prename descclassname">api.technique.variationpoints.algebraicmodel.models.</code><code class="sig-name descname">AlgebraicModel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.variationpoints.algebraicmodel.models.AlgebraicModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>TODO: Docs</p>
+<dl class="py attribute">
+<dt id="api.technique.variationpoints.algebraicmodel.models.AlgebraicModel.LSI">
+<code class="sig-name descname">LSI</code><em class="property"> = 'LSI'</em><a class="headerlink" href="#api.technique.variationpoints.algebraicmodel.models.AlgebraicModel.LSI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="api.technique.variationpoints.algebraicmodel.models.AlgebraicModel.VSM">
+<code class="sig-name descname">VSM</code><em class="property"> = 'VSM'</em><a class="headerlink" href="#api.technique.variationpoints.algebraicmodel.models.AlgebraicModel.VSM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="api.technique.variationpoints.algebraicmodel.models.SimilarityMatrices">
+<em class="property">class </em><code class="sig-prename descclassname">api.technique.variationpoints.algebraicmodel.models.</code><code class="sig-name descname">SimilarityMatrices</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">upper</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>scipy.sparse.csr_matrix<span class="p">, </span>numpy.ndarray<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">lower</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>scipy.sparse.csr_matrix<span class="p">, </span>numpy.ndarray<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.variationpoints.algebraicmodel.models.SimilarityMatrices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A set of technique_matrices for a dataset containing 1 is two datasets have been traced
+TODO: Add public method</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-api.technique.variationpoints.algebraicmodel">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-api.technique.variationpoints.algebraicmodel" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Tracer</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">api package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="api.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="api.constants.html">api.constants package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.datasets.html">api.datasets package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.experiment.html">api.experiment package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.metrics.html">api.metrics package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="api.technique.html">api.technique package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="api.technique.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.technique.html#module-api.technique">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#api-tracer-module">api.tracer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-api">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="api.html">api package</a><ul>
+  <li><a href="api.technique.html">api.technique package</a><ul>
+  <li><a href="api.technique.variationpoints.html">api.technique.variationpoints package</a><ul>
+      <li>Previous: <a href="api.technique.variationpoints.aggregation.html" title="previous chapter">api.technique.variationpoints.aggregation package</a></li>
+      <li>Next: <a href="api.technique.variationpoints.scalers.html" title="next chapter">api.technique.variationpoints.scalers package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Alberto Rodriguez.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/api.technique.variationpoints.algebraicmodel.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

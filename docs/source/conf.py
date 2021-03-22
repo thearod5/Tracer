@@ -67,5 +67,5 @@ with open(os.path.join("..", "..", "requirements.txt")) as requirements_file:
         delimiters_indices = list(filter(lambda index: index > -1,
                                          [r_line.find("="), r_line.find(">"), r_line.find("<")]))
         default_imports.append(r_line[:min(delimiters_indices)])
-autodoc_mock_imports = default_imports
+autodoc_mock_imports = default_imports + ['dotenv']
 sys.path.append(os.path.abspath(os.path.join("..", "..", "src")))

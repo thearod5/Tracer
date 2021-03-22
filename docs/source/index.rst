@@ -1,7 +1,6 @@
 Welcome to Tracer's documentation!
 ==================================
-.. automodule:: api.metrics.models
-    :members:
+.. include:: modules.rst
 
 .. toctree::
    :maxdepth: 2

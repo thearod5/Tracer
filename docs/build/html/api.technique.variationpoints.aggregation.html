@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>api.technique.variationpoints.aggregation package &#8212; Tracer 1 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="api.technique.variationpoints.algebraicmodel package" href="api.technique.variationpoints.algebraicmodel.html" />
+    <link rel="prev" title="api.technique.variationpoints package" href="api.technique.variationpoints.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="api-technique-variationpoints-aggregation-package">
+<h1>api.technique.variationpoints.aggregation package<a class="headerlink" href="#api-technique-variationpoints-aggregation-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-api.technique.variationpoints.aggregation.aggregation_functions">
+<span id="api-technique-variationpoints-aggregation-aggregation-functions-module"></span><h2>api.technique.variationpoints.aggregation.aggregation_functions module<a class="headerlink" href="#module-api.technique.variationpoints.aggregation.aggregation_functions" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+</div>
+<div class="section" id="module-api.technique.variationpoints.aggregation.aggregation_method">
+<span id="api-technique-variationpoints-aggregation-aggregation-method-module"></span><h2>api.technique.variationpoints.aggregation.aggregation_method module<a class="headerlink" href="#module-api.technique.variationpoints.aggregation.aggregation_method" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+<dl class="py class">
+<dt id="api.technique.variationpoints.aggregation.aggregation_method.AggregationMethod">
+<em class="property">class </em><code class="sig-prename descclassname">api.technique.variationpoints.aggregation.aggregation_method.</code><code class="sig-name descname">AggregationMethod</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.variationpoints.aggregation.aggregation_method.AggregationMethod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>The methods in which a series of numbers is combined into one.</p>
+<p>There are two scenarios in which this step is necessary:
+1. Aggregating transitive relation scores between a source and target artifacts into a single score
+2. Aggregation two (or more) techniques into a single technique represented as a similarity matrix.</p>
+<dl class="py attribute">
+<dt id="api.technique.variationpoints.aggregation.aggregation_method.AggregationMethod.MAX">
+<code class="sig-name descname">MAX</code><em class="property"> = 'MAX'</em><a class="headerlink" href="#api.technique.variationpoints.aggregation.aggregation_method.AggregationMethod.MAX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="api.technique.variationpoints.aggregation.aggregation_method.AggregationMethod.PCA">
+<code class="sig-name descname">PCA</code><em class="property"> = 'PCA'</em><a class="headerlink" href="#api.technique.variationpoints.aggregation.aggregation_method.AggregationMethod.PCA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="api.technique.variationpoints.aggregation.aggregation_method.AggregationMethod.SUM">
+<code class="sig-name descname">SUM</code><em class="property"> = 'SUM'</em><a class="headerlink" href="#api.technique.variationpoints.aggregation.aggregation_method.AggregationMethod.SUM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-api.technique.variationpoints.aggregation.pca_aggregation">
+<span id="api-technique-variationpoints-aggregation-pca-aggregation-module"></span><h2>api.technique.variationpoints.aggregation.pca_aggregation module<a class="headerlink" href="#module-api.technique.variationpoints.aggregation.pca_aggregation" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+<dl class="py function">
+<dt id="api.technique.variationpoints.aggregation.pca_aggregation.aggregate_pca">
+<code class="sig-prename descclassname">api.technique.variationpoints.aggregation.pca_aggregation.</code><code class="sig-name descname">aggregate_pca</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x_test</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#api.technique.variationpoints.aggregation.pca_aggregation.aggregate_pca" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the predictions on x_test after training on x_train and y_train.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.technique.variationpoints.aggregation.pca_aggregation.get_weights">
+<code class="sig-prename descclassname">api.technique.variationpoints.aggregation.pca_aggregation.</code><code class="sig-name descname">get_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">matrix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.variationpoints.aggregation.pca_aggregation.get_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a matrix containing artifact combinations as rows and techniques as CACHE_COLUMNS,
+Returns the weight of each technique.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-api.technique.variationpoints.aggregation.technique_aggregation_calculator">
+<span id="api-technique-variationpoints-aggregation-technique-aggregation-calculator-module"></span><h2>api.technique.variationpoints.aggregation.technique_aggregation_calculator module<a class="headerlink" href="#module-api.technique.variationpoints.aggregation.technique_aggregation_calculator" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+<dl class="py function">
+<dt id="api.technique.variationpoints.aggregation.technique_aggregation_calculator.aggregate_techniques">
+<code class="sig-prename descclassname">api.technique.variationpoints.aggregation.technique_aggregation_calculator.</code><code class="sig-name descname">aggregate_techniques</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">technique_similarity_matrices</span><span class="p">:</span> <span class="n"><span class="p">[</span>typing.Union<span class="p">[</span>scipy.sparse.csr_matrix<span class="p">, </span>numpy.ndarray<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">aggregation_method</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#api.technique.variationpoints.aggregation.aggregation_method.AggregationMethod" title="api.technique.variationpoints.aggregation.aggregation_method.AggregationMethod">api.technique.variationpoints.aggregation.aggregation_method.AggregationMethod</a></span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>scipy.sparse.csr_matrix<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="headerlink" href="#api.technique.variationpoints.aggregation.technique_aggregation_calculator.aggregate_techniques" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs an element-wise aggregation on similarity technique_matrices (representing techniques) with given method
+:param technique_similarity_matrices: all the similarity technique_matrices assumed to be of same shape
+:param aggregation_method: the element-wise operations
+:return: similarity matrix of the same shape all the ones given after being aggregated</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-api.technique.variationpoints.aggregation.transitive_path_aggregation">
+<span id="api-technique-variationpoints-aggregation-transitive-path-aggregation-module"></span><h2>api.technique.variationpoints.aggregation.transitive_path_aggregation module<a class="headerlink" href="#module-api.technique.variationpoints.aggregation.transitive_path_aggregation" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+<dl class="py function">
+<dt id="api.technique.variationpoints.aggregation.transitive_path_aggregation.aggregate_similarity_matrices_with_arithmetic_aggregator">
+<code class="sig-prename descclassname">api.technique.variationpoints.aggregation.transitive_path_aggregation.</code><code class="sig-name descname">aggregate_similarity_matrices_with_arithmetic_aggregator</code><span class="sig-paren">(</span><em class="sig-param">similarity_matrices: &lt;module 'api.technique.variationpoints.algebraicmodel.models' from '/Users/albertorodriguez/Projects/Tracer/src/api/technique/variationpoints/algebraicmodel/models.py'&gt;</em>, <em class="sig-param">indirect_aggregation_type: api.technique.variationpoints.aggregation.aggregation_method.AggregationMethod</em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.variationpoints.aggregation.transitive_path_aggregation.aggregate_similarity_matrices_with_arithmetic_aggregator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a single Experiment.Technique.AlgebraicModel containing the aggregated similarity score between every
+top level artifact to the bottom level.
+: similarity_matrices - The set of technique_matrices to aggregate
+: indirect_aggregation_type - How to aggregate the technique_matrices
+: training_data - The technique_data to train Random Forest, if the aggregation type is set to do so</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.technique.variationpoints.aggregation.transitive_path_aggregation.apply_transitive_aggregation">
+<code class="sig-prename descclassname">api.technique.variationpoints.aggregation.transitive_path_aggregation.</code><code class="sig-name descname">apply_transitive_aggregation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">similarity_matrices</span></em>, <em class="sig-param"><span class="n">transitive_path_aggregation</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#api.technique.variationpoints.aggregation.aggregation_method.AggregationMethod" title="api.technique.variationpoints.aggregation.aggregation_method.AggregationMethod">api.technique.variationpoints.aggregation.aggregation_method.AggregationMethod</a></span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>scipy.sparse.csr_matrix<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="headerlink" href="#api.technique.variationpoints.aggregation.transitive_path_aggregation.apply_transitive_aggregation" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param similarity_matrices:
+:param transitive_path_aggregation:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.technique.variationpoints.aggregation.transitive_path_aggregation.create_transitive_aggregation_training_data">
+<code class="sig-prename descclassname">api.technique.variationpoints.aggregation.transitive_path_aggregation.</code><code class="sig-name descname">create_transitive_aggregation_training_data</code><span class="sig-paren">(</span><em class="sig-param">similarity_matrices: &lt;module 'api.technique.variationpoints.algebraicmodel.models' from '/Users/albertorodriguez/Projects/Tracer/src/api/technique/variationpoints/algebraicmodel/models.py'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.variationpoints.aggregation.transitive_path_aggregation.create_transitive_aggregation_training_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a matrix of the n_top similarities r_c_indirect_scores between a requirement and a class.
+Shape = (n_requirements x n_classes, 10)
+:param: upper {Experiment.Technique.AlgebraicModel} - Requirements x Designs
+:param: lower {Experiment.Technique.AlgebraicModel} - Designs x Classes
+&#64;return {DistanceMatrix} Requirements as rows and Classes as cols</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="api.technique.variationpoints.aggregation.transitive_path_aggregation.dot_product_with_aggregation">
+<code class="sig-prename descclassname">api.technique.variationpoints.aggregation.transitive_path_aggregation.</code><code class="sig-name descname">dot_product_with_aggregation</code><span class="sig-paren">(</span><em class="sig-param">similarity_matrices: &lt;module 'api.technique.variationpoints.algebraicmodel.models' from '/Users/albertorodriguez/Projects/Tracer/src/api/technique/variationpoints/algebraicmodel/models.py'&gt;</em>, <em class="sig-param">aggregation_function</em><span class="sig-paren">)</span><a class="headerlink" href="#api.technique.variationpoints.aggregation.transitive_path_aggregation.dot_product_with_aggregation" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param similarity_matrices:
+:param aggregation_function:
+:return:</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-api.technique.variationpoints.aggregation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-api.technique.variationpoints.aggregation" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Tracer</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">api package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="api.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="api.constants.html">api.constants package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.datasets.html">api.datasets package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.experiment.html">api.experiment package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.metrics.html">api.metrics package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="api.technique.html">api.technique package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="api.technique.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.technique.html#module-api.technique">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#api-tracer-module">api.tracer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-api">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="api.html">api package</a><ul>
+  <li><a href="api.technique.html">api.technique package</a><ul>
+  <li><a href="api.technique.variationpoints.html">api.technique.variationpoints package</a><ul>
+      <li>Previous: <a href="api.technique.variationpoints.html" title="previous chapter">api.technique.variationpoints package</a></li>
+      <li>Next: <a href="api.technique.variationpoints.algebraicmodel.html" title="next chapter">api.technique.variationpoints.algebraicmodel package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Alberto Rodriguez.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/api.technique.variationpoints.aggregation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
