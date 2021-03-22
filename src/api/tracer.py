@@ -1,6 +1,8 @@
 """
 TODO
 """
+from typing import List
+
 from api.datasets.dataset import Dataset
 from api.metrics.calculator import calculate_metrics_for_scoring_table
 from api.metrics.models import Metrics
@@ -45,7 +47,7 @@ class Tracer:
 
     def get_metrics(
         self, dataset_name: str, technique_name: str, summary_metrics=True
-    ) -> [Metrics]:
+    ) -> List[Metrics]:
         """
         Returns list of metrics of technique per query in dataset.
         :param dataset_name: name of dataset

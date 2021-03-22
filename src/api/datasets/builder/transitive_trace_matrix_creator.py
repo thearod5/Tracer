@@ -7,7 +7,7 @@ A TraceId is a string in the form of [artifact_a_index]-[artifact_b_index]
 A TracePathMap is a dict mapping from TraceIds to a list of integers representing
 the nodes indices for a certain path
 """
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 from igraph import Graph
 
@@ -39,7 +39,7 @@ TraceId2GraphPathsMap = Dict[str, List[GraphPath]]
 
 def create_trace_matrix_map(
     structure_file: dict, levels: [ArtifactLevel]
-) -> (TraceId2TraceMatrixMap, Graph):
+) -> Tuple[TraceId2TraceMatrixMap, Graph]:
     """
     For every combination of nodes verifies or creates path between
     each node to create a complete graph.
@@ -80,7 +80,7 @@ def create_trace_matrix_map(
 def create_trace_matrix_map_from_graph_path_map(
     graph_paths_map: TraceId2GraphPathsMap,
     trace_matrix_map: TraceId2TraceMatrixMap,
-    levels: [ArtifactLevel],
+    levels: List[ArtifactLevel],
 ) -> TraceId2TraceMatrixMap:
     """
     TODO
@@ -137,7 +137,7 @@ def create_similarity_matrix_map_for_graph_paths(
     return result_matrices
 
 
-def create_trace_matrix_graph(trace_matrix_keys: [str], n_levels: int) -> Graph:
+def create_trace_matrix_graph(trace_matrix_keys: List[str], n_levels: int) -> Graph:
     """
     Creates a dependency graph between artifacts layers using trace technique_matrices as edges
     :param n_levels: The number of artifact levels in the dataset, used to define the number of nodes
@@ -154,7 +154,7 @@ def create_trace_matrix_graph(trace_matrix_keys: [str], n_levels: int) -> Graph:
 
 
 def normalize_original_matrices(
-    trace_matrix_map: TraceId2TraceMatrixMap, graph: Graph, levels: [ArtifactLevel]
+    trace_matrix_map: TraceId2TraceMatrixMap, graph: Graph, levels: List[ArtifactLevel]
 ) -> TraceId2TraceMatrixMap:
     """
     returns the trace matrix with all transitive and direct graph_paths.
@@ -176,7 +176,7 @@ def normalize_original_matrices(
 
 
 def get_graph_paths_map_to_missing_paths(
-    trace_ids: [str], dependency_graph: Graph, n_levels: int
+    trace_ids: List[str], dependency_graph: Graph, n_levels: int
 ) -> TraceId2GraphPathsMap:
     """
     For every combination of nodes verifies or creates path between
@@ -186,7 +186,7 @@ def get_graph_paths_map_to_missing_paths(
     :param dependency_graph: the graph modeling trace dependancies
     :return: TODO
     """
-    missing_paths = {}
+    missing_paths: TraceId2GraphPathsMap = {}
     for a_index in range(n_levels):
         for b_index in range(n_levels):
             trace_id = "%d-%d" % (a_index, b_index)
@@ -207,7 +207,7 @@ def get_graph_paths_map_to_missing_paths(
 
 def get_transitive_matrices_in_path(
     trace_matrix_map: TraceId2TraceMatrixMap, transitive_path: GraphPath
-) -> [SimilarityMatrix]:
+) -> List[SimilarityMatrix]:
     """
     TODO
     :param trace_matrix_map:
@@ -227,7 +227,7 @@ def get_transitive_matrices_in_path(
 
 
 def create_trace_id_2_trace_matrix_map_from_definition(
-    structure_file: dict, levels: [ArtifactLevel]
+    structure_file: dict, levels: List[ArtifactLevel]
 ) -> TraceId2TraceMatrixMap:
     """
     For each non-empty path_to_trace_matrix in structure file,
@@ -258,7 +258,7 @@ def get_similarity_matrix_in_trace_matrix_map(
     :param trace_id:
     :return:
     """
-    index = id_exists_in_traces(trace_matrix_map.keys(), trace_id)
+    index = id_exists_in_traces(list(trace_matrix_map.keys()), trace_id)
     if index == 1:
         return trace_matrix_map[trace_id].matrix
     if index == -1:
@@ -267,7 +267,7 @@ def get_similarity_matrix_in_trace_matrix_map(
 
 
 def contains_trace_id(
-    traces: [str],
+    traces: List[str],
     trace_id: str,
 ):
     """
@@ -281,7 +281,7 @@ def contains_trace_id(
 
 
 def id_exists_in_traces(
-    traces: [str],
+    traces: List[str],
     trace_id: str,
 ):
     """
@@ -319,7 +319,7 @@ def parse_trace_id(trace_id: str):
 
 
 # Retrieved from: https://stackoverflow.com/questions/29320556/finding-longest-path-in-a-graph
-def find_all_paths(graph, start, end, mode="OUT", maxlen=None) -> [GraphPath]:
+def find_all_paths(graph, start, end, mode="OUT", maxlen=None) -> List[GraphPath]:
     """
     TODO
     :param graph:
@@ -330,14 +330,14 @@ def find_all_paths(graph, start, end, mode="OUT", maxlen=None) -> [GraphPath]:
     :return:
     """
 
-    def find_all_paths_aux(adjlist, start, end, path, maxlen=None):
+    def find_all_paths_aux(adj_list, start, end, path, maxlen=None):
         path = path + [start]
         if start == end:
             return [path]
         paths = []
         if maxlen is None or len(path) <= maxlen:
-            for node in adjlist[start] - set(path):
-                paths.extend(find_all_paths_aux(adjlist, node, end, path, maxlen))
+            for node in adj_list[start] - set(path):
+                paths.extend(find_all_paths_aux(adj_list, node, end, path, maxlen))
         return paths
 
     adj_list = [set(graph.neighbors(node, mode=mode)) for node in range(graph.vcount())]

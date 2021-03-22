@@ -1,10 +1,10 @@
-type_hint:
-	env/bin/mypy src/ tests/
+type-hint:
+	env/bin/mypy src/
 test:
 	env/bin/nosetests tests
 lint:
 	env/bin/pylint src/api
-checklist:
-	lint typehint test
 format:
 	env/bin/black src/**/*.py
+checklist:
+	format lint typehint test

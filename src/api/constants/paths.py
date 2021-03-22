@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 ENV_PATH = os.path.join(Path(__file__).parent.absolute(), "..", "..", "..", ".env")
 assert os.path.isfile(ENV_PATH), "Make sure .env file is configured"
 load_dotenv(dotenv_path=ENV_PATH)
+
 PATH_TO_ROOT = os.environ.get("PATH_TO_ROOT")
 
 NOTRACES_ID = "notraces"
