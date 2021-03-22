@@ -15,6 +15,7 @@ class AlgebraicModel(Enum):
     """
     TODO: Docs
     """
+
     LSI = "LSI"
     VSM = "VSM"
 

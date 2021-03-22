@@ -19,7 +19,8 @@ class Dataset:
         self.name = dataset_name
         self.artifacts = MultiLevelArtifacts(dataset_name)  # implements D3
         self.relations: Relations = pd.read_csv(
-            os.path.join(PATH_TO_DATASETS, dataset_name, "Oracles", "Relations.csv"))
+            os.path.join(PATH_TO_DATASETS, dataset_name, "Oracles", "Relations.csv")
+        )
         self.traced_matrices = {}
         self.path_to_dataset = os.path.join(PATH_TO_ROOT, dataset_name)
         self.load_trace_matrices()
@@ -31,8 +32,12 @@ class Dataset:
         TODO
         :return:
         """
-        path_to_traced_matrices = os.path.join(PATH_TO_DATASETS, self.name, "Oracles", "TracedMatrices")
-        trace_matrix_file_names = list(filter(lambda f: f[0] != ".", os.listdir(path_to_traced_matrices)))
+        path_to_traced_matrices = os.path.join(
+            PATH_TO_DATASETS, self.name, "Oracles", "TracedMatrices"
+        )
+        trace_matrix_file_names = list(
+            filter(lambda f: f[0] != ".", os.listdir(path_to_traced_matrices))
+        )
         for file_name in trace_matrix_file_names:
             trace_id = file_name[:-4]
             path = os.path.join(path_to_traced_matrices, file_name)
@@ -54,7 +59,9 @@ class Dataset:
 
         assert n_top_level == len(self.relations)
         assert n_bottom_level == n_relation_bottom_level, "Expected %d saw %d" % (
-            n_bottom_level, n_relation_bottom_level)
+            n_bottom_level,
+            n_relation_bottom_level,
+        )
         assert n_top_level == upper_shape[0]
         assert n_middle_level == upper_shape[1]
         assert n_middle_level == lower_shape[0]

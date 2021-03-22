@@ -33,7 +33,11 @@ def load_previous_caches(path_to_data: str) -> pd.DataFrame:
         file_parts = file_name.split("_")
         dataset = file_parts[0]
         technique_name = "_".join(file_parts[1:])[:-4]  # removes .npy
-        entry = {"dataset": dataset, "technique": technique_name, "file_name": path_to_file}
+        entry = {
+            "dataset": dataset,
+            "technique": technique_name,
+            "file_name": path_to_file,
+        }
         previous_caches_df = previous_caches_df.append(entry, ignore_index=True)
     return previous_caches_df
 
@@ -50,6 +54,7 @@ class Cache:
         calculation.
 
     """
+
     CACHE_ON = DEFAULT_IS_CACHE_ENABLED
     path_to_memory = PATH_TO_CACHE_TEMP
     stored_similarities_df = load_previous_caches(path_to_memory)
@@ -71,8 +76,10 @@ class Cache:
         :return: DataFrame
         """
         assert Cache.CACHE_ON
-        return Cache.stored_similarities_df[(Cache.stored_similarities_df["dataset"] == dataset.name) &
-                                            (Cache.stored_similarities_df["technique"] == technique.get_name())]
+        return Cache.stored_similarities_df[
+            (Cache.stored_similarities_df["dataset"] == dataset.name)
+            & (Cache.stored_similarities_df["technique"] == technique.get_name())
+        ]
 
     @staticmethod
     def is_cached(dataset: Dataset, technique: ITechniqueDefinition):
@@ -88,7 +95,11 @@ class Cache:
         return len(query) == 1
 
     @staticmethod
-    def store_similarities(dataset: Dataset, technique: ITechniqueDefinition, similarity_matrix: SimilarityMatrix):
+    def store_similarities(
+        dataset: Dataset,
+        technique: ITechniqueDefinition,
+        similarity_matrix: SimilarityMatrix,
+    ):
         """
         Stored similarities in cache if never seen, updates cache otherwise
         :param dataset: The dataset the technique was applied to to get given similarity table
@@ -103,19 +114,29 @@ class Cache:
         export_path = os.path.join(Cache.path_to_memory, file_name) + ".npy"
         np.save(export_path, similarity_matrix)
 
-        entry = {"dataset": dataset.name, "technique": technique.get_name(), "file_name": export_path}
+        entry = {
+            "dataset": dataset.name,
+            "technique": technique.get_name(),
+            "file_name": export_path,
+        }
         if not Cache.is_cached(dataset, technique):
-            Cache.stored_similarities_df = Cache.stored_similarities_df.append(entry, ignore_index=True)
+            Cache.stored_similarities_df = Cache.stored_similarities_df.append(
+                entry, ignore_index=True
+            )
 
     @staticmethod
-    def get_similarities(dataset: Dataset, technique: ITechniqueDefinition) -> SimilarityMatrix:
+    def get_similarities(
+        dataset: Dataset, technique: ITechniqueDefinition
+    ) -> SimilarityMatrix:
         """
         Returns similarity matrix for given technique on given Dataset
         :param dataset: dataset whose artifacts to compare
         :param technique: definition describing how to produce the similarity values
         :return: numpy.ndarray containing similarity values
         """
-        assert Cache.is_cached(dataset, technique), "given technique has not been cached: %s" % technique.get_name()
+        assert Cache.is_cached(dataset, technique), (
+            "given technique has not been cached: %s" % technique.get_name()
+        )
         assert Cache.CACHE_ON
         query = Cache.query(dataset, technique)
         file_name = query.iloc[0]["file_name"]
@@ -138,4 +159,5 @@ class Cache:
                     os.remove(file_name)
 
         Cache.stored_similarities_df = Cache.stored_similarities_df[
-            (Cache.stored_similarities_df["dataset"] != dataset_name)]
+            (Cache.stored_similarities_df["dataset"] != dataset_name)
+        ]

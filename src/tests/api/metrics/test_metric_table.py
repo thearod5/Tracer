@@ -5,9 +5,15 @@ import pandas as pd
 from sklearn.metrics import average_precision_score
 
 from api.datasets.dataset import Dataset
-from api.metrics.calculator import calculate_auc, calculate_lag, calculate_metrics_for_scoring_table
+from api.metrics.calculator import (
+    calculate_auc,
+    calculate_lag,
+    calculate_metrics_for_scoring_table,
+)
 from api.metrics.models import Table, ScoringTable
-from api.technique.definitions.transitive.definition import TransitiveTechniqueDefinition
+from api.technique.definitions.transitive.definition import (
+    TransitiveTechniqueDefinition,
+)
 from tests.res.smart_test import SmartTest
 
 
@@ -16,7 +22,9 @@ class TestMetricTable(SmartTest):
     component_a = [".", ["VSM", "NT"], [0, 1]]
     component_b = [".", ["VSM", "NT"], [1, 2]]
 
-    technique = TransitiveTechniqueDefinition(["SUM", "GLOBAL"], [component_a, component_b])
+    technique = TransitiveTechniqueDefinition(
+        ["SUM", "GLOBAL"], [component_a, component_b]
+    )
 
     d_name = "MockDataset"
     dataset = Dataset(d_name)
@@ -44,7 +52,7 @@ class TestMetricTable(SmartTest):
         scoring_table = ScoringTable(self.values[:, 0], self.values[:, 1])
         metrics = calculate_metrics_for_scoring_table(scoring_table, self.n_queries)
 
-        test_file_name = 'test.csv'
+        test_file_name = "test.csv"
         export_path = os.path.join(self.export_path, test_file_name)
         if os.path.exists(export_path):
             os.remove(export_path)
@@ -64,7 +72,9 @@ class TestMetricTable(SmartTest):
 
     def test_metrics(self):
         scoring_table = ScoringTable(self.values[:, 0], self.values[:, 1])
-        query_metrics = calculate_metrics_for_scoring_table(scoring_table, self.n_queries)
+        query_metrics = calculate_metrics_for_scoring_table(
+            scoring_table, self.n_queries
+        )
         mt = query_metrics[0]
         self.assertEqual(self.expected_lag, mt.lag, "lag")
         self.assertEqual(self.expected_map, mt.ap, "map")

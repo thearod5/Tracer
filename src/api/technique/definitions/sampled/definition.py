@@ -1,7 +1,9 @@
 """
 TODO
 """
-from api.technique.definitions.transitive.definition import TransitiveTechniqueDefinition
+from api.technique.definitions.transitive.definition import (
+    TransitiveTechniqueDefinition,
+)
 
 SAMPLED_COMMAND_SYMBOL = "~"
 

@@ -8,5 +8,6 @@ class ScalingMethod(Enum):
     """
     TODO
     """
+
     INDEPENDENT = "INDEPENDENT"
     GLOBAL = "GLOBAL"

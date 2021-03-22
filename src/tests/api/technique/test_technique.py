@@ -5,7 +5,6 @@ from tests.res.test_technique_helper import TestTechniqueHelper
 
 
 class TestTechnique(TestTechniqueHelper):
-
     def test_use_case(self):
         test_technique: CombinedTechniqueDefinition = self.get_combined_definition()
         self.assertEqual(2, len(test_technique.get_component_techniques()))

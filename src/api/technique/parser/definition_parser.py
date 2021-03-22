@@ -16,7 +16,7 @@ def tokenize(chars: str) -> SList:
     :param chars: TODO
     :return:
     """
-    return chars.replace('(', ' ( ').replace(')', ' ) ').split()
+    return chars.replace("(", " ( ").replace(")", " ) ").split()
 
 
 def parse_technique_definition(program: str) -> Exp:
@@ -35,14 +35,14 @@ def read_from_tokens(tokens: list) -> Exp:
     :return:
     """
     if len(tokens) == 0:
-        raise SyntaxError('unexpected EOF')
+        raise SyntaxError("unexpected EOF")
     token = tokens.pop(0)
-    if token == '(':
+    if token == "(":
         token_list = []
-        while tokens[0] != ')':
+        while tokens[0] != ")":
             token_list.append(read_from_tokens(tokens))
         tokens.pop(0)  # pop off ')'
         return token_list
-    if token == ')':
-        raise SyntaxError('unexpected )')
+    if token == ")":
+        raise SyntaxError("unexpected )")
     return token

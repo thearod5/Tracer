@@ -7,8 +7,19 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import minmax_scale
 
-from api.constants.processing import METRIC_COLNAME, SCORE_COLNAME, ALL_METRIC_NAMES, DATASET_COLNAME, \
-    DATASET_COLUMN_ORDER, AP_COLNAME, AUC_COLNAME, Data, N_SIG_FIGS, LAG_NORMALIZED_INVERTED_COLNAME, COLUMN_ORDER
+from api.constants.processing import (
+    METRIC_COLNAME,
+    SCORE_COLNAME,
+    ALL_METRIC_NAMES,
+    DATASET_COLNAME,
+    DATASET_COLUMN_ORDER,
+    AP_COLNAME,
+    AUC_COLNAME,
+    Data,
+    N_SIG_FIGS,
+    LAG_NORMALIZED_INVERTED_COLNAME,
+    COLUMN_ORDER,
+)
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
 
 SIMILARITY_MATRIX_EXTENSION = ".npy"
@@ -93,7 +104,9 @@ class Table(ITable):
         super().__init__()
         self.table = pd.DataFrame()
 
-    def add(self, entries, other: dict = None, create_index=False, index_name='query_index'):  # implements MT2
+    def add(
+        self, entries, other: dict = None, create_index=False, index_name="query_index"
+    ):  # implements MT2
         """
         Converts given entries to dictionary values and appends dictionary in other before
         adding to the table.
@@ -150,10 +163,22 @@ class Table(ITable):
         :return:
         """
         id_vars = [col for col in self.table.columns if col not in ALL_METRIC_NAMES]
-        self.table = pd.melt(self.table, id_vars=id_vars, var_name=METRIC_COLNAME, value_name=SCORE_COLNAME)
+        self.table = pd.melt(
+            self.table,
+            id_vars=id_vars,
+            var_name=METRIC_COLNAME,
+            value_name=SCORE_COLNAME,
+        )
 
     # pylint: disable=too-many-arguments
-    def scale_col(self, col_name: str, group_by_cols: [str], new_col_name=None, drop_old=False, inverted=False):
+    def scale_col(
+        self,
+        col_name: str,
+        group_by_cols: [str],
+        new_col_name=None,
+        drop_old=False,
+        inverted=False,
+    ):
         """
         Performs min-max scaling on given column name, renames new values to scaled_col_name.
         If none is given appends `normalized` to metric_name
@@ -165,7 +190,11 @@ class Table(ITable):
         :return: None - MetricTable is modified
         TODO: Separate into multiple functionality and remove linting bypass
         """
-        new_col_name = new_col_name if new_col_name is not None else "%s_%s" % (col_name, "normalized")
+        new_col_name = (
+            new_col_name
+            if new_col_name is not None
+            else "%s_%s" % (col_name, "normalized")
+        )
         sections = self.table.groupby(group_by_cols).groups
         new_sections = []
         for _, group_indices in sections.items():
@@ -194,7 +223,9 @@ def format_data(data: Data, for_presentation=False):
     """
     if DATASET_COLNAME in data.columns:
         dataset = list(set(DATASET_COLUMN_ORDER + list(data[DATASET_COLNAME].unique())))
-        data[DATASET_COLNAME] = pd.Categorical(data[DATASET_COLNAME], categories=dataset)
+        data[DATASET_COLNAME] = pd.Categorical(
+            data[DATASET_COLNAME], categories=dataset
+        )
     data = data.reset_index(drop=True)
     defined_sort_columns = [col for col in COLUMN_ORDER if col in data.columns]
     other_columns = [col for col in data.columns if col not in defined_sort_columns]
@@ -202,11 +233,18 @@ def format_data(data: Data, for_presentation=False):
     data = data.sort_values(by=defined_sort_columns)
 
     if for_presentation:
-        presentation_map = {AP_COLNAME: "mAP",
-                            AUC_COLNAME: "AUC",
-                            LAG_NORMALIZED_INVERTED_COLNAME: "LagNormInverted"}
+        presentation_map = {
+            AP_COLNAME: "mAP",
+            AUC_COLNAME: "AUC",
+            LAG_NORMALIZED_INVERTED_COLNAME: "LagNormInverted",
+        }
         if METRIC_COLNAME in data.columns:
             data[METRIC_COLNAME] = data[METRIC_COLNAME].replace(presentation_map)
-        data.columns = list(map(lambda s: "".join(list(map(lambda s_0: s_0.title(), s.split("_")))), data.columns))
+        data.columns = list(
+            map(
+                lambda s: "".join(list(map(lambda s_0: s_0.title(), s.split("_")))),
+                data.columns,
+            )
+        )
 
     return data.round(N_SIG_FIGS)

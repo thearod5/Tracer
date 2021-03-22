@@ -19,7 +19,9 @@ class ITechnique(ABC):
         self.calculator = self.create_calculator()
 
     @abstractmethod
-    def create_definition(self, parameters: [str], components: [str]) -> ITechniqueDefinition:
+    def create_definition(
+        self, parameters: [str], components: [str]
+    ) -> ITechniqueDefinition:
         """
         TODO
         :param parameters:

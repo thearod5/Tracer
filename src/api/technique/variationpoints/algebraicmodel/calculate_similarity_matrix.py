@@ -32,10 +32,12 @@ from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
 DocumentTermMatrix = csr_matrix
 
 
-def calculate_similarity_matrix_for_nlp_technique(nlp_type: AlgebraicModel,
-                                                  upper_level: ArtifactLevel,
-                                                  lower_level: ArtifactLevel,
-                                                  return_vocab=False) -> SimilarityMatrix:
+def calculate_similarity_matrix_for_nlp_technique(
+    nlp_type: AlgebraicModel,
+    upper_level: ArtifactLevel,
+    lower_level: ArtifactLevel,
+    return_vocab=False,
+) -> SimilarityMatrix:
     """
     TODO
     :param nlp_type:
@@ -48,7 +50,9 @@ def calculate_similarity_matrix_for_nlp_technique(nlp_type: AlgebraicModel,
         AlgebraicModel.VSM: calculate_similarity_matrix,
         AlgebraicModel.LSI: calculate_lsa_similarity_matrix,
     }
-    similarity_matrix, vocab = similarity_matrix_calculators[nlp_type](upper_level["text"], lower_level["text"])
+    similarity_matrix, vocab = similarity_matrix_calculators[nlp_type](
+        upper_level["text"], lower_level["text"]
+    )
     if return_vocab:
         return similarity_matrix, vocab
     return similarity_matrix
@@ -91,13 +95,16 @@ def calculate_lsa_similarity_matrix(raw_a, raw_b) -> (SimilarityMatrix, dict):
     matrix_a_lsa = lsa_model.transform(matrix_a)
     matrix_b_lsa = lsa_model.transform(matrix_b)
 
-    similarity_matrix = calculate_similarity_matrix_from_term_frequencies(matrix_a_lsa, matrix_b_lsa)
+    similarity_matrix = calculate_similarity_matrix_from_term_frequencies(
+        matrix_a_lsa, matrix_b_lsa
+    )
 
     return similarity_matrix, vocab
 
 
-def calculate_similarity_matrix_from_term_frequencies(tf_a: DocumentTermMatrix,
-                                                      tf_b: DocumentTermMatrix) -> SimilarityMatrix:
+def calculate_similarity_matrix_from_term_frequencies(
+    tf_a: DocumentTermMatrix, tf_b: DocumentTermMatrix
+) -> SimilarityMatrix:
     """
     TODO
     :param tf_a:
@@ -107,9 +114,9 @@ def calculate_similarity_matrix_from_term_frequencies(tf_a: DocumentTermMatrix,
     return 1 - pairwise_distances(tf_a, Y=tf_b, metric="cosine", n_jobs=-1)
 
 
-def create_term_frequency_matrix(raw_a: pd.Series,
-                                 raw_b: pd.Series,
-                                 vectorizer=TfidfVectorizer) -> (DocumentTermMatrix, DocumentTermMatrix, dict):
+def create_term_frequency_matrix(
+    raw_a: pd.Series, raw_b: pd.Series, vectorizer=TfidfVectorizer
+) -> (DocumentTermMatrix, DocumentTermMatrix, dict):
     """
     Creates 2 TermFrequencyMatrices (one for A another for B) where the weight of
     each (row, col) pair is calculated via TF-IDF

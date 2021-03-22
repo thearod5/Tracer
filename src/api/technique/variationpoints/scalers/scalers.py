@@ -8,8 +8,9 @@ from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
 from api.technique.variationpoints.scalers.scaling_method import ScalingMethod
 
 
-def scale_with_technique(scaling_type: ScalingMethod,
-                         matrices: [SimilarityMatrix]) -> [SimilarityMatrix]:
+def scale_with_technique(
+    scaling_type: ScalingMethod, matrices: [SimilarityMatrix]
+) -> [SimilarityMatrix]:
     """
     Scales given matrices using the specified scaling method. See paper for detailed description of the
     theory and details surrounding each scaling type
@@ -40,7 +41,7 @@ def global_scaling(matrices: [SimilarityMatrix]) -> [SimilarityMatrix]:
     for m_index, _ in enumerate(matrices):
         values_in_matrix = n_matrix_values[m_index]
         end_index = start_index + values_in_matrix
-        scaled_values = scaled_aggregate[start_index: end_index]
+        scaled_values = scaled_aggregate[start_index:end_index]
         scaled_matrix = np.reshape(scaled_values, newshape=matrices[m_index].shape)
         scaled_matrices.append(scaled_matrix)
         start_index = values_in_matrix

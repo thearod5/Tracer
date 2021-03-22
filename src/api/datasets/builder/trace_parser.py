@@ -7,15 +7,20 @@ import numpy as np
 import pandas as pd
 
 from api.datasets.trace_matrix import TraceMatrix
-from api.experiment.file_operations import get_non_empty_lines, get_index_after_number_with_extension
+from api.experiment.file_operations import (
+    get_non_empty_lines,
+    get_index_after_number_with_extension,
+)
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
 
 
-def create_trace_matrix_from_path(top_artifacts_ids: pd.Series,
-                                  top_index: int,
-                                  bottom_artifacts_ids: pd.Series,
-                                  bottom_index: int,
-                                  path_to_trace_list: str) -> TraceMatrix:
+def create_trace_matrix_from_path(
+    top_artifacts_ids: pd.Series,
+    top_index: int,
+    bottom_artifacts_ids: pd.Series,
+    bottom_index: int,
+    path_to_trace_list: str,
+) -> TraceMatrix:
     """
     TODO
     :param top_artifacts_ids:
@@ -26,12 +31,16 @@ def create_trace_matrix_from_path(top_artifacts_ids: pd.Series,
     :return:
     """
     trace_list = parse_trace_file(path_to_trace_list)
-    trace_matrix_values = create_trace_matrix_values_from_trace_list(top_artifacts_ids,
-                                                                     bottom_artifacts_ids,
-                                                                     trace_list)
-    trace_matrix = TraceMatrix(top_index, top_artifacts_ids,
-                               bottom_index, bottom_artifacts_ids,
-                               trace_matrix_values)
+    trace_matrix_values = create_trace_matrix_values_from_trace_list(
+        top_artifacts_ids, bottom_artifacts_ids, trace_list
+    )
+    trace_matrix = TraceMatrix(
+        top_index,
+        top_artifacts_ids,
+        bottom_index,
+        bottom_artifacts_ids,
+        trace_matrix_values,
+    )
     return trace_matrix
 
 
@@ -111,9 +120,9 @@ def create_matrix_with_values(values, row_labels, column_labels):
     return trace_matrix
 
 
-def create_trace_matrix_values_from_trace_list(top_artifacts_ids: [str],
-                                               bottom_artifact_ids: [str],
-                                               trace_list: [(str, str)]) -> SimilarityMatrix:
+def create_trace_matrix_values_from_trace_list(
+    top_artifacts_ids: [str], bottom_artifact_ids: [str], trace_list: [(str, str)]
+) -> SimilarityMatrix:
     """
     Creates a DataFrame with CACHE_COLUMNS as bottom ids and id col containing top ids
     TODO
@@ -125,7 +134,9 @@ def create_trace_matrix_values_from_trace_list(top_artifacts_ids: [str],
     assert is_valid_trace_list(trace_list), "Received invalid trace list"
 
     shape = (len(top_artifacts_ids), len(bottom_artifact_ids))
-    trace_matrix = create_matrix_with_values(np.zeros(shape=shape), top_artifacts_ids, bottom_artifact_ids)
+    trace_matrix = create_matrix_with_values(
+        np.zeros(shape=shape), top_artifacts_ids, bottom_artifact_ids
+    )
     trace_matrix = trace_matrix.set_index("id")
     for trace in trace_list:
         source, target = trace
@@ -136,9 +147,9 @@ def create_trace_matrix_values_from_trace_list(top_artifacts_ids: [str],
     return trace_matrix.values
 
 
-def get_document_delimiter(trace_file_content: str,
-                           return_none_on_fail=False,
-                           return_index=False):
+def get_document_delimiter(
+    trace_file_content: str, return_none_on_fail=False, return_index=False
+):
     """
     TODO
     :param trace_file_content:
@@ -166,9 +177,7 @@ def get_document_delimiter(trace_file_content: str,
     return delimiter
 
 
-def get_delimiter_in_segment(segment: str,
-                             high_precedence=None,
-                             low_precedence=None):
+def get_delimiter_in_segment(segment: str, high_precedence=None, low_precedence=None):
     """
     Searches segment for highest precedence delimiters.
     :param low_precedence: delimiters with low precedence (default is space)

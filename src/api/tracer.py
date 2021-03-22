@@ -29,7 +29,9 @@ class Tracer:
             return dataset
         return query[0]
 
-    def get_technique_data(self, dataset_name: str, technique_name: str) -> TechniqueData:
+    def get_technique_data(
+        self, dataset_name: str, technique_name: str
+    ) -> TechniqueData:
         """
         TODO
         :param dataset_name:
@@ -41,7 +43,9 @@ class Tracer:
 
         return technique.calculate_technique_data(dataset)
 
-    def get_metrics(self, dataset_name: str, technique_name: str, summary_metrics=True) -> [Metrics]:
+    def get_metrics(
+        self, dataset_name: str, technique_name: str, summary_metrics=True
+    ) -> [Metrics]:
         """
         Returns list of metrics of technique per query in dataset.
         :param dataset_name: name of dataset
@@ -54,5 +58,9 @@ class Tracer:
         technique_data = technique.calculate_technique_data(dataset)
         scoring_table = technique_data.get_scoring_table()
 
-        n_queries = 1 if summary_metrics else len(dataset.artifacts.levels[technique.definition.source_level])
+        n_queries = (
+            1
+            if summary_metrics
+            else len(dataset.artifacts.levels[technique.definition.source_level])
+        )
         return calculate_metrics_for_scoring_table(scoring_table, n_queries)

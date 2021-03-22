@@ -9,8 +9,10 @@ from api.datasets.dataset import Dataset
 from api.technique.definitions.sampled.definition import SampledTechniqueDefinition
 from api.technique.definitions.sampled.sampler import sample_indices
 from api.technique.definitions.sampled.technique_data import SampledTechniqueData
-from api.technique.definitions.transitive.calculator import TransitiveTechniqueCalculator, \
-    INTERMEDIATE_TECHNIQUE_PIPELINE
+from api.technique.definitions.transitive.calculator import (
+    TransitiveTechniqueCalculator,
+    INTERMEDIATE_TECHNIQUE_PIPELINE,
+)
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
 
 
@@ -80,7 +82,9 @@ def sample_transitive_matrices(technique_data: SampledTechniqueData):
     :return: None - transitive matrices are updated with the sampled versions.
     """
     n_values = get_n_values_in_matrices(technique_data.transitive_matrices)
-    selected_indices = sample_indices(n_values, technique_data.technique.sample_percentage)
+    selected_indices = sample_indices(
+        n_values, technique_data.technique.sample_percentage
+    )
 
     sources = []
     targets = []
@@ -88,17 +92,20 @@ def sample_transitive_matrices(technique_data: SampledTechniqueData):
         transitive_matrix = technique_data.transitive_matrices[matrix_index]
 
         top_level, bottom_level = technique_data.technique.get_component_techniques()[
-            matrix_index].definition.artifact_paths
-        trace_matrix = technique_data.dataset.traced_matrices["%d-%d" % (top_level, bottom_level)]
+            matrix_index
+        ].definition.artifact_paths
+        trace_matrix = technique_data.dataset.traced_matrices[
+            "%d-%d" % (top_level, bottom_level)
+        ]
 
         sources.append(trace_matrix)
         targets.append(transitive_matrix)
     technique_data.transitive_matrices = copy_values(sources, targets, selected_indices)
 
 
-def copy_values(sources: List[SimilarityMatrix],
-                targets: List[SimilarityMatrix],
-                indices: List[int]) -> List[SimilarityMatrix]:
+def copy_values(
+    sources: List[SimilarityMatrix], targets: List[SimilarityMatrix], indices: List[int]
+) -> List[SimilarityMatrix]:
     """
     For each source-target pair, copies the indices within range from source to target.
     :param sources: a list of source matrices representing the original values being copied
@@ -115,8 +122,9 @@ def copy_values(sources: List[SimilarityMatrix],
         assert source.shape == target.shape
 
         n_values_in_matrix = target.shape[0] * target.shape[1]
-        boundary_indices, other_indices = filter_array(indices_remaining,
-                                                       lambda v, limit=n_values_in_matrix: v < limit)
+        boundary_indices, other_indices = filter_array(
+            indices_remaining, lambda v, limit=n_values_in_matrix: v < limit
+        )
         sampled_matrix = replace_indices_in_matrix(boundary_indices, source, target)
         sampled_matrices.append(sampled_matrix)
         indices_remaining = [i - n_values_in_matrix for i in other_indices]

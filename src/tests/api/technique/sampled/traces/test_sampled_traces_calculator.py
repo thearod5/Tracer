@@ -1,9 +1,16 @@
 import numpy as np
 
 from api.technique.definitions.sampled.technique_data import SampledTechniqueData
-from api.technique.definitions.sampled.traces.calculator import sample_transitive_matrices, replace_indices_in_matrix, \
-    filter_array, calc_row_col_index, copy_values
-from api.technique.definitions.transitive.calculator import append_direct_component_matrices
+from api.technique.definitions.sampled.traces.calculator import (
+    sample_transitive_matrices,
+    replace_indices_in_matrix,
+    filter_array,
+    calc_row_col_index,
+    copy_values,
+)
+from api.technique.definitions.transitive.calculator import (
+    append_direct_component_matrices,
+)
 from tests.res.test_technique_helper import TestTechniqueHelper
 
 
@@ -13,7 +20,9 @@ class TestSampledTracesCalculator(TestTechniqueHelper):
     """
 
     def test_SampledTracesTechniqueCalculator(self):
-        data = SampledTechniqueData(self.dataset, self.get_sampled_technique_definition())
+        data = SampledTechniqueData(
+            self.dataset, self.get_sampled_technique_definition()
+        )
         append_direct_component_matrices(data)
 
         self.assertLess(max(map(lambda m: m.max(), data.transitive_matrices)), 1)

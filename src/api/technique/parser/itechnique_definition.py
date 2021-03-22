@@ -6,8 +6,12 @@ from abc import abstractmethod, ABC
 from enum import Enum
 from typing import Type, TypeVar
 
-from api.constants.techniques import ArtifactPathType, LEVELS_DELIMITER, TECHNIQUE_DELIMITER, \
-    UNDEFINED_TECHNIQUE
+from api.constants.techniques import (
+    ArtifactPathType,
+    LEVELS_DELIMITER,
+    TECHNIQUE_DELIMITER,
+    UNDEFINED_TECHNIQUE,
+)
 from api.experiment.file_operations import list_to_string
 
 
@@ -19,7 +23,9 @@ class ITechniqueDefinition(ABC):
     def __init__(self, parameters: [str], components: [str], is_stochastic=False):
         self.parameters = parameters
         self.components = components
-        self._component_techniques = []  # untyped to avoid circular imports but TODO should be ITechnique
+        self._component_techniques = (
+            []
+        )  # untyped to avoid circular imports but TODO should be ITechnique
         self._is_stochastic = is_stochastic
         self.source_level = -1
         self.target_level = -1
@@ -55,14 +61,19 @@ class ITechniqueDefinition(ABC):
         :return:
         """
         return "(%s %s %s)" % (
-            self.get_symbol(), list_to_string(self.parameters), list_to_string(self.components))
+            self.get_symbol(),
+            list_to_string(self.parameters),
+            list_to_string(self.components),
+        )
 
     def get_attributes(self) -> [str]:
         """
         TODO
         :return:
         """
-        return get_public_variables(ITechniqueDefinition) + get_public_variables(self.__class__)
+        return get_public_variables(ITechniqueDefinition) + get_public_variables(
+            self.__class__
+        )
 
     def to_dict(self):
         """
@@ -99,7 +110,11 @@ class ITechniqueDefinition(ABC):
         :return:
         """
         return self._is_stochastic or any(
-            map(lambda t: t.definition.contains_stochastic_technique(), self._component_techniques))
+            map(
+                lambda t: t.definition.contains_stochastic_technique(),
+                self._component_techniques,
+            )
+        )
 
 
 def stringify_paths(artifact_paths: ArtifactPathType) -> str:
@@ -122,7 +137,11 @@ def get_public_variables(some_class: object):
     :return:
     """
     public_properties = get_public_fields(some_class)
-    public_attributes = [key for key in public_properties if not inspect.isroutine(getattr(some_class, key))]
+    public_attributes = [
+        key
+        for key in public_properties
+        if not inspect.isroutine(getattr(some_class, key))
+    ]
     return public_attributes
 
 
@@ -138,7 +157,9 @@ def get_public_fields(some_class: object):
 GenericClass = TypeVar("GenericClass")
 
 
-def get_missing_attributes(source: ITechniqueDefinition, target_class: Type[GenericClass]) -> [str]:
+def get_missing_attributes(
+    source: ITechniqueDefinition, target_class: Type[GenericClass]
+) -> [str]:
     """
     TODO
     :param source:
@@ -146,5 +167,8 @@ def get_missing_attributes(source: ITechniqueDefinition, target_class: Type[Gene
     :return:
     """
     source_attributes = source.get_attributes()
-    return [target_class_attribute for target_class_attribute in get_public_variables(target_class) if
-            target_class_attribute not in source_attributes]
+    return [
+        target_class_attribute
+        for target_class_attribute in get_public_variables(target_class)
+        if target_class_attribute not in source_attributes
+    ]

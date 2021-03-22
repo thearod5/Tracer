@@ -41,8 +41,12 @@ def extract_java_identifiers(class_text):
         word = syntax_item[1]
         return word_label == "IDENTIFIER" and word.lower() not in java_reserved_words
 
-    identifiers = list(map(lambda id: id[-1], filter(filter_java_identifier, parsed_syntax_items)))
-    assert len(identifiers) > 0, "Not enough identifiers found in class text. Perhaps file is commented out."
+    identifiers = list(
+        map(lambda id: id[-1], filter(filter_java_identifier, parsed_syntax_items))
+    )
+    assert (
+        len(identifiers) > 0
+    ), "Not enough identifiers found in class text. Perhaps file is commented out."
     return " ".join(identifiers) + extract_class_comments(class_text)
 
 

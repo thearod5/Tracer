@@ -21,7 +21,7 @@ def get_weights(matrix):
     if any(np.isnan(lambda_values)):
         lambda_values = [1 / n_cols] * n_cols
     assert len(lambda_values) == n_cols
-    assert len(lambda_values) == n_cols, 'variance values dimension mismatch'
+    assert len(lambda_values) == n_cols, "variance values dimension mismatch"
     return lambda_values
 
 
@@ -30,4 +30,6 @@ def aggregate_pca(x_test) -> Similarities:
     Returns the predictions on x_test after training on x_train and y_train.
     """
     weights = get_weights(x_test)
-    return np.apply_along_axis(arr=x_test, func1d=lambda arr: sum(arr * weights), axis=1)
+    return np.apply_along_axis(
+        arr=x_test, func1d=lambda arr: sum(arr * weights), axis=1
+    )

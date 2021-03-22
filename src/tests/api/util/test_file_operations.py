@@ -2,9 +2,15 @@ import os
 from pathlib import Path
 
 from api.constants.paths import PATH_TO_CACHE_TEMP
-from api.experiment.file_operations import get_non_empty_lines, rename_with_timestamp, remove_folder, \
-    get_index_after_numbers, \
-    get_index_after_number_with_extension, create_if_not_exist, list_to_string
+from api.experiment.file_operations import (
+    get_non_empty_lines,
+    rename_with_timestamp,
+    remove_folder,
+    get_index_after_numbers,
+    get_index_after_number_with_extension,
+    create_if_not_exist,
+    list_to_string,
+)
 from tests.res.smart_test import SmartTest
 
 
@@ -13,6 +19,7 @@ class TestFileOperations(SmartTest):
 
     rename_with_timestamp
     """
+
     file_name = "TestFile"
     path_to_old = os.path.join(PATH_TO_CACHE_TEMP, ".old")
 
@@ -25,7 +32,9 @@ class TestFileOperations(SmartTest):
         rename_with_timestamp(path_to_file)
         self.assertEqual(1, len(os.listdir(self.path_to_old)))
         self.assertFalse(os.path.isfile(path_to_file))
-        self.assertTrue(any([self.file_name in file for file in os.listdir(self.path_to_old)]))
+        self.assertTrue(
+            any([self.file_name in file for file in os.listdir(self.path_to_old)])
+        )
 
         #
         remove_folder(self.path_to_old)

@@ -11,8 +11,7 @@ from api.datasets.builder.trace_parser import get_document_delimiter
 from api.experiment.file_operations import get_non_empty_lines
 
 
-def read_artifact_level(path_to_artifacts,
-                        contains_ids_in_file=False):
+def read_artifact_level(path_to_artifacts, contains_ids_in_file=False):
     """
     Returns a DataFrame containing the id and text of each artifact found in given path.
     :param path_to_artifacts: The path to the folder or file containing the artifacts.
@@ -29,9 +28,13 @@ def read_artifact_level(path_to_artifacts,
             raise ValueError("Could not identify file type: %s" % path_to_artifacts)
     else:
 
-        assert os.path.isdir(path_to_artifacts), "Given path is not a directory: %s" % path_to_artifacts
+        assert os.path.isdir(path_to_artifacts), (
+            "Given path is not a directory: %s" % path_to_artifacts
+        )
         artifact_level = pd.DataFrame(columns=["id", "text"])
-        files_in_folder = list(filter(lambda f: f[0] != ".", os.listdir(path_to_artifacts)))
+        files_in_folder = list(
+            filter(lambda f: f[0] != ".", os.listdir(path_to_artifacts))
+        )
         for file_name in files_in_folder:
             path_to_file = os.path.join(path_to_artifacts, file_name)
 
@@ -39,7 +42,7 @@ def read_artifact_level(path_to_artifacts,
                 with open(path_to_file) as file:
                     text = file.read()
             except ValueError:
-                with open(path_to_file, encoding='ISO-8859-1') as file:
+                with open(path_to_file, encoding="ISO-8859-1") as file:
                     text = file.read()
 
             if contains_ids_in_file:
@@ -72,5 +75,7 @@ def parse_artifact_txt_file(path_to_file: str):
             line_delimiter = get_document_delimiter(line)
             line_split = line.split(line_delimiter)
             a_id, a_body = line_split[0], line_delimiter.join(line_split[1:])
-            artifacts_df = artifacts_df.append({"id": a_id.strip(), "text": a_body.strip()}, ignore_index=True)
+            artifacts_df = artifacts_df.append(
+                {"id": a_id.strip(), "text": a_body.strip()}, ignore_index=True
+            )
     return artifacts_df

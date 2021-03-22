@@ -3,16 +3,24 @@ TODO
 """
 import numpy as np
 
-from api.technique.variationpoints.aggregation.aggregation_functions import arithmetic_aggregation_functions
-from api.technique.variationpoints.aggregation.aggregation_method import AggregationMethod
+from api.technique.variationpoints.aggregation.aggregation_functions import (
+    arithmetic_aggregation_functions,
+)
+from api.technique.variationpoints.aggregation.aggregation_method import (
+    AggregationMethod,
+)
 from api.technique.variationpoints.aggregation.pca_aggregation import aggregate_pca
 from api.technique.variationpoints.algebraicmodel import models
-from api.technique.variationpoints.algebraicmodel.models import Similarities, SimilarityMatrix
+from api.technique.variationpoints.algebraicmodel.models import (
+    Similarities,
+    SimilarityMatrix,
+)
 from api.technique.variationpoints.scalers import scalers
 
 
-def apply_transitive_aggregation(similarity_matrices,
-                                 transitive_path_aggregation: AggregationMethod) -> SimilarityMatrix:
+def apply_transitive_aggregation(
+    similarity_matrices, transitive_path_aggregation: AggregationMethod
+) -> SimilarityMatrix:
     """
     TODO
     :param similarity_matrices:
@@ -22,18 +30,25 @@ def apply_transitive_aggregation(similarity_matrices,
     if transitive_path_aggregation == AggregationMethod.PCA:
         x_train = create_transitive_aggregation_training_data(similarity_matrices)
         similarities: Similarities = aggregate_pca(x_train)
-        scaled_similarities = np.apply_along_axis(arr=similarities, axis=0, func1d=scalers.minmax_scale)
-        new_shape = (similarity_matrices.upper.shape[0], similarity_matrices.lower.shape[1])
+        scaled_similarities = np.apply_along_axis(
+            arr=similarities, axis=0, func1d=scalers.minmax_scale
+        )
+        new_shape = (
+            similarity_matrices.upper.shape[0],
+            similarity_matrices.lower.shape[1],
+        )
         return scaled_similarities.reshape(new_shape)
 
-    similarity_matrix = aggregate_similarity_matrices_with_arithmetic_aggregator(similarity_matrices,
-                                                                                 transitive_path_aggregation)
+    similarity_matrix = aggregate_similarity_matrices_with_arithmetic_aggregator(
+        similarity_matrices, transitive_path_aggregation
+    )
 
     return similarity_matrix
 
 
-def aggregate_similarity_matrices_with_arithmetic_aggregator(similarity_matrices: models,
-                                                             indirect_aggregation_type: AggregationMethod):
+def aggregate_similarity_matrices_with_arithmetic_aggregator(
+    similarity_matrices: models, indirect_aggregation_type: AggregationMethod
+):
     """
     Returns a single Experiment.Technique.AlgebraicModel containing the aggregated similarity score between every
     top level artifact to the bottom level.
@@ -44,8 +59,12 @@ def aggregate_similarity_matrices_with_arithmetic_aggregator(similarity_matrices
 
     if indirect_aggregation_type == AggregationMethod.PCA:
         raise Exception("PCA cannot be performed with this function")
-    arithmetic_aggregation_function = arithmetic_aggregation_functions[indirect_aggregation_type]
-    similarity_matrix = dot_product_with_aggregation(similarity_matrices, arithmetic_aggregation_function)
+    arithmetic_aggregation_function = arithmetic_aggregation_functions[
+        indirect_aggregation_type
+    ]
+    similarity_matrix = dot_product_with_aggregation(
+        similarity_matrices, arithmetic_aggregation_function
+    )
 
     return similarity_matrix
 
@@ -63,19 +82,21 @@ def create_transitive_aggregation_training_data(similarity_matrices: models):
     n_bottom = similarity_matrices.lower.shape[1]
 
     multiplied_matrices = (
-            similarity_matrices.upper[:, None, :].T * similarity_matrices.lower[:, :, None]).T
+        similarity_matrices.upper[:, None, :].T * similarity_matrices.lower[:, :, None]
+    ).T
 
     x_train = np.zeros(shape=(n_top * n_bottom, n_middle))
     for r_index in range(n_top):  # number of rows (reqs)
         for c_index in range(n_bottom):
-            r_c_indirect_scores = multiplied_matrices[r_index][c_index]  # a list of scores, one score for each design
+            r_c_indirect_scores = multiplied_matrices[r_index][
+                c_index
+            ]  # a list of scores, one score for each design
             linear_index = (r_index * n_bottom) + c_index
             x_train[linear_index, :] = r_c_indirect_scores
     return x_train
 
 
-def dot_product_with_aggregation(similarity_matrices: models,
-                                 aggregation_function):
+def dot_product_with_aggregation(similarity_matrices: models, aggregation_function):
     """
     TODO
     :param similarity_matrices:

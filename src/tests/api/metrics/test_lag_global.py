@@ -5,7 +5,6 @@ from tests.res.smart_test import SmartTest
 
 
 class TestLag(SmartTest):
-
     def test_number_of_fp_above_index(self):
         self.assertEqual(0, number_of_fp_above_index([1], 0))
         self.assertEqual(1, number_of_fp_above_index(np.array([0, 1]), 1))
@@ -15,7 +14,7 @@ class TestLag(SmartTest):
         y_true = [1, 0, 1, 0, 1, 1]
         y_pred = [0.8, 0.6, 0.5, 0.4, 0.3, 0.9]
         score = calculate_lag(y_true, y_pred)
-        assert score == .75, score
+        assert score == 0.75, score
 
     def test_lag_min(self):
         y_true = [1, 1, 1, 1, 1, 1]

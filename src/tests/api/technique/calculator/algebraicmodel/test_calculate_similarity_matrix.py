@@ -1,6 +1,8 @@
 import pandas as pd
 
-from api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix import calculate_similarity_matrix
+from api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix import (
+    calculate_similarity_matrix,
+)
 from tests.res.smart_test import SmartTest
 
 

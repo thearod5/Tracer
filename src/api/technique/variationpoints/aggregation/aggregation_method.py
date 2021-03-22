@@ -12,6 +12,7 @@ class AggregationMethod(Enum):
     1. Aggregating transitive relation scores between a source and target artifacts into a single score
     2. Aggregation two (or more) techniques into a single technique represented as a similarity matrix.
     """
+
     PCA = "PCA"
     SUM = "SUM"
     MAX = "MAX"
