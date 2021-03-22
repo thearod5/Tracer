@@ -8,7 +8,7 @@ TODO: Define what is required in structure.json file
 import json
 import os
 
-from api.constants.paths import PATH_TO_DATASETS
+from api.datasets.dataset import get_path_to_dataset
 
 STRUCTURE_FILE_NAME = "structure.json"
 
@@ -20,7 +20,7 @@ def get_structure_definition(dataset_name: str):
     :return: dict
     """
     path_to_dataset = get_path_to_dataset(dataset_name)
-    structure_json = read_structure_file(dataset_name)
+    structure_json = read_structure_file(path_to_dataset)
 
     top_level_branches = ["artifacts", "traces"]
     for top_branch in top_level_branches:
@@ -49,26 +49,16 @@ def get_structure_definition(dataset_name: str):
     return structure_json
 
 
-def read_structure_file(dataset_name: str) -> dict:
+def read_structure_file(path_to_dataset: str) -> dict:
     """
-    Attempts to load structure.json file in given dataset_name under the PATH_TO_DATASETS directory.
-    :param dataset_name: the name of the folder containing the structure.json file
+    Reads structure.json file in given path to dataset.
+    :param path_to_dataset: path to the parsed dataset containing a structure.json file
     :return: dict containing the contents of the structure.json file.
     """
-    path_to_dataset = os.path.join(PATH_TO_DATASETS, dataset_name)
     path_to_structure_file = os.path.join(path_to_dataset, STRUCTURE_FILE_NAME)
     with open(path_to_structure_file) as raw_structure_file:
         structure_file: dict = json.loads(raw_structure_file.read())
     return structure_file
-
-
-def get_path_to_dataset(dataset_name: str):
-    """
-    Returns the path to given user-defined dataset_name
-    :param dataset_name: The name of the folder containing the artifacts, traces, and structure.json file
-    :return: str - path to dataset
-    """
-    return os.path.join(PATH_TO_DATASETS, dataset_name)
 
 
 def is_valid_structure_file(structure_file: dict):
@@ -82,9 +72,9 @@ def is_valid_structure_file(structure_file: dict):
     trace_branches = ["top-middle", "middle-bottom", "top-bottom"]
 
     return (
-        contains_fields(structure_file, top_branches)
-        and contains_fields(structure_file["datasets"], artifact_branches)
-        and contains_fields(structure_file["traces"], trace_branches)
+            contains_fields(structure_file, top_branches)
+            and contains_fields(structure_file["datasets"], artifact_branches)
+            and contains_fields(structure_file["traces"], trace_branches)
     )
 
 

@@ -1,7 +1,9 @@
 """
 TODO
 """
-from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
+from typing import Dict
+
+from api.constants.dataset import SimilarityMatrix
 
 
 class TraceMatrix:  # pylint: disable=too-few-public-methods
@@ -21,7 +23,7 @@ class TraceMatrix:  # pylint: disable=too-few-public-methods
 
     # pylint: disable=too-many-arguments
     def __init__(
-        self, top_index, top_artifacts_ids, bottom_index, bottom_artifact_ids, matrix
+            self, top_index, top_artifacts_ids, bottom_index, bottom_artifact_ids, matrix
     ):
         # TODO: Too many arguments, separate for modularity
         self.top_index = top_index
@@ -31,3 +33,8 @@ class TraceMatrix:  # pylint: disable=too-few-public-methods
         self.bottom_artifact_ids = bottom_artifact_ids
 
         self.matrix = matrix
+
+
+TraceId2TraceMatrixMap = Dict[
+    str, TraceMatrix
+]  # for retrieving TraceMatrix values at east

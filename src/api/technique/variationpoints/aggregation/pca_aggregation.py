@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import scale
 
-from api.technique.variationpoints.algebraicmodel.models import Similarities
+from api.constants.dataset import Similarities
 
 
 def get_weights(matrix):

@@ -13,6 +13,7 @@ assert os.path.isfile(ENV_PATH), "Make sure .env file is configured"
 load_dotenv(dotenv_path=ENV_PATH)
 
 PATH_TO_ROOT = os.environ.get("PATH_TO_ROOT")
+PATH_TO_DATASETS = os.environ.get("PATH_TO_DATASETS")
 
 NOTRACES_ID = "notraces"
 WITHTRACES_ID = "withtraces"
@@ -22,8 +23,8 @@ PATH_TO_RESOURCES = os.path.join(PATH_TO_ROOT, "res")
 
 # Roots
 PATH_TO_DATA = os.path.join(PATH_TO_ROOT, "Data")
-# TODO: separate this into a TEST_DATASETS and read this from .env file
-PATH_TO_DATASETS = os.path.join(PATH_TO_RESOURCES, "datasets")
+PATH_TO_SAMPLE_DATASETS = os.path.join(PATH_TO_RESOURCES, "datasets")
+
 PATH_TO_DATA_SOURCE = os.path.join(PATH_TO_DATA, "source")
 PATH_TO_DATA_PROCESSED = os.path.join(PATH_TO_DATA, "processed")
 PATH_TO_DATA_INTERMEDIARY = os.path.join(PATH_TO_DATA, "intermediary")

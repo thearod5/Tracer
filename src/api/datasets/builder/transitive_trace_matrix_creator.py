@@ -7,14 +7,14 @@ A TraceId is a string in the form of [artifact_a_index]-[artifact_b_index]
 A TracePathMap is a dict mapping from TraceIds to a list of integers representing
 the nodes indices for a certain path
 """
-from typing import List, Dict, Tuple
+from typing import List, Tuple
 
 from igraph import Graph
 
-from api.constants.techniques import N_ITERATIONS_TRACE_PROPAGATION
+from api.constants.dataset import TraceId2GraphPathsMap, TraceId2SimilarityMatrixMap, GraphPath
+from api.constants.techniques import N_ITERATIONS_TRACE_PROPAGATION, ArtifactLevel
 from api.datasets.builder.trace_parser import create_trace_matrix_from_path
-from api.datasets.multi_level_artifacts import ArtifactLevel
-from api.datasets.trace_matrix import TraceMatrix
+from api.datasets.trace_matrix import TraceMatrix, TraceId2TraceMatrixMap
 from api.technique.definitions.transitive.calculator import (
     perform_transitive_aggregation_on_component_techniques,
 )
@@ -26,19 +26,9 @@ from api.technique.variationpoints.aggregation.technique_aggregation_calculator 
 )
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
 
-TraceId2SimilarityMatrixMap = Dict[
-    str, SimilarityMatrix
-]  # mapping between trace id and its corresponding SimilarityMatrix as traces
-TraceId2TraceMatrixMap = Dict[
-    str, TraceMatrix
-]  # for retrieving TraceMatrix values at east
-GraphPath = List[int]  # ordered list of vertices representing a pat
-
-TraceId2GraphPathsMap = Dict[str, List[GraphPath]]
-
 
 def create_trace_matrix_map(
-    structure_file: dict, levels: [ArtifactLevel]
+        structure_file: dict, levels: [ArtifactLevel]
 ) -> Tuple[TraceId2TraceMatrixMap, Graph]:
     """
     For every combination of nodes verifies or creates path between
@@ -78,9 +68,9 @@ def create_trace_matrix_map(
 
 
 def create_trace_matrix_map_from_graph_path_map(
-    graph_paths_map: TraceId2GraphPathsMap,
-    trace_matrix_map: TraceId2TraceMatrixMap,
-    levels: List[ArtifactLevel],
+        graph_paths_map: TraceId2GraphPathsMap,
+        trace_matrix_map: TraceId2TraceMatrixMap,
+        levels: List[ArtifactLevel],
 ) -> TraceId2TraceMatrixMap:
     """
     TODO
@@ -107,7 +97,7 @@ def create_trace_matrix_map_from_graph_path_map(
 
 
 def create_similarity_matrix_map_for_graph_paths(
-    graph_paths: TraceId2GraphPathsMap, trace_matrix_map: TraceId2TraceMatrixMap
+        graph_paths: TraceId2GraphPathsMap, trace_matrix_map: TraceId2TraceMatrixMap
 ) -> TraceId2SimilarityMatrixMap:
     """
     For each key corresponding to a TraceId a similarity matrix is calculated for each assigned path.
@@ -154,7 +144,7 @@ def create_trace_matrix_graph(trace_matrix_keys: List[str], n_levels: int) -> Gr
 
 
 def normalize_original_matrices(
-    trace_matrix_map: TraceId2TraceMatrixMap, graph: Graph, levels: List[ArtifactLevel]
+        trace_matrix_map: TraceId2TraceMatrixMap, graph: Graph, levels: List[ArtifactLevel]
 ) -> TraceId2TraceMatrixMap:
     """
     returns the trace matrix with all transitive and direct graph_paths.
@@ -176,7 +166,7 @@ def normalize_original_matrices(
 
 
 def get_graph_paths_map_to_missing_paths(
-    trace_ids: List[str], dependency_graph: Graph, n_levels: int
+        trace_ids: List[str], dependency_graph: Graph, n_levels: int
 ) -> TraceId2GraphPathsMap:
     """
     For every combination of nodes verifies or creates path between
@@ -191,9 +181,9 @@ def get_graph_paths_map_to_missing_paths(
         for b_index in range(n_levels):
             trace_id = "%d-%d" % (a_index, b_index)
             if (
-                a_index != b_index
-                and not contains_trace_id(trace_ids, trace_id)
-                and not contains_trace_id(missing_paths, trace_id)
+                    a_index != b_index
+                    and not contains_trace_id(trace_ids, trace_id)
+                    and not contains_trace_id(missing_paths, trace_id)
             ):
                 transitive_paths = find_all_paths(dependency_graph, a_index, b_index)
 
@@ -206,7 +196,7 @@ def get_graph_paths_map_to_missing_paths(
 
 
 def get_transitive_matrices_in_path(
-    trace_matrix_map: TraceId2TraceMatrixMap, transitive_path: GraphPath
+        trace_matrix_map: TraceId2TraceMatrixMap, transitive_path: GraphPath
 ) -> List[SimilarityMatrix]:
     """
     TODO
@@ -227,7 +217,7 @@ def get_transitive_matrices_in_path(
 
 
 def create_trace_id_2_trace_matrix_map_from_definition(
-    structure_file: dict, levels: List[ArtifactLevel]
+        structure_file: dict, levels: List[ArtifactLevel]
 ) -> TraceId2TraceMatrixMap:
     """
     For each non-empty path_to_trace_matrix in structure file,
@@ -250,7 +240,7 @@ def create_trace_id_2_trace_matrix_map_from_definition(
 
 
 def get_similarity_matrix_in_trace_matrix_map(
-    trace_matrix_map: TraceId2TraceMatrixMap, trace_id: str
+        trace_matrix_map: TraceId2TraceMatrixMap, trace_id: str
 ) -> SimilarityMatrix:
     """
     TODO
@@ -267,8 +257,8 @@ def get_similarity_matrix_in_trace_matrix_map(
 
 
 def contains_trace_id(
-    traces: List[str],
-    trace_id: str,
+        traces: List[str],
+        trace_id: str,
 ):
     """
     TODO
@@ -281,8 +271,8 @@ def contains_trace_id(
 
 
 def id_exists_in_traces(
-    traces: List[str],
-    trace_id: str,
+        traces: List[str],
+        trace_id: str,
 ):
     """
     TODO
