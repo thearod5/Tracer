@@ -5,7 +5,7 @@ from typing import List
 
 from api.datasets.dataset import Dataset
 from api.metrics.calculator import calculate_metrics_for_scoring_table
-from api.metrics.models import Metrics
+from api.tables.metric_table import Metrics
 from api.technique.definitions.combined.technique import create_technique_by_name
 from api.technique.parser.data import TechniqueData
 
