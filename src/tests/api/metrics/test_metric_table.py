@@ -10,7 +10,8 @@ from api.metrics.calculator import (
     calculate_lag,
     calculate_metrics_for_scoring_table,
 )
-from api.metrics.models import Table, ScoringTable
+from api.tables.scoring_table import ScoringTable
+from api.tables.table import Table
 from api.technique.definitions.transitive.definition import (
     TransitiveTechniqueDefinition,
 )
@@ -57,12 +58,12 @@ class TestMetricTable(SmartTest):
         if os.path.exists(export_path):
             os.remove(export_path)
 
-        table = Table()
+        table = Table(None)
         table.add(metrics)
 
         # test export
         self.assertFalse(os.path.exists(export_path))
-        table.export(export_path)
+        table.save(export_path)
         self.assertTrue(os.path.exists(export_path))
         df = pd.read_csv(export_path)
         self.assertEqual(1, len(df))

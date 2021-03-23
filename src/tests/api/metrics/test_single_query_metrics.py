@@ -6,7 +6,7 @@ from api.metrics.calculator import (
     calculate_lag,
     calculate_metrics_for_scoring_table,
 )
-from api.metrics.models import ScoringTable
+from api.tables.scoring_table import ScoringTable
 from api.technique.definitions.transitive.definition import (
     TransitiveTechniqueDefinition,
 )

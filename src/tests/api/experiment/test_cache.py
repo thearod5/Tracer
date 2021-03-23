@@ -2,9 +2,9 @@ import os
 
 import numpy as np
 
+from api.constants.techniques import SIMILARITY_MATRIX_EXTENSION
 from api.datasets.dataset import Dataset
 from api.extension.cache import Cache
-from api.metrics.models import SIMILARITY_MATRIX_EXTENSION
 from api.tracer import Tracer
 from tests.res.test_technique_helper import TestTechniqueHelper
 
@@ -58,21 +58,23 @@ class TestCache(TestTechniqueHelper):
         tracer = Tracer()
         tracer.get_metrics(self.dataset.name, self.transitive_technique_name)
 
-        files_in_cache = list(
+        numpy_files_in_cache = list(
             filter(
                 lambda f: SIMILARITY_MATRIX_EXTENSION in f,
                 os.listdir(Cache.path_to_memory),
             )
         )
 
-        self.assertEqual(3, len(files_in_cache))
+        self.assertEqual(3, len(numpy_files_in_cache))
 
         def create_name(name: str):
             return self.dataset.name + "_" + name + ".npy"
 
-        self.assertIn(create_name(self.transitive_upper_comp), files_in_cache)
-        self.assertIn(create_name(self.transitive_component_b_name), files_in_cache)
-        self.assertIn(create_name(self.transitive_technique_name), files_in_cache)
+        self.assertIn(create_name(self.transitive_upper_comp), numpy_files_in_cache)
+        self.assertIn(
+            create_name(self.transitive_component_b_name), numpy_files_in_cache
+        )
+        self.assertIn(create_name(self.transitive_technique_name), numpy_files_in_cache)
 
         Cache.cleanup(self.dataset.name)
         Cache.CACHE_ON = original_cache_value

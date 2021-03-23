@@ -4,7 +4,7 @@ TODO
 from typing import Union
 
 from api.datasets.dataset import Dataset
-from api.metrics.models import ScoringTable
+from api.tables.scoring_table import ScoringTable
 from api.technique.parser import itechnique_definition
 from api.technique.parser.itechnique_definition import ITechniqueDefinition
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
