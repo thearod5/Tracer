@@ -20,7 +20,6 @@ class Dataset:
     def __init__(self, dataset_name: str):
         self.name = dataset_name
         self.path_to_dataset = get_path_to_dataset(dataset_name)
-        print("PATH:", self.path_to_dataset)
 
         self.artifacts = MultiLevelArtifacts(self.path_to_dataset)
         self.relations: pd.DataFrame = pd.read_csv(
