@@ -6,7 +6,7 @@ from abc import abstractmethod
 from typing import Generic
 
 from api.datasets.dataset import Dataset
-from api.experiment.cache import Cache
+from api.extension.cache import Cache
 from api.technique.parser.itechnique_definition import ITechniqueDefinition
 from api.technique.parser.pipeline import TechniquePipeline, GenericOutputData
 

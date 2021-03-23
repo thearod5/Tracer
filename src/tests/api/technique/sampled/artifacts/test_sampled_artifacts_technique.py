@@ -1,4 +1,4 @@
-from api.experiment.cache import Cache
+from api.extension.cache import Cache
 from api.technique.definitions.sampled.artifacts.technique import (
     SampledIntermediateTechnique,
 )

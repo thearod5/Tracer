@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 from api.constants.paths import PATH_TO_CACHE_TEMP
-from api.experiment.file_operations import (
+from api.extension.file_operations import (
     get_non_empty_lines,
     rename_with_timestamp,
     remove_folder,
