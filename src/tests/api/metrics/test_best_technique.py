@@ -1,17 +1,18 @@
 import pandas as pd
 
 from api.constants.processing import (
-    LAG_COLNAME,
-    DATASET_COLNAME,
-    AP_COLNAME,
-    TRANSITIVE_TRACE_TYPE_COLNAME,
-    RANK_COLNAME,
     ALGEBRAIC_MODEL_COLNAME,
+    AP_COLNAME,
+    DATASET_COLNAME,
+    LAG_COLNAME,
     PERCENT_BEST_COLNAME,
+    RANK_COLNAME,
+    TECHNIQUE_COLNAME,
     TRANSITIVE_SCALING_COLNAME,
+    TRANSITIVE_TRACE_TYPE_COLNAME,
 )
 from api.constants.techniques import DIRECT_ID
-from api.tables.metric_table import MetricTable, create_ranks
+from api.tables.metric_table import MetricTable
 from tests.res.smart_test import SmartTest
 
 
@@ -26,39 +27,82 @@ def create_entry(dataset):
 
 
 class TestBestTechnique(SmartTest):
+    """
+    Tests that we can rank based on groups of dataset and trace type. The following data is structured with the
+    following features:
+    1. Two datasets where first four rows are D1, the latter four are D2
+    2. For each dataset, first two rows are traced to T1 and the latter two to T2.
+    3. Each trace type contains metrics for both scaling methods (e.g. M1, M2)
+    4. D1 ranks M2 highest across all trace types, and D2 ranks M1 highest across all trace types
+    """
+
     data = pd.DataFrame()
-    data[DATASET_COLNAME] = ["ABC"] * 2 + ["DEF"] * 2
-    data[TRANSITIVE_TRACE_TYPE_COLNAME] = ["NONE"] * 4
-    data[TRANSITIVE_SCALING_COLNAME] = ["GLOBAL", "INDEPENDENT"] * 2
-    data[AP_COLNAME] = [2, 3, 3, 5]
-    data[LAG_COLNAME] = [2, 3, 4, 5]
+    data[DATASET_COLNAME] = ["D1", "D1", "D1", "D1", "D2", "D2", "D2", "D2"]
+    data[TRANSITIVE_TRACE_TYPE_COLNAME] = [
+        "T1",
+        "T1",
+        "T2",
+        "T2",
+        "T1",
+        "T1",
+        "T2",
+        "T2",
+    ]
+    data[TRANSITIVE_SCALING_COLNAME] = ["M1", "M2"] * 4
+    data[AP_COLNAME] = [1, 2, 1, 2, 2, 1, 2, 1]
 
-    """
-    create_ranks
-    """
+    def test_create_ranks_with_all_datasets(self):
+        """
+        Tests that ranks are accurate in respect to dataset x trace type groups.
+        :return: None
+        """
+        ranked_table = MetricTable(self.data).create_ranks().table
+        self.assertTrue(RANK_COLNAME in ranked_table.columns)
 
-    def test_create_ranks(self):
-        data = create_ranks(self.data)
-        self.assertTrue(RANK_COLNAME in data.columns)
+        self.assertEqual(2, ranked_table[RANK_COLNAME][0])
+        self.assertEqual(1, ranked_table[RANK_COLNAME][1])
+        self.assertEqual(2, ranked_table[RANK_COLNAME][2])
+        self.assertEqual(1, ranked_table[RANK_COLNAME][3])
+        self.assertEqual(1, ranked_table[RANK_COLNAME][4])
+        self.assertEqual(2, ranked_table[RANK_COLNAME][5])
+        self.assertEqual(1, ranked_table[RANK_COLNAME][6])
+        self.assertEqual(2, ranked_table[RANK_COLNAME][7])
 
-        self.assertEqual(2, data[RANK_COLNAME][0])
-        self.assertEqual(1, data[RANK_COLNAME][1])
-        self.assertEqual(2, data[RANK_COLNAME][2])
-        self.assertEqual(1, data[RANK_COLNAME][3])
+    def test_create_ranks_with_single_dataset(self):
+        """
+        Tests that ranks are accurate in respect to data containing a single dataset
+        with no dataset column.
+        :return: None
+        """
+        single_dataset = self.data.iloc[:4].drop(DATASET_COLNAME, axis=1)
+        ranked_table = MetricTable(single_dataset).create_ranks().table
 
-    """
-    percent_best
-    """
+        self.assertEqual(2, ranked_table[RANK_COLNAME][0])
+        self.assertEqual(1, ranked_table[RANK_COLNAME][1])
+        self.assertEqual(2, ranked_table[RANK_COLNAME][2])
+        self.assertEqual(1, ranked_table[RANK_COLNAME][3])
 
     def test_percent_best(self):
-        table = MetricTable(self.data)
-        data = table.calculate_percent_best().table
-        data = data.set_index("technique")
+        """
+        Tests that for each trace_type (T1, T2), each scaling method (M1, M2) vote is distributed equally
+        among both datasets as displayed in the data.
+        :return:
+        """
+        percent_best_table = MetricTable(self.data).calculate_percent_best().table
+        percent_best_table = percent_best_table.set_index(
+            [TRANSITIVE_TRACE_TYPE_COLNAME, TECHNIQUE_COLNAME]
+        )
 
-        def get_percent(tech_name: str):
-            return data.loc[tech_name][PERCENT_BEST_COLNAME]
-
-        self.assertEqual(3, len(data))
-        self.assertEqual(1, get_percent("INDEPENDENT"))
-        self.assertEqual(0, get_percent("GLOBAL"))
-        self.assertEqual(1, get_percent("NONE"))
+        self.assertEqual(4, len(percent_best_table))
+        self.assertEqual(
+            0.5, percent_best_table.loc[("T1", "M1")][PERCENT_BEST_COLNAME]
+        )
+        self.assertEqual(
+            0.5, percent_best_table.loc[("T1", "M2")][PERCENT_BEST_COLNAME]
+        )
+        self.assertEqual(
+            0.5, percent_best_table.loc[("T2", "M1")][PERCENT_BEST_COLNAME]
+        )
+        self.assertEqual(
+            0.5, percent_best_table.loc[("T2", "M2")][PERCENT_BEST_COLNAME]
+        )

@@ -11,7 +11,7 @@ from tests.res.test_technique_helper import TestTechniqueHelper
 
 class TestCache(TestTechniqueHelper):
     def test_direct(self):
-        Cache.cleanup(self.dataset.name)
+        Cache.cleanup()
         original_cache_value = Cache.CACHE_ON
         Cache.CACHE_ON = True
         self.assertFalse(Cache.is_cached(self.dataset, self.get_direct_definition()))
@@ -37,7 +37,7 @@ class TestCache(TestTechniqueHelper):
         self.assertEqual(scores[0, 2], similarities[0, 2])
 
         # VP 4. All files are deleted
-        Cache.cleanup(self.dataset.name)
+        Cache.cleanup()
         extra_files = list(
             filter(
                 lambda f: SIMILARITY_MATRIX_EXTENSION in f,
@@ -50,7 +50,7 @@ class TestCache(TestTechniqueHelper):
     def test_transitive(self):
         original_cache_value = Cache.CACHE_ON
         Cache.CACHE_ON = True
-        Cache.cleanup(self.dataset.name)
+        Cache.cleanup()
         self.assertFalse(
             Cache.is_cached(self.dataset, self.get_transitive_definition())
         )

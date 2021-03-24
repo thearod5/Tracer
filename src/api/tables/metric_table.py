@@ -38,15 +38,35 @@ class MetricTable(Table):
     Represents a table containing technique identification information and metric scores
     """
 
-    def __init__(self, table: Optional[Data]):
-        super().__init__(table)
+    def __init__(
+        self, table: Optional[Data] = None, path_to_table: Optional[str] = None
+    ):
+        super().__init__(table, path_to_table=path_to_table)
 
-    def create_ranks(self) -> Table:
+    def create_ranks(self, rank_col=AP_COLNAME, new_col_name=RANK_COLNAME) -> Table:
         """
-        Finds the best ranking technique, using average precision scores, for each given group.
-        :return: DataFrame containing technique identification information and its rank
+        For each dataset and trace type, create ranks with 1 corresponding to highest map score
+        :param rank_col: str - the name of the column to be used for ranking
+        :param new_col_name: str - the name of the new column containing the ranks
+        :return:
         """
-        return Table(create_ranks(self.table))
+        data = self.table.copy()
+        aggregated_rank_df = None
+
+        rank_groups = [DATASET_COLNAME, TRANSITIVE_TRACE_TYPE_COLNAME]
+        rank_groups_in_data = [col for col in rank_groups if col in self.table.columns]
+
+        for _, values in data.groupby(rank_groups_in_data):
+            values[new_col_name] = values[rank_col].rank(
+                method="dense", ascending=False
+            )
+            if aggregated_rank_df is None:
+                aggregated_rank_df = values
+            else:
+                aggregated_rank_df = pd.concat(
+                    [aggregated_rank_df, values], ignore_index=True
+                )
+        return Table(aggregated_rank_df)
 
     def calculate_gain(self) -> Table:  # pylint: disable=too-many-locals
         """
@@ -102,25 +122,36 @@ class MetricTable(Table):
 
     def calculate_percent_best(self) -> Table:
         """
-        For each variation point, calculates the percent of times it had a rank of 1 for each transitive trace type.
-        TODO: Why no group by dataset?
+        For each transitive trace type and variation point, calculates the percent of times it had a rank of 1 across
+        all datasets. Missing groups columns are ignored.
         :return:
         """
-        ranks_df = self.create_ranks().table
-        ignore_columns = ALL_METRIC_NAMES + META_COLS + [RANK_COLNAME]
-        variation_points = [
-            col for col in ranks_df.columns if col not in ignore_columns
-        ]
-        data = ranks_df.copy()
-        percent_best_df = pd.DataFrame()
-        n_datasets = len(data[DATASET_COLNAME].unique())
+        data = self.create_ranks().table.copy()
 
-        for variation_point in variation_points:  # ex: NLPType
+        # 1. extract variation points (e.g. AlgebraicModel, TraceType, ect.)
+        non_vp_columns = (
+            ALL_METRIC_NAMES + META_COLS + [RANK_COLNAME, TRANSITIVE_TRACE_TYPE_COLNAME]
+        )
+        vp_cols = [col for col in data.columns if col not in non_vp_columns]
+
+        percent_best_df = pd.DataFrame()
+        n_datasets = (
+            len(data[DATASET_COLNAME].unique())
+            if DATASET_COLNAME in data.columns
+            else 1
+        )
+
+        for variation_point in vp_cols:
             for (trace_type, vp_technique), group_data in data.groupby(
                 [TRANSITIVE_TRACE_TYPE_COLNAME, variation_point]
             ):
                 best_rank_query = group_data[group_data[RANK_COLNAME] == 1]
-                vp_freq = len(best_rank_query[DATASET_COLNAME].unique()) / n_datasets
+                n_datasets_in_query = (
+                    1
+                    if DATASET_COLNAME not in best_rank_query.columns
+                    else len(best_rank_query[DATASET_COLNAME].unique())
+                )
+                vp_freq = n_datasets_in_query / n_datasets
                 new_record = {
                     TRANSITIVE_TRACE_TYPE_COLNAME: trace_type,
                     VARIATION_POINT_COLNAME: variation_point,
@@ -129,7 +160,7 @@ class MetricTable(Table):
                 }
                 percent_best_df = percent_best_df.append(new_record, ignore_index=True)
 
-        return Table(percent_best_df)
+        return Table(percent_best_df).sort_cols()
 
     def create_melted_metrics(
         self, metric_col_name=METRIC_COLNAME, metric_value_col_name="value"
@@ -259,25 +290,3 @@ def calculate_gain_for_scores(scores: Scores, base_value: float, inverted: bool)
     :return:
     """
     return scores.apply(lambda score: calculate_gain(score, base_value, inverted))
-
-
-def create_ranks(data: Data, rank_col=AP_COLNAME, new_col_name=RANK_COLNAME) -> Data:
-    """
-    For each dataset and trace type, create ranks with 1 corresponding to highest map score
-    :param data: DataFrame containing cols: dataset, transitive_trace_type
-    :param rank_col: str - the name of the column to be used for ranking
-    :param new_col_name: str - the name of the new column containing the ranks
-    :return:
-    """
-    data = data.copy()
-    aggregated_rank_df = None
-
-    for _, values in data.groupby([DATASET_COLNAME, TRANSITIVE_TRACE_TYPE_COLNAME]):
-        values[new_col_name] = values[rank_col].rank(method="dense", ascending=False)
-        if aggregated_rank_df is None:
-            aggregated_rank_df = values
-        else:
-            aggregated_rank_df = pd.concat(
-                [aggregated_rank_df, values], ignore_index=True
-            )
-    return aggregated_rank_df

@@ -3,18 +3,18 @@ The Table module serves as a proxy for all of the post or pre processing operati
 All of the operations are wrapped in the Table object below.
 """
 import os
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
 import pandas as pd
 
 from api.constants.processing import (
-    METRIC_COLNAME,
-    LAG_NORMALIZED_INVERTED_COLNAME,
-    DATASET_COLNAME,
-    COLUMN_ORDER,
-    DATASET_COLUMN_ORDER,
     AP_COLNAME,
     AUC_COLNAME,
+    COLUMN_ORDER,
+    DATASET_COLNAME,
+    DATASET_COLUMN_ORDER,
+    LAG_NORMALIZED_INVERTED_COLNAME,
+    METRIC_COLNAME,
     N_SIG_FIGS,
 )
 from api.tables.itable import ITable
@@ -25,9 +25,13 @@ class Table(ITable):
     Proxy class encapsulating pre and post processing operations for generic tables.
     """
 
-    def __init__(self, table: Optional[pd.DataFrame]):  # implements MT1
+    def __init__(
+        self, table: Optional[pd.DataFrame] = None, path_to_table: Optional[str] = None
+    ):
         super().__init__()
         self.table = pd.DataFrame() if table is None else table
+        if path_to_table is not None:
+            self.table = pd.read_csv(path_to_table)
 
     def add(
         self, entries, other: dict = None, create_index=False, index_name="query_index"
@@ -52,14 +56,10 @@ class Table(ITable):
 
         self.table = self.table.append(entries_dict, ignore_index=True)
 
-    def format_table(self, names_title_case=False) -> "Table":
+    def sort_cols(self) -> "Table":
         """
-        1. Sorts datasets using constants defined in api/constants
-        2. Sorts column order of data
-        3. Formats numerical data to a fixed amount of sig figs (see api/constants)
-        :param data: the source data
-        :param names_title_case: whether the names of metrics and columns should be lower case
-        :return: DataFrame with modifications specified
+        Sorts columns of table using the constants in api/constants
+        :return: Table - copy of this table but with sort applied
         """
         if DATASET_COLNAME in self.table.columns:
             dataset = list(
@@ -69,10 +69,25 @@ class Table(ITable):
                 self.table[DATASET_COLNAME], categories=dataset
             )
         data = self.table.reset_index(drop=True)
-        defined_sort_columns = [col for col in COLUMN_ORDER if col in data.columns]
-        other_columns = [col for col in data.columns if col not in defined_sort_columns]
-        data = data[defined_sort_columns + other_columns]
-        data = data.sort_values(by=defined_sort_columns)
+        defined_columns_in_sort_order = [
+            col for col in COLUMN_ORDER if col in data.columns
+        ]
+        undefined_columns = [
+            col for col in data.columns if col not in defined_columns_in_sort_order
+        ]
+        return Table(data[defined_columns_in_sort_order + undefined_columns])
+
+    def format_table(self, names_title_case=False) -> "Table":
+        """
+        1. Sorts datasets using constants defined in api/constants
+        2. Sorts column order of data
+        3. Formats numerical data to a fixed amount of sig figs (see api/constants)
+        :param data: the source data
+        :param names_title_case: whether the names of metrics and columns should be lower case
+        :return: DataFrame with modifications specified
+        """
+
+        data = self.sort_cols().table
 
         if names_title_case:
             presentation_map = {

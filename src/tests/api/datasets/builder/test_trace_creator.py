@@ -2,14 +2,14 @@ from igraph import Graph
 
 from api.datasets.builder.structure_definition import get_structure_definition
 from api.datasets.builder.trace_parser import (
+    create_trace_matrix_values_from_trace_list,
+    get_delimiter_in_segment,
     get_document_delimiter,
+    get_index_of_next_alpha_char,
     get_traces_in_line,
+    get_traces_in_trace_file_content,
     is_valid_trace_list,
     parse_trace_file,
-    create_trace_matrix_values_from_trace_list,
-    get_index_of_next_alpha_char,
-    get_delimiter_in_segment,
-    get_traces_in_trace_file_content,
 )
 from api.datasets.builder.transitive_trace_matrix_creator import (
     create_trace_matrix_graph,
@@ -25,19 +25,22 @@ class TestTraceCreator(SmartTest):
     """
 
     def test_get_document_delimiter_colon(self):
+        """
+        Tests that get_document_delimiter is able to identify colons as a delimiters in an artifact definition file.
+        """
         dataset_name = "EasyClinic"
         structure: dict = get_structure_definition(dataset_name)
         with open(structure["traces"]["0-1"]) as top_trace_file:
             delimiter = get_document_delimiter(top_trace_file.read())
-            assert delimiter == ":", delimiter
+            self.assertEqual(":", delimiter)
 
     def test_get_document_delimiter_tab(self):
         dataset_name = "WARC"
 
         structure: dict = get_structure_definition(dataset_name)
-        with open(structure["traces"]["0-1"]) as top_trace_file:
+        with open(structure["traces"]["1-2"]) as top_trace_file:
             delimiter = get_document_delimiter(top_trace_file.read())
-            assert delimiter == "\t", delimiter
+            self.assertEqual("\t", delimiter)
 
     """
     get_document_delimiter
@@ -226,7 +229,7 @@ class TestTraceCreator(SmartTest):
 
 def assert_traces_for_dataset(dataset_name: str):
     structure: dict = get_structure_definition(dataset_name)
-    traces = parse_trace_file(structure["traces"]["0-1"])
+    traces = parse_trace_file(structure["traces"]["1-2"])
 
     for trace in traces:
         source, target = trace

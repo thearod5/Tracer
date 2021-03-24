@@ -3,24 +3,23 @@ import time
 
 from api.constants.paths import PATH_TO_SAMPLE_DATASETS
 from api.datasets.builder.dataset_builder import DatasetBuilder
-from api.datasets.builder.dataset_exporter import export_dataset
 from tests.res.smart_test import SmartTest
 
 TIME_DELTA = 2  # tolerable time since last update
 
 
 class TestDatasetExporter(SmartTest):
-    """
-    export_dataset
-    """
-
     def test_export_dataset(self):
+        """
+        Tests that after MockDataset is exported all required folders have been updated.
+        :return:
+        """
         # Setup
         dataset_name = "MockDataset"
         builder = DatasetBuilder(dataset_name, create=True)
 
         # Work
-        export_dataset(builder)
+        builder.export_dataset()
         folders = ["Artifacts", "Oracles"]
         for folder_rel_path in folders:
             path_to_folder = os.path.join(
