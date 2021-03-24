@@ -3,7 +3,7 @@ The Table module serves as a proxy for all of the post or pre processing operati
 All of the operations are wrapped in the Table object below.
 """
 import os
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 import pandas as pd
 
@@ -77,11 +77,21 @@ class Table(ITable):
         ]
         return Table(data[defined_columns_in_sort_order + undefined_columns])
 
+    def sort_values(self, by: List[str], axis: int) -> "Table":
+        """
+        Sorts the rows of the table using specified values along axis
+        :param by: the col names or row values to sort by
+        :param axis: 0 if cols 1 if rows
+        :return:
+        """
+        return Table(self.table.sort_values(by=by, axis=axis))
+
     def format_table(self, names_title_case=False) -> "Table":
         """
         1. Sorts datasets using constants defined in api/constants
         2. Sorts column order of data
         3. Formats numerical data to a fixed amount of sig figs (see api/constants)
+        4. Splits
         :param data: the source data
         :param names_title_case: whether the names of metrics and columns should be lower case
         :return: DataFrame with modifications specified
@@ -110,8 +120,38 @@ class Table(ITable):
                 )
             )
 
-        rounded_df = data.round(N_SIG_FIGS)
-        return Table(rounded_df)
+        return Table(data).round()
+
+    def to_categorical(self, col_name: str, col_value_order: List[str]) -> "Table":
+        """
+        Converts the given column into a categorical one which can be used for sorting later.
+        :param col_name: the name of the column to convert
+        :param col_value_order: the order of the categories in the specified column
+        :return: Table
+        """
+        data = self.table.copy()
+        data[col_name] = pd.Categorical(data[col_name], categories=col_value_order)
+        return Table(data)
+
+    def to_title_case(self, exclude: Optional[List[str]] = None) -> "Table":
+        """
+        Converted every column and categorical value to their their title case representation.
+        :return:
+        """
+        data = self.table.copy()
+        exclude = [] if exclude is None else exclude
+        for col_name in data.columns:
+            if data[col_name].dtype != "float64" and col_name not in exclude:
+                data[col_name] = data[col_name].apply(split_and_format)
+        data.columns = list(map(split_and_format, data.columns))
+        return Table(data)
+
+    def round(self, sig_figs=N_SIG_FIGS) -> "Table":
+        """
+        Rounds numerical columns to the significant figures given sig figs.
+        :return:
+        """
+        return Table(self.table.round(sig_figs))
 
     def save(self, export_path: str):
         """
@@ -120,6 +160,20 @@ class Table(ITable):
         :return: None
         """
         self.table.to_csv(export_path, index=False)
+
+    def format_percents_for_latex(self, to_int=False):
+        """
+        For any any containing "percent", its values are put into the range of [0,100] and a "\%" precedes them.
+        :param to_int: whether percents should be put into integer formats
+        :return:
+        """
+        data = self.table.copy()
+        for col in data.columns:
+            if "percent" in col.lower():
+                data[col] = data[col].apply(
+                    lambda f: f"{int(f * 100) if to_int else f * 100}\%"
+                )
+        return Table(data)
 
     def get_extension(self) -> str:
         """
@@ -160,3 +214,13 @@ class Table(ITable):
                 else pd.concat([aggregate_df, intermediate_df])
             )
         return Table(aggregate_df)
+
+
+def split_and_format(name: str, delimiter="_"):
+    """
+    Returns the title-cased version of name after being seperated by given delimiter
+    :param name: the name containing delimiter to be formatted
+    :param delimiter: the delimiter separating the parts in name
+    :return:
+    """
+    return " ".join(list(map(lambda p: p.title(), name.split(delimiter))))

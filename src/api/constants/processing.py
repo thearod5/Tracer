@@ -3,6 +3,8 @@ This module stores the constants regarding the names of columns for any pre or p
 """
 import pandas as pd
 
+from api.extension.experiment_types import ExperimentTraceType, SamplingExperiment
+
 N_SIG_FIGS = 3
 
 DATASET_COLNAME = "dataset"
@@ -65,10 +67,13 @@ COLUMN_ORDER = (
     + PERCENT_BEST_SORT_ORDER
 )
 DATASET_COLUMN_ORDER = ["WARC", "Drone", "EasyClinic", "TrainController", "EBT"]
+
+TRANSITIVE_TRACE_TYPE_ORDER = [tt.value for tt in ExperimentTraceType]
 Data = pd.DataFrame
 Scores = pd.Series
 MeltedData = pd.DataFrame
 DF_METRICS = [AP_COLNAME, AUC_COLNAME, LAG_COLNAME, LAG_NORMALIZED_INVERTED_COLNAME]
+SAMPLING_METHODS = [et.value for et in SamplingExperiment]
 
 MinAccuracyTable = Data
 MedianAccuracyTable = Data
