@@ -3,6 +3,7 @@ This module stores the constants regarding the names of columns for any pre or p
 """
 import pandas as pd
 
+from api.constants.techniques import COMBINED_ID, DIRECT_ID, TRANSITIVE_ID
 from api.extension.experiment_types import ExperimentTraceType, SamplingExperiment
 
 N_SIG_FIGS = 3
@@ -12,6 +13,7 @@ NAME_COLNAME = "name"
 
 SCORE_COLNAME = "score"
 METRIC_COLNAME = "metric"
+METRIC_SCORE_COLNAME = "metric_score"
 QUERY_INDEX_COLNAME = "query_index"
 AP_COLNAME = "ap"
 AUC_COLNAME = "auc"
@@ -19,10 +21,7 @@ LAG_COLNAME = "lag"
 CORE_METRIC_NAMES = [AP_COLNAME, AUC_COLNAME, LAG_COLNAME]
 LAG_NORMALIZED_COLNAME = "lag_normalized"
 LAG_NORMALIZED_INVERTED_COLNAME = "lag_normalized_inverted"
-ALL_METRIC_NAMES = [
-    AP_COLNAME,
-    AUC_COLNAME,
-    LAG_COLNAME,
+ALL_METRIC_NAMES = CORE_METRIC_NAMES + [
     LAG_NORMALIZED_COLNAME,
     LAG_NORMALIZED_INVERTED_COLNAME,
 ]
@@ -34,6 +33,7 @@ TRANSITIVE_AGGREGATION_COLNAME = "transitive_aggregation"
 TECHNIQUE_AGGREGATION_COLNAME = "technique_aggregation"
 TRANSITIVE_TRACE_TYPE_COLNAME = "transitive_trace_type"
 TECHNIQUE_TYPE_COLNAME = "technique_type"
+TECHNIQUE_TYPE_SORT_ORDER = [DIRECT_ID, TRANSITIVE_ID, COMBINED_ID]
 
 VARIATION_POINT_COLNAME = "variation_point"
 RELATIVE_GAIN_COLNAME = "relative_gain"
@@ -59,12 +59,20 @@ PERCENT_BEST_SORT_ORDER = [
     TECHNIQUE_COLNAME,
     PERCENT_BEST_COLNAME,
 ]
+CORRELATION_COL_ORDER = [RELATIVE_GAIN_COLNAME, CORRELATION_COLNAME, P_VALUE_COLNAME]
 COLUMN_ORDER = (
-    [DATASET_COLNAME, TECHNIQUE_TYPE_COLNAME, TRANSITIVE_TRACE_TYPE_COLNAME]
+    [
+        DATASET_COLNAME,
+        TECHNIQUE_TYPE_COLNAME,
+        TRANSITIVE_TRACE_TYPE_COLNAME,
+        QUERY_INDEX_COLNAME,
+        METRIC_COLNAME,
+    ]
     + TECHNIQUE_COLS
-    + [NAME_COLNAME]
     + ALL_METRIC_NAMES
     + PERCENT_BEST_SORT_ORDER
+    + CORRELATION_COL_ORDER
+    + [NAME_COLNAME]
 )
 DATASET_COLUMN_ORDER = ["WARC", "Drone", "EasyClinic", "TrainController", "EBT"]
 

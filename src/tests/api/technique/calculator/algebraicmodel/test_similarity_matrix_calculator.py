@@ -5,7 +5,7 @@ from api.technique.variationpoints.algebraicmodel.calculate_similarity_matrix im
     calculate_similarity_matrix_for_nlp_technique,
     create_term_frequency_matrix,
     calculate_similarity_matrix_from_term_frequencies,
-    calculate_lsa_similarity_matrix,
+    calculate_lsi_similarity_matrix,
     calculate_similarity_matrix,
 )
 from api.technique.variationpoints.algebraicmodel.models import AlgebraicModel
@@ -61,7 +61,7 @@ class TestSimilarityMatrixCalculator(SmartTest):
     """
 
     def test_calculate_lsa_similarity_matrix(self):
-        similarity_matrix, vocab = calculate_lsa_similarity_matrix(
+        similarity_matrix, vocab = calculate_lsi_similarity_matrix(
             self.words_a, self.words_b
         )
 

@@ -6,8 +6,8 @@ from api.technique.definitions.sampled.definition import SampledTechniqueDefinit
 from api.technique.definitions.sampled.sampler import sample_indices
 from api.technique.definitions.sampled.technique_data import SampledTechniqueData
 from api.technique.definitions.transitive.calculator import (
-    TransitiveTechniqueCalculator,
     INTERMEDIATE_TECHNIQUE_PIPELINE,
+    TransitiveTechniqueCalculator,
 )
 
 
@@ -18,7 +18,8 @@ def sample_matrices(data: SampledTechniqueData):
     :return:
     """
     indices_to_keep_agg = []
-    for matrix in data.transitive_matrices[:-1]:
+    for matrix in data.transitive_matrices[:-1]:  # no sampling on last matrix
+        # sample percentage of intermediate indices
         n_transitive_artifacts = matrix.shape[1]
         indices_to_keep = sample_indices(
             n_transitive_artifacts, data.technique.sample_percentage
@@ -26,7 +27,10 @@ def sample_matrices(data: SampledTechniqueData):
         indices_to_keep_agg.append(indices_to_keep)
 
     for boundary_index, boundary_indices in enumerate(indices_to_keep_agg):
+        boundary_indices.sort()
         boundary_indices = indices_to_keep_agg[boundary_index]
+
+        # select artifacts using sampled indices
         data.transitive_matrices[boundary_index] = data.transitive_matrices[
             boundary_index
         ][:, boundary_indices]
