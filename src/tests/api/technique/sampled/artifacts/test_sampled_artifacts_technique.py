@@ -23,7 +23,7 @@ class TestSampledArtifactsTechnique(TestTechniqueHelper):
         )
 
     def test_combined_sampled(self):
-        dataset = "EasyClinic"
+        dataset = "SAMPLE_EasyClinic"
         tracer = Tracer()
         Cache.CACHE_ON = True
 

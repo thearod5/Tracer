@@ -83,7 +83,7 @@ class TestCache(TestTechniqueHelper):
         original_cache_value = Cache.CACHE_ON
         Cache.CACHE_ON = True
 
-        dataset_other_name = "EasyClinic"
+        dataset_other_name = "SAMPLE_EasyClinic"
         dataset_other = Dataset(dataset_other_name)
 
         tracer = Tracer()

@@ -35,7 +35,7 @@ class TestTransitiveTraceMatrixCreator(SmartTest):
         self.assertEqual(3, len(graph.es))
 
     def test_create_transitive_trace_matrices_with_warc(self):
-        dataset_builder = DatasetBuilder("WARC")
+        dataset_builder = DatasetBuilder("SAMPLE_WARC")
         dataset_builder.create_levels()
 
         # erase trace matrix
@@ -163,7 +163,7 @@ class TestTransitiveTraceMatrixCreator(SmartTest):
         defined trace matrices.
         :return: None
         """
-        dataset_builder = DatasetBuilder("WARC")
+        dataset_builder = DatasetBuilder("SAMPLE_WARC")
         dataset_builder.create_levels()
         graph = create_trace_matrix_graph(dataset_builder.defined_trace_matrices, 3)
         paths = get_graph_paths_map_to_missing_paths(

@@ -5,13 +5,13 @@ from pandas import DataFrame
 from api.constants.paths import PATH_TO_TEST_REQUIREMENTS
 from api.datasets.builder.dataset_builder import DatasetBuilder
 from api.datasets.builder.level_parser import (
-    read_artifact_level,
     parse_artifact_txt_file,
+    read_artifact_level,
 )
 from api.datasets.builder.structure_definition import (
+    contains_fields,
     get_structure_definition,
     is_valid_structure_file,
-    contains_fields,
 )
 from api.extension.file_operations import get_index_after_numbers
 from tests.res.smart_test import SmartTest
@@ -50,7 +50,7 @@ class TestDatasetBuilder(SmartTest):
         )
 
     def test_read_level_in_dataset(self):
-        dataset_name = "EasyClinic"
+        dataset_name = "SAMPLE_EasyClinic"
         structure: dict = get_structure_definition(dataset_name)
 
         level = read_artifact_level(structure["artifacts"]["0"])
@@ -91,7 +91,7 @@ class TestDatasetBuilder(SmartTest):
             )
 
     def test_indirect_matrices_shape_with_missing_sources(self):
-        dataset_name = "WARC"
+        dataset_name = "SAMPLE_WARC"
         dataset_structure = DatasetBuilder(dataset_name)
         dataset_structure.create_dataset()
 

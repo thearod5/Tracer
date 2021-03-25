@@ -11,7 +11,7 @@ class TestStructureDefinitionParser(SmartTest):
     """
 
     def test_read_level_in_dataset_csv_file(self):
-        dataset_name = "EBT"
+        dataset_name = "SAMPLE_EBT"
         structure: dict = get_structure_definition(dataset_name)
 
         # level 1
