@@ -3,12 +3,12 @@ from igraph import Graph
 
 from api.datasets.builder.dataset_builder import DatasetBuilder
 from api.datasets.builder.transitive_trace_matrix_creator import (
-    create_trace_matrix_graph,
-    create_trace_id_2_trace_matrix_map_from_definition,
-    get_graph_paths_map_to_missing_paths,
     contains_trace_id,
-    create_trace_matrix_map,
     create_similarity_matrix_map_for_graph_paths,
+    create_trace_id_2_trace_matrix_map_from_definition,
+    create_trace_matrix_graph,
+    create_trace_matrix_map,
+    get_graph_paths_map_to_missing_paths,
 )
 from api.datasets.trace_matrix import TraceMatrix
 from tests.res.smart_test import SmartTest
@@ -158,6 +158,11 @@ class TestTransitiveTraceMatrixCreator(SmartTest):
         self.assertEqual([0, 1, 2], paths["0-2"][0])
 
     def test_get_paths_to_missing_traces_with_warc(self):
+        """
+        Checks that the missing trace matrix in WARC is covered using a transitive path using the
+        defined trace matrices.
+        :return: None
+        """
         dataset_builder = DatasetBuilder("WARC")
         dataset_builder.create_levels()
         graph = create_trace_matrix_graph(dataset_builder.defined_trace_matrices, 3)
@@ -165,8 +170,8 @@ class TestTransitiveTraceMatrixCreator(SmartTest):
             dataset_builder.defined_trace_matrices, graph, 3
         )
         self.assertEqual(1, len(paths.keys()))
-        self.assertEqual(1, len(paths["1-2"]))
-        self.assertEqual([1, 0, 2], paths["1-2"][0])
+        self.assertEqual(1, len(paths["0-1"]))
+        self.assertEqual([0, 2, 1], paths["0-1"][0])
 
     """
     contains_id

@@ -1,43 +1,90 @@
 id,text
-FR04.txt,fr type war crecord set function avail createmodifi record properti
-FR10.txt,fr libwarc provid mime iter handl mim etyp payload
-FR38.txt,fr librari implement compat simplifi wrapper interfac gener swig httpwww swig org wrapper libwarc code allow call nativ wide varieti languag
-FR39.txt,fr python interfac implement
-FR11.txt,fr iter use exact pattern search regex express
-FR05.txt,fr libwarc provid rang function univers interfac read rang valid war crecord
-FR13.txt,fr libwarc enabl combin iter use composit iter
-FR07.txt,fr libwarc provid ar crecord reader function libwarc reader make read oper simpl possibl
-FR06.txt,fr libwarc provid stabl applic programm interfac api handl war crecord abstract object adt
-FR12.txt,fr libwarc provid abstract interfac iter enabl custom iter
-FR16.txt,fr dynam memori manag hidden insid libwarc
-FR02.txt,fr libwarc interfac fulli encapsul intern function isol abstract tool applic base libwarc chang intern implement
-FR03.txt,fr libwarc provid rang function univers interfac creat type valid war crecord ensur result warc file conform prevail warc standard
-FR17.txt,fr libwarc use gzip default compress format
-FR29.txt,fr possibl walk curl directori write data warc file
-FR01.txt,fr softwar tool applic base libwarc requir just singl header file
-FR15.txt,fr libwarc use diskbas work memori
-FR14.txt,fr libwarc memori safe manag dynam memori intern
-FR28.txt,fr possibl walk wget mirror write data warc file
-FR25.txt,fr possibl convert arc file warc file use commandlin tool call arcwarc
-FR31.txt,fr python script avail enabl rapid develop warc base solut
-FR19.txt,fr libwarc manag write read access
-FR18.txt,fr libwarc provid plugin interfac enabl use altern compress librari gzip zip
-FR30.txt,fr possibl collect arbitrari web content html file imag exampl web server document root directori write data warc file
-FR24.txt,fr apach lighttp plugin provid access libwarc api warc browser http
-FR32.txt,fr warc extens releas patch command curl wget httrack project
-FR26.txt,fr arc warc convers arcwarc carri accord specif configur file
-FR27.txt,fr possibl collect ht track data directori output ht track write data warc file
-FR33.txt,fr warc extens help content provid command curl wget httrack
-FR37.txt,fr warc file variou teststat provid test jhove deliver
-FR23.txt,fr warc browser support proxystyl interfac
-FR22.txt,fr warc browser support rewrit interfac
-FR36.txt,fr jhove plugin modul output handler avail warc file
-FR08.txt,fr libwarc provid default iter builtin function
-FR20.txt,fr warc file valid use command line tool wvalid enabl valid reject warc file
-FR34.txt,fr possibl identifi warc file use unix file command
-FR35.txt,fr possibl identifi valid warc file use jhove
-FR21.txt,fr warc browser provid api allow brows warc file associ cdx file http server
-FR09.txt,fr libwarc provid record iter handl war ctype record
-FR40.txt,fr java interfac implement
-FR41.txt,fr independ java implement libwarc implement
-FR42.txt,fr function librari expos way fit metaphor paradigm implement languag
+SRS75.txt,sr commun support provid open sourc commun support provid term project
+SRS61.txt,sr java interfac libwarc implement use swig wrapper andor jni
+SRS49.txt,sr set command line tool api incorpor libwarc enabl collect onlin document html embed file write valid warc record
+SRS48.txt,sr set command line tool incorpor libwarc perform migrat curl archiv war crecord
+SRS60.txt,sr python interfac libwarc implement use swig wrapper
+SRS74.txt,sr util applic level function warc tool avail end user command line tool extens exist tool simpl web applic access warc content
+SRS62.txt,sr independ java implement libwarc implement subject review deliver satisfi sr
+SRS76.txt,sr patch implement parti project contribut distribut appropri commun
+SRS89.txt,sr assembl code specif system featur use libwarc ensur result code wide portabl multipl target architectur
+SRS88.txt,sr essenti extern librari use libwarc gzip compress wide charact encod librari
+SRS77.txt,sr code document libwarc licens commun use iipc approv licens apach bsd licenc
+SRS63.txt,sr libwarc bind function enabl use libwarc iter describ sr use variou dynam languag java earlier use metaphor paradigm familiar languag
+SRS67.txt,sr libwarc implement warc
+SRS73.txt,sr libwarc ship number readytous command line exampl warcdump dump content warc file wfilter
+SRS72.txt,sr libwarc ship develop guid use exampl
+SRS66.txt,sr possibl libwarc abl read write updat warc file high speed design focu minimum memori footprint perform
+SRS58.txt,sr void duplic sr
+SRS70.txt,sr libwarc ship manual build script
+SRS64.txt,sr libwarc bind function enabl use libwarc iter describ sr use java later use java new contain iter foreach
+SRS65.txt,sr possibl libwarc abl handl warc file size minim memori usag
+SRS71.txt,sr libwarc ship instal guid fedora debian free bsd mac os window xp
+SRS59.txt,sr libwarc provid interfac swig wrapper allow dynam languag bind python rubi perl lua
+SRS16.txt,sr libwarc provid gener iter enabl develop iter war crecord creat abstract war cdocument simpl contain
+SRS02.txt,sr libwarc header structur hierarch manner univers header warc includ
+SRS03.txt,sr possibl develop access modifi manipul aspect warc file format includ singl header file
+SRS17.txt,sr libwarc provid war crecord mim etyp iter
+SRS01.txt,sr singl entri point libwarc call warc
+SRS15.txt,sr libwarc includ adt object handl read oper ar crecord
+SRS29.txt,sr libwarc support multipl compress schema load specif compressor runtim extern share librari
+SRS28.txt,sr default compress format gzip
+SRS14.txt,sr oper war crecord possibl use function accept abstract handl argument
+SRS38.txt,sr web proxi interfac implement allow user set web browser proxi provid interfac ensur content deliv archiv live web
+SRS04.txt,sr univers header warc ensur compat version libwarc
+SRS10.txt,sr peer class expos set class function read write updat attribut correspond war crecord
+SRS11.txt,sr libwarc provid api describ set data set oper perform data data type abstract abstract data type adt ensur independ concret implement
+SRS05.txt,sr univers header warc ensur deprec function call chang librari notifi compil time
+SRS39.txt,sr libwarc incorpor apach modul enabl action specifi sr execut apach
+SRS13.txt,sr possibl releas war crecord use destructor
+SRS07.txt,sr univers header warc provid normalis interfac enabl develop creat valid compliant war crecord base definit iso tc sc standard document interfac avail creat warc record follow type warinfo respons request metadata revisit convers continu resourc
+SRS06.txt,sr interfac libwarc ensur chang librari affect tool applic base libwarc
+SRS12.txt,sr possibl creat war crecord use constructor return abstract handl data repres war crecord
+SRS37.txt,sr warc browser support clientsid rewrit interfac use javascript code rewrit link deliv alongsid archiv content base principl implement wayback machin
+SRS23.txt,sr libwarc use dynam heap memori intern usag
+SRS22.txt,sr develop use libwarc requir allocatereleas memori directli instead develop use libwarc object constructor destructor function
+SRS36.txt,sr warc browser support cdx file cdx file format standard time outsid scope
+SRS20.txt,sr libwarc iter combin composit iter enabl develop search field
+SRS34.txt,sr possibl perform read oper read offset filter war crecord remot locat http
+SRS08.txt,sr war crecord access peer class same
+SRS09.txt,sr attribut war crecord iso standard specif correspond attribut peer class
+SRS35.txt,sr secur reason possibl perform write updat oper war crecord remot
+SRS21.txt,sr libwarc encapsul handl memori manag process war crecord
+SRS19.txt,sr libwarc gener iter customis differ purpos callback handler hook
+SRS25.txt,sr payload war crecord document store disk avoid use memori heap small object
+SRS31.txt,sr command line tool implement utilis libwarc check consist war crecord conform warc iso standard
+SRS30.txt,sr possibl use compress schema includ noncompress singl warc file possibl mix compress scheme singl warc file
+SRS24.txt,sr libwarc alloc minimum memori heap store war crecord metadata
+SRS18.txt,sr libwarc provid war crecordtyp iter
+SRS32.txt,sr command line tool notifi user war crecord anomali miss requir field incompat field type
+SRS26.txt,sr libwarc use file memori map technolog instead libwarc explicitli alloc memori need
+SRS27.txt,sr libwarc support noncompress war crecord compress war crecord file
+SRS33.txt,sr libwarc provid set class enabl remot manag war crecord
+SRS54.txt,sr magic number warc creat incorpor file mimetyp databas enabl simpl identif warc file unix file command
+SRS40.txt,sr libwarc incorpor lighttp modul enabl action specifi sr execut lighttp
+SRS68.txt,sr major revis warc iso standard lead revis libwarc revis isol affect tool develop incorpor libwarc
+SRS83.txt,sr libwarc binari modul readi use binari command librari static share compil gener optimis flag releas
+SRS82.txt,sr libwarc sourc code releas follow archiv libwarcvers tar gz libwarcvers tar bz libwarcvers zip correspond digest develop adapt build configur file best perform target machin
+SRS69.txt,sr libwarc develop gnu linux fedora
+SRS41.txt,sr command line tool arcwarc incorpor libwarc abl migrat data ar crecord war crecord format
+SRS55.txt,sr warc valid tool specifi sr extend option make use jhove command line api identifi valid warc file given specif warc file command abl identifi file warc file valid level complianc given standard term wellformed valid final characteris file extract display signific properti contain file
+SRS43.txt,sr arcwarc make default oper case ar crecord correspond field war crecord
+SRS57.txt,sr warc file variou teststat provid test jhove deliver
+SRS80.txt,sr ensur code portabl older comput architectur libwarc compat compil conform ansic standard revis
+SRS81.txt,sr command line tool incorpor libwarc atom tool perform singl function perform perfectli spirit unix command line tool combin use pipe redirect script creat high level command
+SRS56.txt,sr warc mdoul warc handler plugin modul implement jhove plugin layer enabl identif valid warc file
+SRS42.txt,sr default oper arcwarc carri onetoon map record field convert ar crecord correspond respons war crecord metadata war crecord includ inform convers process
+SRS46.txt,sr ht track archiv file format link strategi vari version version ht track possibl adapt migrat script deal chang
+SRS52.txt,sr extens ht track wget curl incorpor libwarc provid patch recent specif version tool enabl user tool access function libwarc
+SRS85.txt,sr libwarc compil run solari aix ming unix compliant system compil run window xp
+SRS84.txt,sr libwarc avail binari gnu linux free bsd mac os window xp
+SRS53.txt,sr helper document libwarc function avail ht track wget curl command
+SRS47.txt,sr set command line tool incorpor libwarc perform migrat wget archiv war crecord
+SRS79.txt,sr libwarc implement conform ansic standard revis
+SRS51.txt,sr python script implement incorpor libwarc make function libwarc api avail python
+SRS45.txt,sr set command line tool incorpor libwarc perform migrat ht track archiv war crecord
+SRS86.txt,sr libwarc depend specif build tool order built sourc makefil target includ simplifi deploy
+SRS87.txt,sr default compil use unix system build libwarc gcc window default compil microsoft visual
+SRS44.txt,sr possibl specifi nondefault oper arcwarc use name configur file describ desir ar crecord war crecord convers
+SRS50.txt,sr command line tool api sr includ link extract featur
+SRS78.txt,sr libwarc associ tool ship instal modwarc apach lighttpd server

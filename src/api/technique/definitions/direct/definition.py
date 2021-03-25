@@ -26,7 +26,9 @@ class DirectTechniqueDefinition(ITechniqueDefinition):
         TODO
         :return:
         """
-        assert len(self.parameters) == 2
+        assert (
+            len(self.parameters) == 2
+        ), "Expected algebraic model and trace type: %d" % len(self.parameters)
         self.algebraic_model = AlgebraicModel(self.parameters[0])
         self.trace_type = TraceType(self.parameters[1])
 

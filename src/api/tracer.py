@@ -52,7 +52,8 @@ class Tracer:
         Returns list of metrics of technique per query in dataset.
         :param dataset_name: name of dataset
         :param technique_name: technique definition to evaluate
-        :param summary_metrics: whether metrics should be calculated for each individual query
+        :param summary_metrics: if true metrics of all queries are taken, otherwise individual queries are used
+        :return: list of metrics, one per query. If summary_metrics is True, then list will contain a single item.
         """
         dataset: Dataset = self.get_dataset(dataset_name)
         technique = create_technique_by_name(technique_name)

@@ -19,24 +19,25 @@ the documents. Each entry in the matrix is a number meant to represent how much
 "weight" a given column (word) has in each row (text doc).
 """
 import pandas as pd
-from scipy.sparse import csr_matrix
-from scipy.sparse import vstack
+from scipy.sparse import csr_matrix, vstack
 from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import pairwise_distances
 
 from api.constants.techniques import ArtifactLevel
-from api.technique.variationpoints.algebraicmodel.models import AlgebraicModel
-from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
+from api.technique.variationpoints.algebraicmodel.models import (
+    AlgebraicModel,
+    SimilarityMatrix,
+)
 
 DocumentTermMatrix = csr_matrix
 
 
 def calculate_similarity_matrix_for_nlp_technique(
-        nlp_type: AlgebraicModel,
-        upper_level: ArtifactLevel,
-        lower_level: ArtifactLevel,
-        return_vocab=False,
+    nlp_type: AlgebraicModel,
+    upper_level: ArtifactLevel,
+    lower_level: ArtifactLevel,
+    return_vocab=False,
 ) -> SimilarityMatrix:
     """
     TODO
@@ -48,7 +49,7 @@ def calculate_similarity_matrix_for_nlp_technique(
     """
     similarity_matrix_calculators = {
         AlgebraicModel.VSM: calculate_similarity_matrix,
-        AlgebraicModel.LSI: calculate_lsa_similarity_matrix,
+        AlgebraicModel.LSI: calculate_lsi_similarity_matrix,
     }
     similarity_matrix, vocab = similarity_matrix_calculators[nlp_type](
         upper_level["text"], lower_level["text"]
@@ -72,7 +73,7 @@ def calculate_similarity_matrix(raw_a, raw_b) -> (SimilarityMatrix, dict):
     return similarity_matrix, vocab
 
 
-def calculate_lsa_similarity_matrix(raw_a, raw_b) -> (SimilarityMatrix, dict):
+def calculate_lsi_similarity_matrix(raw_a, raw_b) -> (SimilarityMatrix, dict):
     """
     Creates a Distance Matrix (calc. via cosine-similarity)
     where the given matrix is first reduced via lsa.
@@ -90,7 +91,9 @@ def calculate_lsa_similarity_matrix(raw_a, raw_b) -> (SimilarityMatrix, dict):
     n_components = min(len(raw_a), len(raw_b), 100)  # average number of documents
 
     # Singular Value Decomposition on Term Frequencies = LSI
-    lsa_model = TruncatedSVD(n_components=n_components, random_state=42)
+    lsa_model = TruncatedSVD(
+        n_components=n_components, random_state=42, algorithm="arpack"
+    )
     lsa_model.fit(vstack([matrix_a, matrix_b]))  # essentially appending docs vectorized
     matrix_a_lsa = lsa_model.transform(matrix_a)
     matrix_b_lsa = lsa_model.transform(matrix_b)
@@ -103,7 +106,7 @@ def calculate_lsa_similarity_matrix(raw_a, raw_b) -> (SimilarityMatrix, dict):
 
 
 def calculate_similarity_matrix_from_term_frequencies(
-        tf_a: DocumentTermMatrix, tf_b: DocumentTermMatrix
+    tf_a: DocumentTermMatrix, tf_b: DocumentTermMatrix
 ) -> SimilarityMatrix:
     """
     TODO
@@ -115,7 +118,7 @@ def calculate_similarity_matrix_from_term_frequencies(
 
 
 def create_term_frequency_matrix(
-        raw_a: pd.Series, raw_b: pd.Series, vectorizer=TfidfVectorizer
+    raw_a: pd.Series, raw_b: pd.Series, vectorizer=TfidfVectorizer
 ) -> (DocumentTermMatrix, DocumentTermMatrix, dict):
     """
     Creates 2 TermFrequencyMatrices (one for A another for B) where the weight of

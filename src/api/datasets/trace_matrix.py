@@ -23,7 +23,7 @@ class TraceMatrix:  # pylint: disable=too-few-public-methods
 
     # pylint: disable=too-many-arguments
     def __init__(
-            self, top_index, top_artifacts_ids, bottom_index, bottom_artifact_ids, matrix
+        self, top_index, top_artifacts_ids, bottom_index, bottom_artifact_ids, matrix
     ):
         # TODO: Too many arguments, separate for modularity
         self.top_index = top_index
@@ -33,6 +33,20 @@ class TraceMatrix:  # pylint: disable=too-few-public-methods
         self.bottom_artifact_ids = bottom_artifact_ids
 
         self.matrix = matrix
+
+    def transpose(self) -> "TraceMatrix":
+        """
+        Returns a copy of this TraceMatrix with artifacts and traces transposed so that top artifacts become the bottom
+        ones and the bottom ones become the top.
+        :return:
+        """
+        return TraceMatrix(
+            top_index=self.bottom_index,
+            top_artifacts_ids=self.bottom_artifact_ids,
+            bottom_index=self.top_index,
+            bottom_artifact_ids=self.top_artifact_ids,
+            matrix=self.matrix.T,
+        )
 
 
 TraceId2TraceMatrixMap = Dict[

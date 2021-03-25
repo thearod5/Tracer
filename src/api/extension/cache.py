@@ -6,6 +6,7 @@ on the Cache when calculating a lot of techniques, note, by default caching is t
 :TODO: create a unique key for item in cache and only delete those so parallel runs do not interfere.
 """
 import os
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -79,7 +80,7 @@ class Cache:
         return Cache.stored_similarities_df[
             (Cache.stored_similarities_df["dataset"] == dataset.name)
             & (Cache.stored_similarities_df["technique"] == technique.get_name())
-            ]
+        ]
 
     @staticmethod
     def is_cached(dataset: Dataset, technique: ITechniqueDefinition):
@@ -96,9 +97,9 @@ class Cache:
 
     @staticmethod
     def store_similarities(
-            dataset: Dataset,
-            technique: ITechniqueDefinition,
-            similarity_matrix: SimilarityMatrix,
+        dataset: Dataset,
+        technique: ITechniqueDefinition,
+        similarity_matrix: SimilarityMatrix,
     ):
         """
         Stored similarities in cache if never seen, updates cache otherwise
@@ -126,7 +127,7 @@ class Cache:
 
     @staticmethod
     def get_similarities(
-            dataset: Dataset, technique: ITechniqueDefinition
+        dataset: Dataset, technique: ITechniqueDefinition
     ) -> SimilarityMatrix:
         """
         Returns similarity matrix for given technique on given Dataset
@@ -135,7 +136,7 @@ class Cache:
         :return: numpy.ndarray containing similarity values
         """
         assert Cache.is_cached(dataset, technique), (
-                "given technique has not been cached: %s" % technique.get_name()
+            "given technique has not been cached: %s" % technique.get_name()
         )
         assert Cache.CACHE_ON
         query = Cache.query(dataset, technique)
@@ -144,7 +145,7 @@ class Cache:
         return loaded_matrix
 
     @staticmethod
-    def cleanup(dataset_name: str):
+    def cleanup(dataset_name: Optional[str] = None):
         """
         Removes all saved files in the cache. Currently, calling this method while parallel operations are ongoing on
         the same dataset have the potential to break their execution.
@@ -154,7 +155,7 @@ class Cache:
         """
         for _, row in Cache.stored_similarities_df.iterrows():
             dataset, _, file_name = row
-            if dataset == dataset_name:
+            if dataset == dataset_name or dataset_name is None:
                 if os.path.exists(file_name):
                     os.remove(file_name)
 

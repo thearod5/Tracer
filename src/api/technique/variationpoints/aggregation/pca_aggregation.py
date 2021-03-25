@@ -18,6 +18,7 @@ def get_weights(matrix):
     pca_model = PCA(n_components=n_cols, random_state=42)  # keeps all the components
     pca_model.fit(scaled_matrix)
     lambda_values = pca_model.explained_variance_ratio_
+
     if any(np.isnan(lambda_values)):
         lambda_values = [1 / n_cols] * n_cols
     assert len(lambda_values) == n_cols

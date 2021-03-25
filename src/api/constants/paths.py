@@ -8,6 +8,8 @@ from pathlib import Path  # Python 3.6+ only
 
 from dotenv import load_dotenv
 
+from api.extension.type_checks import to_string
+
 ENV_PATH = os.path.join(Path(__file__).parent.absolute(), "..", "..", "..", ".env")
 assert os.path.isfile(ENV_PATH), "Make sure .env file is configured"
 load_dotenv(dotenv_path=ENV_PATH)
@@ -19,42 +21,39 @@ NOTRACES_ID = "notraces"
 WITHTRACES_ID = "withtraces"
 TECHNIQUES_ID = "techniques"
 
-PATH_TO_RESOURCES = os.path.join(PATH_TO_ROOT, "res")
+PATH_TO_RESOURCES = os.path.join(to_string(PATH_TO_ROOT), "res")
 
 # Roots
-PATH_TO_DATA = os.path.join(PATH_TO_ROOT, "Data")
+
 PATH_TO_SAMPLE_DATASETS = os.path.join(PATH_TO_RESOURCES, "datasets")
 
-PATH_TO_DATA_SOURCE = os.path.join(PATH_TO_DATA, "source")
-PATH_TO_DATA_PROCESSED = os.path.join(PATH_TO_DATA, "processed")
-PATH_TO_DATA_INTERMEDIARY = os.path.join(PATH_TO_DATA, "intermediary")
+# PATH_TO_DATA_PROCESSED = os.path.join(PATH_TO_DATA, "processed")
+# PATH_TO_DATA_INTERMEDIARY = os.path.join(PATH_TO_DATA, "intermediary")
 
-# SOURCE
-PATH_TO_TECHNIQUE_SOURCE_DATA = os.path.join(PATH_TO_DATA_SOURCE, TECHNIQUES_ID)
-PATH_TO_SAMPLING_SOURCE = os.path.join(PATH_TO_DATA_SOURCE, "sampling")
+# # SOURCE
+# PATH_TO_TECHNIQUE_SOURCE_DATA = os.path.join(
+#     PATH_TO_DATASET_METRIC_TABLES, TECHNIQUES_ID
+# )
+# PATH_TO_SAMPLING_SOURCE = os.path.join(PATH_TO_DATASET_METRIC_TABLES, "sampling")
 
 # INTERMEDIARY
-PATH_TO_GAIN_INTERMEDIARY = os.path.join(PATH_TO_DATA_INTERMEDIARY, "gain")
-PATH_TO_BEST_INTERMEDIARY = os.path.join(PATH_TO_DATA_INTERMEDIARY, "best")
-PATH_TO_SAMPLING_INTERMEDIARY = os.path.join(PATH_TO_DATA_INTERMEDIARY, "sampling")
-PATH_TO_TECHNIQUES_INTERMEDIARY = os.path.join(PATH_TO_DATA_INTERMEDIARY, TECHNIQUES_ID)
-PATH_TO_CORRELATION_INTERMEDIARY = os.path.join(
-    PATH_TO_DATA_INTERMEDIARY, "correlation"
-)
+# PATH_TO_GAIN_INTERMEDIARY = os.path.join(PATH_TO_DATA_INTERMEDIARY, "gain")
+# PATH_TO_BEST_INTERMEDIARY = os.path.join(PATH_TO_DATA_INTERMEDIARY, "best")
+# PATH_TO_SAMPLING_INTERMEDIARY = os.path.join(PATH_TO_DATA_INTERMEDIARY, "sampling")
+# PATH_TO_TECHNIQUES_INTERMEDIARY = os.path.join(PATH_TO_DATA_INTERMEDIARY, TECHNIQUES_ID)
+# PATH_TO_CORRELATION_INTERMEDIARY = os.path.join(
+#     PATH_TO_DATA_INTERMEDIARY, "correlation"
+# )
 
-PATH_TO_RQ1_INTERMEDIATE = os.path.join(
-    PATH_TO_TECHNIQUES_INTERMEDIARY, NOTRACES_ID
-)
-PATH_TO_RQ2_INTERMEDIATE = os.path.join(
-    PATH_TO_TECHNIQUES_INTERMEDIARY, WITHTRACES_ID
-)
-
-# PROCESSED
-PATH_TO_BEST_PROCESSED = os.path.join(PATH_TO_DATA_PROCESSED, "best")
-PATH_TO_DATASET_SIZES_DATA = os.path.join(PATH_TO_DATA_PROCESSED, "datasetsizes")
-PATH_TO_GAIN_PROCESSED = os.path.join(PATH_TO_DATA_PROCESSED, "gain")
-PATH_TO_SAMPLING_PROCESSED = os.path.join(PATH_TO_DATA_PROCESSED, "sampling")
-PATH_TO_CORRELATION_PROCESSED = os.path.join(PATH_TO_DATA_PROCESSED, "correlation")
+# PATH_TO_RQ1_INTERMEDIATE = os.path.join(PATH_TO_TECHNIQUES_INTERMEDIARY, NOTRACES_ID)
+# PATH_TO_RQ2_INTERMEDIATE = os.path.join(PATH_TO_TECHNIQUES_INTERMEDIARY, WITHTRACES_ID)
+#
+# # PROCESSED
+# PATH_TO_BEST_PROCESSED = os.path.join(PATH_TO_DATA_PROCESSED, "best")
+# PATH_TO_DATASET_SIZES_DATA = os.path.join(PATH_TO_DATA_PROCESSED, "datasetsizes")
+# PATH_TO_GAIN_PROCESSED = os.path.join(PATH_TO_DATA_PROCESSED, "gain")
+# PATH_TO_SAMPLING_PROCESSED = os.path.join(PATH_TO_DATA_PROCESSED, "sampling")
+# PATH_TO_CORRELATION_PROCESSED = os.path.join(PATH_TO_DATA_PROCESSED, "correlation")
 
 # Tracer
 PATH_TO_TRACER_SRC = os.path.join(PATH_TO_ROOT, "src")

@@ -8,17 +8,21 @@ artifacts as level 2. This is due to the fact target artifacts without a connect
 """
 import os
 
+import numpy as np
+import pandas as pd
 from igraph import Graph
 
+from api.datasets.builder.dataset_exporter import clean_level
 from api.datasets.builder.level_parser import read_artifact_level
 from api.datasets.builder.structure_definition import (
-    get_structure_definition,
     get_path_to_dataset,
+    get_structure_definition,
 )
 from api.datasets.builder.transitive_trace_matrix_creator import (
     TraceId2TraceMatrixMap,
-    create_trace_matrix_map,
     create_trace_matrix_graph,
+    create_trace_matrix_map,
+    parse_trace_id,
 )
 from api.extension.file_operations import create_if_not_exist
 
@@ -60,6 +64,8 @@ class DatasetBuilder:
         self.trace_graph = trace_graph
         self.remove_unimplemented_requirements()
 
+        print(trace_matrix_map)
+
     def create_levels(self):
         """
         For each level defined in the structure.json file this parses, cleans, and stored the level.
@@ -84,12 +90,12 @@ class DatasetBuilder:
         for trace_id in self.trace_matrices.keys():
             if "0-" in trace_id:
                 self.trace_matrices[trace_id].matrix = self.trace_matrices[
-                                                           trace_id
-                                                       ].matrix[implemented_requirements, :]
+                    trace_id
+                ].matrix[implemented_requirements, :]
             elif "-0" in trace_id:
                 self.trace_matrices[trace_id].matrix = self.trace_matrices[
-                                                           trace_id
-                                                       ].matrix[:, implemented_requirements]
+                    trace_id
+                ].matrix[:, implemented_requirements]
         self.levels[0] = (
             self.levels[0][implemented_requirements].dropna().reset_index(drop=True)
         )
@@ -109,3 +115,37 @@ class DatasetBuilder:
         ]
         for folder in required_folder:
             create_if_not_exist(folder)
+
+    def export_dataset(self):
+        """
+        Given a DatasetBuilder, this functions exports its artifacts and trace matrices into a standardized folder
+        system and naming scheme utilized by the Tracer project.
+        :return: None
+        """
+        self.create_dataset_export_folder()
+
+        # Levels
+        for level_index, level in enumerate(self.levels):
+            level_export_path = os.path.join(
+                self.path, "Artifacts", "Level_%d.csv" % level_index
+            )
+            level_cleaned = clean_level(level)
+            level_cleaned.to_csv(level_export_path, index=False)
+
+        # Relations.csv - Level_1_to_Level_3
+        top_bottom_values = self.trace_matrices["0-2"].matrix
+        top_bottom_df = pd.DataFrame(top_bottom_values, columns=self.levels[2]["id"])
+        top_bottom_df["id"] = self.levels[0]["id"]
+        top_bottom_df.to_csv(
+            os.path.join(self.path, "Oracles", "Relations.csv"), index=False
+        )
+
+        # Trace Matrices
+        for trace_id in self.trace_matrices.keys():
+            a_index, b_index = parse_trace_id(trace_id)
+            matrix_file_name = "%d-%d.npy" % (a_index, b_index)
+            matrix_file_path = os.path.join(
+                self.path, "Oracles", "TracedMatrices", matrix_file_name
+            )
+            matrix = self.trace_matrices[trace_id].matrix
+            np.save(matrix_file_path, matrix)

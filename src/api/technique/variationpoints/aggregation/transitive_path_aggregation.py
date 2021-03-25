@@ -19,7 +19,7 @@ from api.technique.variationpoints.scalers import scalers
 
 
 def apply_transitive_aggregation(
-        similarity_matrices, transitive_path_aggregation: AggregationMethod
+    similarity_matrices, transitive_path_aggregation: AggregationMethod
 ) -> SimilarityMatrix:
     """
     TODO
@@ -47,7 +47,7 @@ def apply_transitive_aggregation(
 
 
 def aggregate_similarity_matrices_with_arithmetic_aggregator(
-        similarity_matrices: models, indirect_aggregation_type: AggregationMethod
+    similarity_matrices: models, indirect_aggregation_type: AggregationMethod
 ):
     """
     Returns a single Experiment.Technique.AlgebraicModel containing the aggregated similarity score between every
@@ -82,7 +82,7 @@ def create_transitive_aggregation_training_data(similarity_matrices: models):
     n_bottom = similarity_matrices.lower.shape[1]
 
     multiplied_matrices = (
-            similarity_matrices.upper[:, None, :].T * similarity_matrices.lower[:, :, None]
+        similarity_matrices.upper[:, None, :].T * similarity_matrices.lower[:, :, None]
     ).T
 
     x_train = np.zeros(shape=(n_top * n_bottom, n_middle))

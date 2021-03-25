@@ -36,8 +36,12 @@ class Dataset:
         Read and stores the trace matrices of the parsed dataset
         :return: None
         """
-        path_to_traced_matrices = os.path.join(self.path_to_dataset, "Oracles", "TracedMatrices")
-        trace_matrix_file_names = list(filter(lambda f: f[0] != ".", os.listdir(path_to_traced_matrices)))
+        path_to_traced_matrices = os.path.join(
+            self.path_to_dataset, "Oracles", "TracedMatrices"
+        )
+        trace_matrix_file_names = list(
+            filter(lambda f: f[0] != ".", os.listdir(path_to_traced_matrices))
+        )
         for file_name in trace_matrix_file_names:
             trace_id = file_name[:-4]
             path = os.path.join(path_to_traced_matrices, file_name)
@@ -52,8 +56,8 @@ class Dataset:
         n_middle_level = len(self.artifacts[1])
         n_bottom_level = len(self.artifacts[2])
 
-        upper_shape = self.traced_matrices["0-1"].shape
-        lower_shape = self.traced_matrices["1-2"].shape
+        upper_trace_matrix_shape = self.traced_matrices["0-1"].shape
+        lower_trace_matrix_shape = self.traced_matrices["1-2"].shape
 
         n_relation_bottom_level = len(self.relations.columns) - 1
 
@@ -62,10 +66,15 @@ class Dataset:
             n_bottom_level,
             n_relation_bottom_level,
         )
-        assert n_top_level == upper_shape[0]
-        assert n_middle_level == upper_shape[1]
-        assert n_middle_level == lower_shape[0]
-        assert n_bottom_level == lower_shape[1]
+        assert (
+            n_top_level == upper_trace_matrix_shape[0]
+        ), "# top artifacts %d, but trace matrix top artifacts %d" % (
+            n_top_level,
+            upper_trace_matrix_shape[0],
+        )
+        assert n_middle_level == upper_trace_matrix_shape[1]
+        assert n_middle_level == lower_trace_matrix_shape[0]
+        assert n_bottom_level == lower_trace_matrix_shape[1]
 
     def get_y_true(self) -> np.ndarray:
         """
