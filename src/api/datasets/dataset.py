@@ -118,4 +118,11 @@ def get_path_to_dataset(dataset_name: str) -> str:
         datasets_found = datasets_found + os.listdir(p_folder)
         if dataset_name in datasets_found:
             return os.path.join(to_string(p_folder), dataset_name)
-    raise ValueError("%s is not one of %s" % (dataset_name, ",".join(datasets_found)))
+    if PATH_TO_DATASETS == "":
+        raise RuntimeError(
+            "PATH_TO_DATASETS in .env is empty and %s is not a sample dataset."
+            % dataset_name
+        )
+    raise ValueError(
+        "Could not find %s, not one of %s" % (dataset_name, ",".join(datasets_found))
+    )
