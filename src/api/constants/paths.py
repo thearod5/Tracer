@@ -8,6 +8,8 @@ from pathlib import Path  # Python 3.6+ only
 
 from dotenv import load_dotenv
 
+from api.extension.type_checks import to_string
+
 ENV_PATH = os.path.join(Path(__file__).parent.absolute(), "..", "..", "..", ".env")
 assert os.path.isfile(ENV_PATH), "Make sure .env file is configured"
 load_dotenv(dotenv_path=ENV_PATH)
@@ -19,7 +21,7 @@ NOTRACES_ID = "notraces"
 WITHTRACES_ID = "withtraces"
 TECHNIQUES_ID = "techniques"
 
-PATH_TO_RESOURCES = os.path.join(PATH_TO_ROOT, "res")
+PATH_TO_RESOURCES = os.path.join(to_string(PATH_TO_ROOT), "res")
 
 # Roots
 

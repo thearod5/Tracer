@@ -1,22 +1,43 @@
 id,text
-NFR06.txt,nfr librari tool extens document develop end user use man page common document form
-NFR12.txt,nfr librari function ap dynam languag bind avail softwar librari develop
-NFR13.txt,nfr function api enabl appropri function librari scriptabl programm
-NFR07.txt,nfr patch implement parti project document develop end user use man page common document form
-NFR11.txt,nfr warc tool implement librari
-NFR05.txt,nfr commun support provid open sourc commun support provid term project
-NFR04.txt,nfr util applic level function warc tool avail end user command line tool extens exist tool simpl web applic access warc content
-NFR10.txt,nfr instal script andor instruct librari tool target platform includ linux unix window apach lighttp instal script
-NFR14.txt,nfr web server plugin conform apach mod api oper correctli apach lighttp server compat appropri web sever program standard wsgi python servlet api java
-NFR01.txt,nfr core function warc tool specif warc writerread implement comprehens standalon gener purpos softwar librari libwarc
-NFR15.txt,nfr deliver avail sourc code name libwarcvers tar gz version version librari number binari distribut includ rpm deb exe
-NFR03.txt,nfr warc tool highli portabl run rang linux unix platform xp minimum man page build instal guid develop guid
-NFR17.txt,nfr final warc api code minimum depend extern librari gzip includ assembl code
-NFR16.txt,nfr deliver port follow platform linux free bsd mac os window
-NFR02.txt,nfr warc baselin version warc standard use project
-NFR18.txt,nfr librari develop way allow use simplifi wrapper interfac gener swig www swig org order wrap code allow call nativ wide varieti languag
-NFR19.txt,nfr interfac implement python allow librari use nativ python programm requir knowledg intern implement libwarc
-NFR09.txt,nfr code document licens use open sourc licens
-NFR21.txt,nfr function librari expos way fit metaphor paradigm specif implement languag java python
-NFR20.txt,nfr interfac implement java allow librari use nativ java programm requir knowledg intern implement libwarc
-NFR08.txt,nfr patch implement parti project contribut distribut appropri commun
+FR04.txt,fr type war crecord set function avail createmodifi record properti
+FR10.txt,fr libwarc provid mime iter handl mim etyp payload
+FR38.txt,fr librari implement compat simplifi wrapper interfac gener swig httpwww swig org wrapper libwarc code allow call nativ wide varieti languag
+FR39.txt,fr python interfac implement
+FR11.txt,fr iter use exact pattern search regex express
+FR05.txt,fr libwarc provid rang function univers interfac read rang valid war crecord
+FR13.txt,fr libwarc enabl combin iter use composit iter
+FR07.txt,fr libwarc provid ar crecord reader function libwarc reader make read oper simpl possibl
+FR06.txt,fr libwarc provid stabl applic programm interfac api handl war crecord abstract object adt
+FR12.txt,fr libwarc provid abstract interfac iter enabl custom iter
+FR16.txt,fr dynam memori manag hidden insid libwarc
+FR02.txt,fr libwarc interfac fulli encapsul intern function isol abstract tool applic base libwarc chang intern implement
+FR03.txt,fr libwarc provid rang function univers interfac creat type valid war crecord ensur result warc file conform prevail warc standard
+FR17.txt,fr libwarc use gzip default compress format
+FR29.txt,fr possibl walk curl directori write data warc file
+FR01.txt,fr softwar tool applic base libwarc requir just singl header file
+FR15.txt,fr libwarc use diskbas work memori
+FR14.txt,fr libwarc memori safe manag dynam memori intern
+FR28.txt,fr possibl walk wget mirror write data warc file
+FR25.txt,fr possibl convert arc file warc file use commandlin tool call arcwarc
+FR31.txt,fr python script avail enabl rapid develop warc base solut
+FR19.txt,fr libwarc manag write read access
+FR18.txt,fr libwarc provid plugin interfac enabl use altern compress librari gzip zip
+FR30.txt,fr possibl collect arbitrari web content html file imag exampl web server document root directori write data warc file
+FR24.txt,fr apach lighttp plugin provid access libwarc api warc browser http
+FR32.txt,fr warc extens releas patch command curl wget httrack project
+FR26.txt,fr arc warc convers arcwarc carri accord specif configur file
+FR27.txt,fr possibl collect ht track data directori output ht track write data warc file
+FR33.txt,fr warc extens help content provid command curl wget httrack
+FR37.txt,fr warc file variou teststat provid test jhove deliver
+FR23.txt,fr warc browser support proxystyl interfac
+FR22.txt,fr warc browser support rewrit interfac
+FR36.txt,fr jhove plugin modul output handler avail warc file
+FR08.txt,fr libwarc provid default iter builtin function
+FR20.txt,fr warc file valid use command line tool wvalid enabl valid reject warc file
+FR34.txt,fr possibl identifi warc file use unix file command
+FR35.txt,fr possibl identifi valid warc file use jhove
+FR21.txt,fr warc browser provid api allow brows warc file associ cdx file http server
+FR09.txt,fr libwarc provid record iter handl war ctype record
+FR40.txt,fr java interfac implement
+FR41.txt,fr independ java implement libwarc implement
+FR42.txt,fr function librari expos way fit metaphor paradigm implement languag
