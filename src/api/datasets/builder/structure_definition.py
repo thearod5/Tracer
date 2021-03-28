@@ -86,22 +86,22 @@ class StructureDefinition:
         trace_branches = ["top-middle", "middle-bottom", "top-bottom"]
 
         return (
-            StructureDefinition.contains_fields(self.json, top_branches)
-            and StructureDefinition.contains_fields(
-                self.json["datasets"], artifact_branches
+            StructureDefinition(raw=self.json).contains_fields(top_branches)
+            and StructureDefinition(raw=self.json["datasets"]).contains_fields(
+                artifact_branches
             )
-            and StructureDefinition.contains_fields(self.json["traces"], trace_branches)
+            and StructureDefinition(raw=self.json["traces"]).contains_fields(
+                trace_branches
+            )
         )
 
-    @staticmethod
-    def contains_fields(some_dict: dict, required_fields: [str]) -> bool:
+    def contains_fields(self, required_fields: [str]) -> bool:
         """
         Returns whether given dictionary contains required fields.
-        :param some_dict: a python dictionary
         :param required_fields: list of fields that must be in given dictionary
         :return: boolean
         """
         for a_branch in required_fields:
-            if a_branch not in some_dict:
+            if a_branch not in self.json:
                 return False
         return True

@@ -30,12 +30,14 @@ class TestDatasetBuilder(SmartTest):
     def test_contains_branches(self):
         required_branches = ["top", "middle", "bottom"]
         self.assertTrue(
-            StructureDefinition.contains_fields(self.valid_artifacts, required_branches)
+            StructureDefinition(raw=self.valid_artifacts).contains_fields(
+                required_branches
+            )
         )
-        self.assertFalse(StructureDefinition.contains_fields({}, required_branches))
+        self.assertFalse(StructureDefinition(raw={}).contains_fields(required_branches))
         self.assertFalse(
-            StructureDefinition.contains_fields(
-                {"bottom": "thing", "middle": ""}, required_branches
+            StructureDefinition(raw={"bottom": "thing", "middle": ""}).contains_fields(
+                required_branches
             )
         )
 
