@@ -2,10 +2,10 @@ import numpy as np
 from igraph import Graph
 
 from api.datasets.builder.dataset_builder import DatasetBuilder
-from api.datasets.builder.transitive_trace_matrix_creator import (
+from api.datasets.builder.trace_matrix_creator import (
+    TraceMatrixCreator,
     contains_trace_id,
     create_similarity_matrix_map_for_graph_paths,
-    create_trace_id_2_trace_matrix_map_from_definition,
     create_trace_matrix_graph,
     create_trace_matrix_map,
     get_graph_paths_map_to_missing_paths,
@@ -26,11 +26,13 @@ class TestTransitiveTraceMatrixCreator(SmartTest):
             dataset_builder.structure_file, dataset_builder.levels
         )
 
-        self.assertEqual(3, len(new_trace_map.keys()))
-        self.assertIsNotNone(new_trace_map["0-2"])
-        self.assertIsNotNone(new_trace_map["0-2"].matrix)
-        self.assertEqual(1, new_trace_map["0-2"].matrix[0, 0])
-        self.assertEqual(2, new_trace_map["0-2"].matrix.sum(axis=1).sum())
+        self.assertEqual(3, len(new_trace_map.trace_matrix_map.keys()))
+        self.assertIsNotNone(new_trace_map.trace_matrix_map["0-2"])
+        self.assertIsNotNone(new_trace_map.trace_matrix_map["0-2"].matrix)
+        self.assertEqual(1, new_trace_map.trace_matrix_map["0-2"].matrix[0, 0])
+        self.assertEqual(
+            2, new_trace_map.trace_matrix_map["0-2"].matrix.sum(axis=1).sum()
+        )
 
         self.assertEqual(3, len(graph.es))
 
@@ -43,7 +45,7 @@ class TestTransitiveTraceMatrixCreator(SmartTest):
             dataset_builder.structure_file, dataset_builder.levels
         )
 
-        self.assertIsNotNone(new_trace_map["1-2"])
+        self.assertIsNotNone(new_trace_map.trace_matrix_map["1-2"])
         self.assertEqual(3, len(graph.es))
 
     """
@@ -74,10 +76,6 @@ class TestTransitiveTraceMatrixCreator(SmartTest):
         self.assertEqual(1, values[0, 2])
         self.assertEqual(0, self.reqs2code.matrix[0, 2])
 
-    """
-    create_trace_matrix_graph
-    """
-
     def test_create_trace_matrix_graph(self):
         graph: Graph = create_trace_matrix_graph(["0-1", "1-2"], 3)
         self.assertFalse(graph.are_connected(0, 2))
@@ -95,41 +93,31 @@ class TestTransitiveTraceMatrixCreator(SmartTest):
         self.assertEqual(1, len(path))
         self.assertEqual([1, 0, 2], path[0])
 
-    """
-    create_trace_matrices_in_definition
-    """
-
     def test_create_trace_matrices_in_definition(self):
         dataset_builder = DatasetBuilder("MockDataset")
         dataset_builder.structure_file["traces"]["0-2"] = None
         dataset_builder.create_levels()
 
-        trace_matrix_map = create_trace_id_2_trace_matrix_map_from_definition(
+        trace_matrix_map = TraceMatrixCreator(
             dataset_builder.structure_file, dataset_builder.levels
         )
 
-        self.assertEqual(2, len(trace_matrix_map.keys()))
-        self.assertTrue("0-1" in trace_matrix_map.keys())
-        self.assertTrue("1-2" in trace_matrix_map.keys())
-        self.assertFalse("0-2" in trace_matrix_map.keys())
+        self.assertEqual(2, len(trace_matrix_map.trace_matrix_map.keys()))
+        self.assertTrue("0-1" in trace_matrix_map.trace_matrix_map.keys())
+        self.assertTrue("1-2" in trace_matrix_map.trace_matrix_map.keys())
+        self.assertFalse("0-2" in trace_matrix_map.trace_matrix_map.keys())
 
-        self.assertEqual(0, trace_matrix_map["0-1"].top_index)
-        self.assertEqual(1, trace_matrix_map["0-1"].bottom_index)
-
-    """
-    normalize_original_matrices
-    """
+        self.assertEqual(
+            0, trace_matrix_map.trace_matrix_map["0-1"].top_index
+        )  # TODO: Implement lookup
+        self.assertEqual(1, trace_matrix_map.trace_matrix_map["0-1"].bottom_index)
 
     def test_normalize_original_matrices(self):
         db = DatasetBuilder("MockDataset")
         db.create_levels()
         trace_matrix_map, graph = create_trace_matrix_map(db.structure_file, db.levels)
 
-        self.assertEqual(1, trace_matrix_map["0-2"].matrix[0][2])
-
-    """
-    get_trace_path_map_to_missing_links
-    """
+        self.assertEqual(1, trace_matrix_map.trace_matrix_map["0-2"].matrix[0][2])
 
     def test_get_trace_path_map_to_missing_links(self):
         traces = ["1-4", "4-0", "0-2", "2-3"]
@@ -172,10 +160,6 @@ class TestTransitiveTraceMatrixCreator(SmartTest):
         self.assertEqual(1, len(paths.keys()))
         self.assertEqual(1, len(paths["0-1"]))
         self.assertEqual([0, 2, 1], paths["0-1"][0])
-
-    """
-    contains_id
-    """
 
     def test_contains_id(self):
         self.assertTrue(contains_trace_id(["0-1"], "0-1"))

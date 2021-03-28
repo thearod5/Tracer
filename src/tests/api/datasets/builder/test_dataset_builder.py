@@ -41,17 +41,6 @@ class TestDatasetBuilder(SmartTest):
             )
         )
 
-    def test_is_valid_structure_file(self):
-        assert not StructureDefinition(raw={}).is_valid_structure_file()
-        assert not StructureDefinition(raw={"datasets": {}}).is_valid_structure_file()
-        assert not StructureDefinition(raw={"traces": {}}).is_valid_structure_file()
-        assert not StructureDefinition(
-            raw={"datasets": {}, "traces": {}}
-        ).is_valid_structure_file()
-        assert StructureDefinition(
-            raw={"datasets": self.valid_artifacts, "traces": self.valid_traces}
-        ).is_valid_structure_file()
-
     def test_read_level_in_dataset(self):
         dataset_name = "SAMPLE_EasyClinic"
         structure: dict = StructureDefinition(dataset_name=dataset_name).json

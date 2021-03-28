@@ -3,7 +3,13 @@ TODO
 """
 from typing import Dict
 
+import pandas as pd
+
 from api.constants.dataset import SimilarityMatrix
+from api.datasets.builder.trace_parser import (
+    create_trace_matrix_values_from_trace_list,
+    parse_trace_file,
+)
 
 
 class TraceMatrix:  # pylint: disable=too-few-public-methods
@@ -47,6 +53,36 @@ class TraceMatrix:  # pylint: disable=too-few-public-methods
             bottom_artifact_ids=self.top_artifact_ids,
             matrix=self.matrix.T,
         )
+
+    @staticmethod
+    def create_trace_matrix_from_path(
+        top_artifacts_ids: pd.Series,
+        top_index: int,
+        bottom_artifacts_ids: pd.Series,
+        bottom_index: int,
+        path_to_trace_list: str,
+    ) -> "TraceMatrix":
+        """
+        TODO
+        :param top_artifacts_ids:
+        :param top_index:
+        :param bottom_artifacts_ids:
+        :param bottom_index:
+        :param path_to_trace_list:
+        :return:
+        """
+        trace_list = parse_trace_file(path_to_trace_list)
+        trace_matrix_values = create_trace_matrix_values_from_trace_list(
+            top_artifacts_ids, bottom_artifacts_ids, trace_list
+        )
+        trace_matrix = TraceMatrix(
+            top_index,
+            top_artifacts_ids,
+            bottom_index,
+            bottom_artifacts_ids,
+            trace_matrix_values,
+        )
+        return trace_matrix
 
 
 TraceId2TraceMatrixMap = Dict[

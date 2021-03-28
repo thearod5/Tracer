@@ -1,6 +1,10 @@
 from igraph import Graph
 
 from api.datasets.builder.structure_definition import StructureDefinition
+from api.datasets.builder.trace_matrix_creator import (
+    create_trace_matrix_graph,
+    find_all_paths,
+)
 from api.datasets.builder.trace_parser import (
     create_trace_matrix_values_from_trace_list,
     get_delimiter_in_segment,
@@ -10,10 +14,6 @@ from api.datasets.builder.trace_parser import (
     get_traces_in_trace_file_content,
     is_valid_trace_list,
     parse_trace_file,
-)
-from api.datasets.builder.transitive_trace_matrix_creator import (
-    create_trace_matrix_graph,
-    find_all_paths,
 )
 from api.extension.file_operations import get_index_after_number_with_extension
 from tests.res.smart_test import SmartTest
