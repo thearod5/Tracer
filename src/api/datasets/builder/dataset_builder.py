@@ -13,7 +13,6 @@ import pandas as pd
 from igraph import Graph
 
 from api.datasets.builder.dataset_exporter import clean_level
-from api.datasets.builder.level_parser import read_artifact_level
 from api.datasets.builder.structure_definition import (
     get_path_to_dataset,
     get_structure_definition,
@@ -24,6 +23,7 @@ from api.datasets.builder.transitive_trace_matrix_creator import (
     create_trace_matrix_map,
     parse_trace_id,
 )
+from api.datasets.multi_level_artifacts import MultiLevelArtifacts
 from api.extension.file_operations import create_if_not_exist
 
 
@@ -73,7 +73,9 @@ class DatasetBuilder:
         """
 
         def create_level(path: str):
-            return read_artifact_level(self.structure_file["artifacts"][path])
+            return MultiLevelArtifacts.read_artifact_level(
+                self.structure_file["artifacts"][path]
+            )
 
         level_indices = list(self.structure_file["artifacts"].keys())
         level_indices.sort()

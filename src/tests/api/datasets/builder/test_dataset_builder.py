@@ -4,15 +4,12 @@ from pandas import DataFrame
 
 from api.constants.paths import PATH_TO_TEST_REQUIREMENTS
 from api.datasets.builder.dataset_builder import DatasetBuilder
-from api.datasets.builder.level_parser import (
-    parse_artifact_txt_file,
-    read_artifact_level,
-)
 from api.datasets.builder.structure_definition import (
     contains_fields,
     get_structure_definition,
     is_valid_structure_file,
 )
+from api.datasets.multi_level_artifacts import MultiLevelArtifacts
 from api.extension.file_operations import get_index_after_numbers
 from tests.res.smart_test import SmartTest
 
@@ -53,13 +50,13 @@ class TestDatasetBuilder(SmartTest):
         dataset_name = "SAMPLE_EasyClinic"
         structure: dict = get_structure_definition(dataset_name)
 
-        level = read_artifact_level(structure["artifacts"]["0"])
+        level = MultiLevelArtifacts.read_artifact_level(structure["artifacts"]["0"])
         assert len(level) > 0, "Could not load top datasets"
 
-        level = read_artifact_level(structure["artifacts"]["1"])
+        level = MultiLevelArtifacts.read_artifact_level(structure["artifacts"]["1"])
         assert len(level) == 20, "Could not load middle datasets %d " % len(level)
 
-        level = read_artifact_level(structure["artifacts"]["2"])
+        level = MultiLevelArtifacts.read_artifact_level(structure["artifacts"]["2"])
         assert len(level) == 47, "Could not load bottom datasets %d " % len(level)
 
     def test_read_level_in_dataset_txt_file(self):
@@ -67,7 +64,9 @@ class TestDatasetBuilder(SmartTest):
         d_structure_def: dict = get_structure_definition(d_name)
 
         # level 1
-        level = read_artifact_level(d_structure_def["artifacts"]["0"])
+        level = MultiLevelArtifacts.read_artifact_level(
+            d_structure_def["artifacts"]["0"]
+        )
         self.assertEqual(len(level), 1, "Could not load top datasets: %d" % len(level))
         for col in self.level_cols:
             self.assertIn(
@@ -82,7 +81,7 @@ class TestDatasetBuilder(SmartTest):
 
     def test_parse_level_txt(self):
         path_to_level = PATH_TO_TEST_REQUIREMENTS
-        level = parse_artifact_txt_file(path_to_level)
+        level = MultiLevelArtifacts.parse_artifact_txt_file(path_to_level)
         assert len(level) > 0, "Expected non-empty list: %d" % len(level)
         for col in self.level_cols:
             assert col in level.columns, "Expected %s in CACHE_COLUMNS: %s" % (
