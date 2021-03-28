@@ -8,10 +8,10 @@ from typing import List, Optional, Tuple
 import pandas as pd
 
 from api.constants.processing import (
+    ALL_METRIC_NAMES,
     AP_COLNAME,
     AUC_COLNAME,
     COLUMN_ORDER,
-    CORE_METRIC_NAMES,
     DATASET_COLNAME,
     DATASET_COLUMN_ORDER,
     LAG_NORMALIZED_INVERTED_COLNAME,
@@ -82,16 +82,17 @@ class Table(ITable):
         self.table = self.table.append(entries_dict, ignore_index=True)
         return self.table
 
-    def sort_cols(self) -> "Table":
+    def sort(self) -> "Table":
         """
-        Sorts columns of table using the constants in api/constants
+        Sorts values by dataset, technique_type, and metrics then sorts columns
+        Sort orders are defined by the constants in api/constants
         :return: Table - copy of this table but with sort applied
         """
         data = Table(self.table.copy())
 
         # TODO: This is dependent on order
         if METRIC_COLNAME in self.table.columns:
-            data = data.to_categorical(METRIC_COLNAME, CORE_METRIC_NAMES)
+            data = data.to_categorical(METRIC_COLNAME, ALL_METRIC_NAMES)
             data = data.sort_values(group_names=[METRIC_COLNAME], axis=0)
 
         if TECHNIQUE_TYPE_COLNAME in self.table.columns:
@@ -133,7 +134,7 @@ class Table(ITable):
         :return: DataFrame with modifications specified
         """
 
-        data = self.sort_cols().table
+        data = self.sort().table
 
         if names_title_case:
             presentation_map = {
@@ -182,6 +183,7 @@ class Table(ITable):
                 data[col_name].dtype not in ["int64", "float64"]
                 and col_name not in exclude
             ):
+                print(col_name, data[col_name])
                 data[col_name] = data[col_name].apply(split_and_format)
         data.columns = list(map(split_and_format, data.columns))
         return Table(data)
