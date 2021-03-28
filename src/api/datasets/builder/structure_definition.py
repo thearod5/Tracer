@@ -30,9 +30,10 @@ class StructureDefinition:
         if raw is not None:
             self.json = raw
         else:
-            self.json = self._read_dataset_structure_file(dataset_name)
+            self.json = StructureDefinition._read_dataset_structure_file(dataset_name)
 
-    def _read_dataset_structure_file(self, dataset_name: str) -> dict:
+    @staticmethod
+    def _read_dataset_structure_file(dataset_name: str) -> dict:
         path_to_dataset = get_path_to_dataset(dataset_name)
         structure_json = StructureDefinition.read_structure_file(path_to_dataset)
 
