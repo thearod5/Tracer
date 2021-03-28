@@ -12,7 +12,7 @@ class TestStructureDefinitionParser(SmartTest):
 
     def test_read_level_in_dataset_csv_file(self):
         dataset_name = "SAMPLE_EBT"
-        structure: dict = StructureDefinition.get_structure_definition(dataset_name)
+        structure: dict = StructureDefinition(dataset_name).json
 
         # level 1
         level = MultiLevelArtifacts.read_artifact_level(structure["artifacts"]["1"])

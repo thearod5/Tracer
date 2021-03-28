@@ -19,8 +19,7 @@ class StructureDefinition:
     artifacts and trace matrices for a dataset.
     """
 
-    @staticmethod
-    def get_structure_definition(dataset_name: str):
+    def __init__(self, dataset_name: str):
         """
         Reads and validates the structure.json file of the given dataset assumed to be in that "Datasets" root folder.
         :param dataset_name: the name of the folder in "Datasets" root folder containing the dataset assets
@@ -54,7 +53,8 @@ class StructureDefinition:
                 else os.path.join(path_to_dataset, relative_path)
             )
             structure_json["traces"][t_branch] = final_path
-        return structure_json
+
+        self.json = structure_json
 
     @staticmethod
     def read_structure_file(path_to_dataset: str) -> dict:
@@ -90,7 +90,7 @@ class StructureDefinition:
         )
 
     @staticmethod
-    def contains_fields(some_dict: dict, required_fields: [str]):
+    def contains_fields(some_dict: dict, required_fields: [str]) -> bool:
         """
         Returns whether given dictionary contains required fields.
         :param some_dict: a python dictionary

@@ -52,7 +52,7 @@ class TestDatasetBuilder(SmartTest):
 
     def test_read_level_in_dataset(self):
         dataset_name = "SAMPLE_EasyClinic"
-        structure: dict = StructureDefinition.get_structure_definition(dataset_name)
+        structure: dict = StructureDefinition(dataset_name).json
 
         level = MultiLevelArtifacts.read_artifact_level(structure["artifacts"]["0"])
         assert len(level) > 0, "Could not load top datasets"
@@ -65,7 +65,7 @@ class TestDatasetBuilder(SmartTest):
 
     def test_read_level_in_dataset_txt_file(self):
         d_name = "MockDataset"
-        d_structure_def: dict = StructureDefinition.get_structure_definition(d_name)
+        d_structure_def: dict = StructureDefinition(d_name).json
 
         # level 1
         level = MultiLevelArtifacts.read_artifact_level(

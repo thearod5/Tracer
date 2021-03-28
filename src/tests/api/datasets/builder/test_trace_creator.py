@@ -29,7 +29,7 @@ class TestTraceCreator(SmartTest):
         Tests that get_document_delimiter is able to identify colons as a delimiters in an artifact definition file.
         """
         dataset_name = "SAMPLE_EasyClinic"
-        structure: dict = StructureDefinition.get_structure_definition(dataset_name)
+        structure: dict = StructureDefinition(dataset_name).json
         with open(structure["traces"]["0-1"]) as top_trace_file:
             delimiter = get_document_delimiter(top_trace_file.read())
             self.assertEqual(":", delimiter)
@@ -37,7 +37,7 @@ class TestTraceCreator(SmartTest):
     def test_get_document_delimiter_tab(self):
         dataset_name = "SAMPLE_WARC"
 
-        structure: dict = StructureDefinition.get_structure_definition(dataset_name)
+        structure: dict = StructureDefinition(dataset_name).json
         with open(structure["traces"]["1-2"]) as top_trace_file:
             delimiter = get_document_delimiter(top_trace_file.read())
             self.assertEqual("\t", delimiter)
@@ -228,7 +228,7 @@ class TestTraceCreator(SmartTest):
 
 
 def assert_traces_for_dataset(dataset_name: str):
-    structure: dict = StructureDefinition.get_structure_definition(dataset_name)
+    structure: dict = StructureDefinition(dataset_name).json
     traces = parse_trace_file(structure["traces"]["1-2"])
 
     for trace in traces:

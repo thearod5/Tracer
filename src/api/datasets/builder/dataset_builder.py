@@ -38,7 +38,7 @@ class DatasetBuilder:
         self.path = get_path_to_dataset(dataset_name)
         self.levels = []
         self.trace_matrices: TraceId2TraceMatrixMap = {}
-        self.structure_file = StructureDefinition.get_structure_definition(dataset_name)
+        self.structure_file = StructureDefinition(dataset_name).json
         self.defined_trace_matrices = [
             key
             for key in self.structure_file["traces"].keys()
