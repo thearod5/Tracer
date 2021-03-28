@@ -29,7 +29,7 @@ A TraceId is a string in the form of [artifact_a_index]-[artifact_b_index]
 A TracePathMap is a dict mapping from TraceIds to a list of integers representing
 the nodes indices for a certain path
 """
-from typing import List, Tuple
+from typing import List
 
 from igraph import Graph
 
@@ -72,60 +72,60 @@ class TraceMatrixCreator:
                 r_trace_id = "%d-%d" % (b_index, a_index)
                 trace_matrices[r_trace_id] = trace_matrix.transpose()
         self.trace_matrix_map: TraceId2TraceMatrixMap = trace_matrices
+        self.levels = levels
 
-    def normalize_original_matrices(self, graph: Graph, levels: List[ArtifactLevel]):
+    def normalize_original_matrices(self):
         """
         returns the trace matrix with all transitive and direct graph_paths.
         :param graph: The dependency graph of each trace matrix
-        :param levels: TODO
         :return:
         """
+        graph = self.create_dependency_graph()
         direct_path_map = {}
         for trace_id in self.trace_matrix_map.keys():
             a_index, b_index = parse_trace_id(trace_id)
             direct_path_map[trace_id] = find_all_paths(graph, a_index, b_index)
         updated_trace_matrix_map = create_trace_matrix_map_from_graph_path_map(
-            direct_path_map, self.trace_matrix_map, levels
+            direct_path_map, self.trace_matrix_map, self.levels
         )
         self.trace_matrix_map.update(updated_trace_matrix_map)
 
+    def create_dependency_graph(self):
+        n_levels = len(self.levels)
+        direct_trace_ids: List[str] = list(map(to_string, self.trace_matrix_map.keys()))
+        graph = create_trace_matrix_graph(direct_trace_ids, n_levels)
+        return graph
 
-def create_trace_matrix_map(
-    structure_file: dict, levels: [ArtifactLevel]
-) -> Tuple[TraceMatrixCreator, Graph]:
-    """
-    For every combination of nodes verifies that path already exists or creates path between them to form a
-    a complete graph.
-    :param structure_file: a dataset's structure definition
-    :param levels: parsed ArtifactLevels with indices corresponding to level index
-    :return: map with all trace technique_matrices defined
-    """
-    n_levels = len(levels)
-    direct_trace_matrix_map = TraceMatrixCreator(structure_file, levels)
-    direct_trace_ids: List[str] = list(
-        map(to_string, direct_trace_matrix_map.trace_matrix_map.keys())
-    )
+    def create_trace_matrix_map(self):
+        """
+        For every combination of nodes verifies that path already exists or creates path between them to form a
+        a complete graph.
+        TODO: RENAME TO CREATE_DEPENDENY_GRAPH
+        :return: map with all trace technique_matrices defined
+        """
+        n_levels = len(self.levels)
+        direct_trace_ids: List[str] = list(map(to_string, self.trace_matrix_map.keys()))
 
-    # create dependency graph
-    dependency_graph = create_trace_matrix_graph(direct_trace_ids, n_levels)
+        # create dependency graph
+        dependency_graph = self.create_dependency_graph()
 
-    # for each undefined path for nodes a and b find all graph_paths between a and b
-    missing_graph_path = get_graph_paths_map_to_missing_paths(
-        direct_trace_ids, dependency_graph, n_levels
-    )
-    transitive_matrix_map = create_trace_matrix_map_from_graph_path_map(
-        missing_graph_path, direct_trace_matrix_map.trace_matrix_map, levels
-    )
-    for path_id in missing_graph_path:  #
-        a_index, b_index = parse_trace_id(path_id)
-        dependency_graph.add_edge(a_index, b_index)
+        # for each undefined path for nodes a and b find all graph_paths between a and b
+        missing_graph_path = get_graph_paths_map_to_missing_paths(
+            direct_trace_ids, dependency_graph, n_levels
+        )
+        transitive_matrix_map = create_trace_matrix_map_from_graph_path_map(
+            missing_graph_path, self.trace_matrix_map, self.levels
+        )
+        for path_id in missing_graph_path:  #
+            a_index, b_index = parse_trace_id(path_id)
+            dependency_graph.add_edge(a_index, b_index)
 
-    direct_trace_matrix_map.trace_matrix_map.update(transitive_matrix_map)
+        self.trace_matrix_map.update(transitive_matrix_map)
 
-    # update original graph_paths with transitive ones
-    for _ in range(N_ITERATIONS_TRACE_PROPAGATION):
-        direct_trace_matrix_map.normalize_original_matrices(dependency_graph, levels)
-    return direct_trace_matrix_map, dependency_graph
+        # update original graph_paths with transitive ones
+        for _ in range(N_ITERATIONS_TRACE_PROPAGATION):
+            self.normalize_original_matrices()
+        return dependency_graph
 
 
 def create_trace_matrix_map_from_graph_path_map(

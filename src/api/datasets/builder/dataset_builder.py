@@ -18,8 +18,8 @@ from api.datasets.builder.structure_definition import (
     get_path_to_dataset,
 )
 from api.datasets.builder.trace_matrix_creator import (
+    TraceMatrixCreator,
     create_trace_matrix_graph,
-    create_trace_matrix_map,
 )
 from api.datasets.builder.trace_parser import parse_trace_id
 from api.datasets.multi_level_artifacts import MultiLevelArtifacts
@@ -57,14 +57,12 @@ class DatasetBuilder:
         """
         self.create_levels()
         # create trace matrices
-        trace_matrix_creator, trace_graph = create_trace_matrix_map(
-            self.structure_file, self.levels
-        )
+        trace_matrix_creator = TraceMatrixCreator(self.structure_file, self.levels)
+        trace_graph = trace_matrix_creator.create_dependency_graph()
+        trace_matrix_creator.create_trace_matrix_map()
         self.trace_matrices = trace_matrix_creator.trace_matrix_map
         self.trace_graph = trace_graph
         self.remove_unimplemented_requirements()
-
-        print(trace_matrix_creator)
 
     def create_levels(self):
         """
