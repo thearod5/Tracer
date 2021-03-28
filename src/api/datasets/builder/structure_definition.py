@@ -7,6 +7,7 @@ TODO: Define what is required in structure.json file
 """
 import json
 import os
+from typing import Optional
 
 from api.datasets.dataset import get_path_to_dataset
 
@@ -19,13 +20,19 @@ class StructureDefinition:
     artifacts and trace matrices for a dataset.
     """
 
-    def __init__(self, dataset_name: str):
+    def __init__(self, dataset_name: Optional[str] = None, raw: Optional[dict] = None):
         """
         Reads and validates the structure.json file of the given dataset assumed to be in that "Datasets" root folder.
         :param dataset_name: the name of the folder in "Datasets" root folder containing the dataset assets
         :return: dict
         :TODO: add attributes to class instead of returning dictionary
         """
+        if raw is not None:
+            self.json = raw
+        else:
+            self.json = self._read_dataset_structure_file(dataset_name)
+
+    def _read_dataset_structure_file(self, dataset_name: str) -> dict:
         path_to_dataset = get_path_to_dataset(dataset_name)
         structure_json = StructureDefinition.read_structure_file(path_to_dataset)
 
@@ -54,7 +61,7 @@ class StructureDefinition:
             )
             structure_json["traces"][t_branch] = final_path
 
-        self.json = structure_json
+        return structure_json
 
     @staticmethod
     def read_structure_file(path_to_dataset: str) -> dict:
@@ -68,11 +75,9 @@ class StructureDefinition:
             structure_file: dict = json.loads(raw_structure_file.read())
         return structure_file
 
-    @staticmethod
-    def is_valid_structure_file(structure_file: dict):
+    def is_valid_structure_file(self) -> bool:
         """
-        Returns whether given structure file contains all of required fields for structure.json files.
-        :param structure_file: the contents of a dataset's structure.json file
+        Returns whether structure file contains all of required fields for structure.json files.
         :return: boolean - true if valid, false otherwise
         """
         top_branches = ["datasets", "traces"]
@@ -80,13 +85,11 @@ class StructureDefinition:
         trace_branches = ["top-middle", "middle-bottom", "top-bottom"]
 
         return (
-            StructureDefinition.contains_fields(structure_file, top_branches)
+            StructureDefinition.contains_fields(self.json, top_branches)
             and StructureDefinition.contains_fields(
-                structure_file["datasets"], artifact_branches
+                self.json["datasets"], artifact_branches
             )
-            and StructureDefinition.contains_fields(
-                structure_file["traces"], trace_branches
-            )
+            and StructureDefinition.contains_fields(self.json["traces"], trace_branches)
         )
 
     @staticmethod

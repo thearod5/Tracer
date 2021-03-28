@@ -40,19 +40,19 @@ class TestDatasetBuilder(SmartTest):
         )
 
     def test_is_valid_structure_file(self):
-        assert not StructureDefinition.is_valid_structure_file({})
-        assert not StructureDefinition.is_valid_structure_file({"datasets": {}})
-        assert not StructureDefinition.is_valid_structure_file({"traces": {}})
-        assert not StructureDefinition.is_valid_structure_file(
-            {"datasets": {}, "traces": {}}
-        )
-        assert StructureDefinition.is_valid_structure_file(
-            {"datasets": self.valid_artifacts, "traces": self.valid_traces}
-        )
+        assert not StructureDefinition(raw={}).is_valid_structure_file()
+        assert not StructureDefinition(raw={"datasets": {}}).is_valid_structure_file()
+        assert not StructureDefinition(raw={"traces": {}}).is_valid_structure_file()
+        assert not StructureDefinition(
+            raw={"datasets": {}, "traces": {}}
+        ).is_valid_structure_file()
+        assert StructureDefinition(
+            raw={"datasets": self.valid_artifacts, "traces": self.valid_traces}
+        ).is_valid_structure_file()
 
     def test_read_level_in_dataset(self):
         dataset_name = "SAMPLE_EasyClinic"
-        structure: dict = StructureDefinition(dataset_name).json
+        structure: dict = StructureDefinition(dataset_name=dataset_name).json
 
         level = MultiLevelArtifacts.read_artifact_level(structure["artifacts"]["0"])
         assert len(level) > 0, "Could not load top datasets"
@@ -65,7 +65,7 @@ class TestDatasetBuilder(SmartTest):
 
     def test_read_level_in_dataset_txt_file(self):
         d_name = "MockDataset"
-        d_structure_def: dict = StructureDefinition(d_name).json
+        d_structure_def: dict = StructureDefinition(dataset_name=d_name).json
 
         # level 1
         level = MultiLevelArtifacts.read_artifact_level(
