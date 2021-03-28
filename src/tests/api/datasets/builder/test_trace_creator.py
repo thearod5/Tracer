@@ -3,7 +3,7 @@ from igraph import Graph
 from api.datasets.builder.structure_definition import StructureDefinition
 from api.datasets.builder.trace_matrix_creator import (
     create_trace_matrix_graph,
-    find_all_paths,
+    get_all_paths,
 )
 from api.datasets.builder.trace_parser import (
     create_trace_matrix_values_from_trace_list,
@@ -187,38 +187,38 @@ class TestTraceCreator(SmartTest):
 
     def test_find_all_paths_one(self):
         graph: Graph = create_trace_matrix_graph([], 1)
-        paths = find_all_paths(graph, 0, 0)
+        paths = get_all_paths(graph, 0, 0)
         self.assertEqual(1, len(paths))
         self.assertEqual(1, len(paths[0]))
         self.assertEqual(0, paths[0][0])
 
     def test_find_all_paths_two_complete(self):
         graph: Graph = create_trace_matrix_graph(["0-1"], 2)
-        paths = find_all_paths(graph, 0, 1)
+        paths = get_all_paths(graph, 0, 1)
         self.assertEqual(1, len(paths))
         self.assertEqual([0, 1], paths[0])
 
     def test_find_all_paths_two_empty(self):
         graph: Graph = create_trace_matrix_graph([], 2)
-        paths = find_all_paths(graph, 0, 1)
+        paths = get_all_paths(graph, 0, 1)
         self.assertEqual(0, len(paths))
 
     def test_find_all_paths_three_complete(self):
         graph: Graph = create_trace_matrix_graph(["0-2", "0-1", "1-2"], 3)
-        paths = find_all_paths(graph, 0, 1)
+        paths = get_all_paths(graph, 0, 1)
         self.assertEqual(2, len(paths))
         self.assertEqual([0, 1], paths[0])
         self.assertEqual([0, 2, 1], paths[1])
 
     def test_find_all_paths_three_incomplete(self):
         graph: Graph = create_trace_matrix_graph(["0-2"], 3)
-        paths = find_all_paths(graph, 0, 1)
+        paths = get_all_paths(graph, 0, 1)
         self.assertEqual(0, len(paths))
 
     def test_find_all_paths_four_incomplete(self):
         traces = ["1-2", "0-2", "2-3", "1-0", "0-3", "1-3"]
         graph: Graph = create_trace_matrix_graph(traces, 4)
-        paths = find_all_paths(graph, 1, 2)
+        paths = get_all_paths(graph, 1, 2)
         self.assertEqual(5, len(paths))
         self.assertTrue([1, 0, 2] in paths)
         self.assertTrue([1, 2] in paths)

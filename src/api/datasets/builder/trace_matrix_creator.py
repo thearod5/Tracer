@@ -2,6 +2,7 @@
 The following module creates a module responsible for parsing trace matrices using the paths definition
 in structure definitions.
 """
+
 from api.constants.dataset import (
     GraphPath,
     SimilarityMatrix,
@@ -29,7 +30,7 @@ A TraceId is a string in the form of [artifact_a_index]-[artifact_b_index]
 A TracePathMap is a dict mapping from TraceIds to a list of integers representing
 the nodes indices for a certain path
 """
-from typing import List
+from typing import List, Optional
 
 from igraph import Graph
 
@@ -84,7 +85,7 @@ class TraceMatrixCreator:
         direct_path_map = {}
         for trace_id in self.trace_matrix_map.keys():
             a_index, b_index = parse_trace_id(trace_id)
-            direct_path_map[trace_id] = find_all_paths(graph, a_index, b_index)
+            direct_path_map[trace_id] = get_all_paths(graph, a_index, b_index)
         updated_trace_matrix_map = create_trace_matrix_map_from_graph_path_map(
             direct_path_map, self.trace_matrix_map, self.levels
         )
@@ -295,7 +296,7 @@ def get_graph_paths_map_to_missing_paths(
                 and not contains_trace_id(trace_ids, trace_id)
                 and not contains_trace_id(list(missing_paths.keys()), trace_id)
             ):
-                transitive_paths = find_all_paths(dependency_graph, a_index, b_index)
+                transitive_paths = get_all_paths(dependency_graph, a_index, b_index)
 
                 if len(transitive_paths) == 0:
                     raise Exception(
@@ -305,35 +306,46 @@ def get_graph_paths_map_to_missing_paths(
     return missing_paths
 
 
-# Retrieved from: https://stackoverflow.com/questions/29320556/finding-longest-path-in-a-graph
-def find_all_paths(graph, start, end, mode="OUT", maxlen=None) -> List[GraphPath]:
+def get_all_paths(
+    trace_matrix_dependency_graph: Graph,
+    start_index: int,
+    end_index: int,
+) -> List[GraphPath]:
     """
-    TODO
-    :param graph:
-    :param start:
-    :param end:
-    :param mode:
-    :param maxlen:
+    Returns list of all possible paths through graph starting and ending at given indices
+
+    Retrieved from: https://stackoverflow.com/questions/29320556/finding-longest-path-in-a-graph
+    is defined between them
+     :param trace_matrix_dependency_graph: the graph with nodes are artifacts levels with edges if a trace matrix
+    :param start_index: int - index of artifact level to start path at
+    :param end_index: int - index of artifact lvel to end path at
     :return:
     """
+    mode = "OUT"
+    max_length: Optional[int] = None
 
-    def find_all_paths_aux(adj_list, start, end, path, maxlen=None):
-        path = path + [start]
-        if start == end:
+    def find_all_paths_aux(
+        adj_list: List[set], start_aux: int, end_aux: int, path, maxlen: int = None
+    ):
+        path = path + [start_aux]
+        if start_aux == end_aux:
             return [path]
         paths = []
         if maxlen is None or len(path) <= maxlen:
-            for node in adj_list[start] - set(path):
-                paths.extend(find_all_paths_aux(adj_list, node, end, path, maxlen))
+            for node in adj_list[start_aux] - set(path):
+                paths.extend(find_all_paths_aux(adj_list, node, end_aux, path, maxlen))
         return paths
 
-    adj_list = [set(graph.neighbors(node, mode=mode)) for node in range(graph.vcount())]
+    adj_list: List[set] = [
+        set(trace_matrix_dependency_graph.neighbors(node, mode=mode))
+        for node in range(trace_matrix_dependency_graph.vcount())
+    ]
     all_paths = []
-    start = start if isinstance(start, list) else [start]
-    end = end if isinstance(end, list) else [end]
-    for start_path in start:
-        for end_path in end:
+    start_index = start_index if isinstance(start_index, list) else [start_index]
+    end_index = end_index if isinstance(end_index, list) else [end_index]
+    for start_path in start_index:
+        for end_path in end_index:
             all_paths.extend(
-                find_all_paths_aux(adj_list, start_path, end_path, [], maxlen)
+                find_all_paths_aux(adj_list, start_path, end_path, [], max_length)
             )
     return all_paths
