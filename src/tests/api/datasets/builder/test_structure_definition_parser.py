@@ -1,4 +1,4 @@
-from api.datasets.builder.structure_definition import get_structure_definition
+from api.datasets.builder.structure_definition import StructureDefinition
 from api.datasets.multi_level_artifacts import MultiLevelArtifacts
 from tests.res.smart_test import SmartTest
 
@@ -12,7 +12,7 @@ class TestStructureDefinitionParser(SmartTest):
 
     def test_read_level_in_dataset_csv_file(self):
         dataset_name = "SAMPLE_EBT"
-        structure: dict = get_structure_definition(dataset_name)
+        structure: dict = StructureDefinition.get_structure_definition(dataset_name)
 
         # level 1
         level = MultiLevelArtifacts.read_artifact_level(structure["artifacts"]["1"])

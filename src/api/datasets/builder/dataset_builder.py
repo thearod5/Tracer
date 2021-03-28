@@ -14,8 +14,8 @@ from igraph import Graph
 
 from api.datasets.builder.dataset_exporter import clean_level
 from api.datasets.builder.structure_definition import (
+    StructureDefinition,
     get_path_to_dataset,
-    get_structure_definition,
 )
 from api.datasets.builder.transitive_trace_matrix_creator import (
     TraceId2TraceMatrixMap,
@@ -38,7 +38,7 @@ class DatasetBuilder:
         self.path = get_path_to_dataset(dataset_name)
         self.levels = []
         self.trace_matrices: TraceId2TraceMatrixMap = {}
-        self.structure_file = get_structure_definition(dataset_name)
+        self.structure_file = StructureDefinition.get_structure_definition(dataset_name)
         self.defined_trace_matrices = [
             key
             for key in self.structure_file["traces"].keys()

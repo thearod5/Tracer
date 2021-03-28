@@ -5,9 +5,7 @@ from pandas import DataFrame
 from api.constants.paths import PATH_TO_TEST_REQUIREMENTS
 from api.datasets.builder.dataset_builder import DatasetBuilder
 from api.datasets.builder.structure_definition import (
-    contains_fields,
-    get_structure_definition,
-    is_valid_structure_file,
+    StructureDefinition,
 )
 from api.datasets.multi_level_artifacts import MultiLevelArtifacts
 from api.extension.file_operations import get_index_after_numbers
@@ -31,24 +29,30 @@ class TestDatasetBuilder(SmartTest):
 
     def test_contains_branches(self):
         required_branches = ["top", "middle", "bottom"]
-        self.assertTrue(contains_fields(self.valid_artifacts, required_branches))
-        self.assertFalse(contains_fields({}, required_branches))
+        self.assertTrue(
+            StructureDefinition.contains_fields(self.valid_artifacts, required_branches)
+        )
+        self.assertFalse(StructureDefinition.contains_fields({}, required_branches))
         self.assertFalse(
-            contains_fields({"bottom": "thing", "middle": ""}, required_branches)
+            StructureDefinition.contains_fields(
+                {"bottom": "thing", "middle": ""}, required_branches
+            )
         )
 
     def test_is_valid_structure_file(self):
-        assert not is_valid_structure_file({})
-        assert not is_valid_structure_file({"datasets": {}})
-        assert not is_valid_structure_file({"traces": {}})
-        assert not is_valid_structure_file({"datasets": {}, "traces": {}})
-        assert is_valid_structure_file(
+        assert not StructureDefinition.is_valid_structure_file({})
+        assert not StructureDefinition.is_valid_structure_file({"datasets": {}})
+        assert not StructureDefinition.is_valid_structure_file({"traces": {}})
+        assert not StructureDefinition.is_valid_structure_file(
+            {"datasets": {}, "traces": {}}
+        )
+        assert StructureDefinition.is_valid_structure_file(
             {"datasets": self.valid_artifacts, "traces": self.valid_traces}
         )
 
     def test_read_level_in_dataset(self):
         dataset_name = "SAMPLE_EasyClinic"
-        structure: dict = get_structure_definition(dataset_name)
+        structure: dict = StructureDefinition.get_structure_definition(dataset_name)
 
         level = MultiLevelArtifacts.read_artifact_level(structure["artifacts"]["0"])
         assert len(level) > 0, "Could not load top datasets"
@@ -61,7 +65,7 @@ class TestDatasetBuilder(SmartTest):
 
     def test_read_level_in_dataset_txt_file(self):
         d_name = "MockDataset"
-        d_structure_def: dict = get_structure_definition(d_name)
+        d_structure_def: dict = StructureDefinition.get_structure_definition(d_name)
 
         # level 1
         level = MultiLevelArtifacts.read_artifact_level(
