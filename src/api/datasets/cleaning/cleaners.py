@@ -118,3 +118,17 @@ def clean_doc(doc, stop_at_index=None):
     """
     pipeline = CLEANING_PIPELINE[:stop_at_index]
     return functools.reduce(lambda acc, value: value(acc), pipeline, doc)
+
+
+def clean_level(raw_df):
+    """
+    For the `text` column in given DataFrame, clean each entry and returns DataFrame whose `text` column contains the
+    cleaned artifacts.
+    :param raw_df: the DataFrame containing the text documents to clean.
+    :return: Copy of given DataFrame whose `text` columns only contains the cleaned strings.
+    """
+    raw_df = raw_df.copy()
+    assert "text" in raw_df.columns, raw_df.columns
+
+    raw_df["text"] = list(map(clean_doc, raw_df["text"]))
+    return raw_df

@@ -1,8 +1,9 @@
+from api.datasets.builder.dataset_builder import DatasetBuilder
 from api.datasets.dataset import Dataset
 from api.technique.definitions.combined.technique import CombinedTechniqueDefinition
 from api.technique.definitions.direct.definition import (
-    DirectTechniqueDefinition,
     DIRECT_COMMAND_SYMBOL,
+    DirectTechniqueDefinition,
 )
 from api.technique.definitions.sampled.definition import (
     SAMPLED_COMMAND_SYMBOL,
@@ -39,6 +40,9 @@ Some predefined techniques that tests can share
 
 class TestTechniqueHelper(SmartTest):
     d_name = "MockDataset"
+    d_builder = DatasetBuilder(d_name)
+    d_builder.build()
+    d_builder.export()
     dataset = Dataset(d_name)
     """
     Direct

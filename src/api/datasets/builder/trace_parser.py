@@ -186,23 +186,3 @@ def get_index_of_next_alpha_char(string: str, start_index=0) -> int:
         if str.isalnum(char) and char not in forbidden:
             return start_index + char_index
     return -1
-
-
-def reverse_id(trace_id: str):
-    """
-    TODO
-    :param trace_id:
-    :return:
-    """
-    upper_level, lower_level = trace_id.split("-")
-    return "%s-%s" % (lower_level, upper_level)
-
-
-def parse_trace_id(trace_id: str):
-    """
-    TODO
-    :param trace_id:
-    :return:
-    """
-    upper_level, lower_level = trace_id.split("-")
-    return int(upper_level), int(lower_level)

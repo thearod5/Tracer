@@ -3,7 +3,7 @@ TODO
 """
 import numpy as np
 import pandas as pd
-from sklearn.metrics import average_precision_score, roc_curve, auc
+from sklearn.metrics import auc, average_precision_score, roc_curve
 
 from api.constants.processing import CORE_METRIC_NAMES
 from api.tables.metric_table import Metrics
@@ -70,7 +70,7 @@ def calculate_ap(y_true, y_pred):
 
 
 def calculate_metrics_for_scoring_table(
-        scoring_table: ScoringTable, n_queries: int
+    scoring_table: ScoringTable, n_queries: int
 ) -> [Metrics]:
     """
     Returns list of Metrics per query in scoring table
@@ -82,7 +82,7 @@ def calculate_metrics_for_scoring_table(
     y_true = scoring_table.values[:, 1]
 
     assert (
-            len(y_true) % n_queries == 0
+        len(y_true) % n_queries == 0
     ), "given number of queries (%d) does not divide into values (%d)" % (
         n_queries,
         len(y_true),
@@ -99,6 +99,9 @@ def calculate_metrics_for_scoring_table(
         start_index = query_index * query_length
         end_index = start_index + query_length
         query_y_true = y_true[start_index:end_index]
+
+        if 1 not in query_y_true:
+            continue
 
         m_entry = Metrics(
             ap=calculate_ap(query_y_true, query_y_pred),

@@ -103,7 +103,7 @@ class MetricTable(Table):
         :return: Table
         """
         best_rows = self.find_direct_best_techniques(metric_name=metric_name)
-        return best_rows.index
+        return best_rows.table.index
 
     def get_transitive_best_indices(self, metric_name=AP_COLNAME) -> List[int]:
         """
@@ -434,6 +434,13 @@ class Metrics:  # pylint: disable=too-few-public-methods
         self.ap = ap  # pylint: disable=invalid-name
         self.auc = auc
         self.lag = lag
+
+    def __sub__(self, other):
+        ap_delta = self.ap - other.ap
+        auc_delta = self.auc - other.auc
+        lag_delta = self.lag - other.lag
+
+        return Metrics(ap_delta, auc_delta, lag_delta)
 
 
 def calculate_gain_between_techniques(base_metrics: Data, target_metrics: Data) -> Data:

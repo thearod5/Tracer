@@ -34,8 +34,8 @@ def create_direct_algebraic_model(data: DirectTechniqueData):
         data.similarity_matrix = data.dataset.traced_matrices[trace_id]
     else:
         upper_level_index, lower_level_index = data.technique.artifact_paths
-        upper_artifacts = data.dataset.artifacts.levels[upper_level_index]
-        lower_artifacts = data.dataset.artifacts.levels[lower_level_index]
+        upper_artifacts = data.dataset.artifacts[upper_level_index]
+        lower_artifacts = data.dataset.artifacts[lower_level_index]
         similarity_matrix = calculate_similarity_matrix_for_nlp_technique(
             data.technique.algebraic_model, upper_artifacts, lower_artifacts
         )

@@ -57,13 +57,13 @@ class CombinedTechniqueDefinition(ITechniqueDefinition):
                 self.target_level = new_technique.definition.target_level
             else:
                 assert (
-                        self.source_level == new_technique.definition.source_level
+                    self.source_level == new_technique.definition.source_level
                 ), "source level mismatch. expected %d but got %d" % (
                     self.source_level,
                     new_technique.definition.source_level,
                 )
                 assert (
-                        self.target_level == new_technique.definition.target_level
+                    self.target_level == new_technique.definition.target_level
                 ), "target level mismatch. expected %d but got %d" % (
                     self.target_level,
                     new_technique.definition.target_level,
@@ -104,7 +104,7 @@ def create_technique_by_name(name: str) -> ITechnique:
     technique_expressions = parse_technique_definition(name)
 
     assert (
-            len(technique_expressions) == 3
+        len(technique_expressions) == 3
     ), "expected ([command] [parameters] [components]) got %s" % len(
         technique_expressions
     )
@@ -151,7 +151,7 @@ class CombinedTechniqueCalculator(ITechniqueCalculator[CombinedTechniqueData]):
     """
 
     def __init__(
-            self, technique_definition: CombinedTechniqueDefinition, pipeline=None
+        self, technique_definition: CombinedTechniqueDefinition, pipeline=None
     ):
         super().__init__(technique_definition, pipeline)
         if pipeline is None:
@@ -177,8 +177,8 @@ def turn_aggregated_values_into_matrix(dataset: Dataset, values: np.ndarray):
     return np.reshape(
         values,
         newshape=(
-            dataset.artifacts.get_n_artifacts(level_index=0),
-            dataset.artifacts.get_n_artifacts(level_index=-1),
+            dataset.get_n_artifacts(0),
+            dataset.get_n_artifacts(-1),
             # TODO: Is this always -1? What about for datasets with 4 levels
         ),
     )
@@ -190,7 +190,7 @@ class CombinedTechnique(ITechnique):
     """
 
     def create_definition(
-            self, parameters: [str], components: [str]
+        self, parameters: [str], components: [str]
     ) -> CombinedTechniqueDefinition:
         """
         TODO
