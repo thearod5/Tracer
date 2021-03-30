@@ -1,7 +1,7 @@
 """
 Represents constants and types used when parsing datasets.
 """
-from typing import Dict, Union, List
+from typing import Dict, List, Union
 
 import numpy as np
 from scipy.sparse import csr_matrix
@@ -12,6 +12,6 @@ TraceId2SimilarityMatrixMap = Dict[
     str, SimilarityMatrix
 ]  # mapping between trace id and its corresponding SimilarityMatrix as traces
 
-GraphPath = List[int]  # ordered list of vertices representing a pat
+GraphPath: List[int] = List[int]  # ordered list of vertices representing a pat
 
 TraceId2GraphPathsMap = Dict[str, List[GraphPath]]

@@ -49,6 +49,130 @@ class MetricTable(Table):
     ):
         super().__init__(table, path_to_table=path_to_table)
 
+    def find_direct_best_techniques(self, metric_name=AP_COLNAME) -> "MetricTable":
+        """
+        Fins the highest performing direct techniques
+        :param metric_name: the metric which to declare a best from.
+        TODO: How to deal with ties
+        :return: Table
+        """
+        data = self.table.copy()
+        direct_data = data[self.get_technique_type_mask(DIRECT_ID)]
+        best_technique_df = get_best_rows(direct_data, metric_name)
+        return MetricTable(best_technique_df)
+
+    def find_best_transitive_techniques(self, metric_name=AP_COLNAME) -> "MetricTable":
+        """
+        Finds the transitive techniques that performed the best on given metric table.
+        Note, only techniques without transitive traces are considered.
+        :param metric_name: the metric from which to decide a best
+        :return: Table
+        """
+        data = self.table.copy()
+        query_mask = self.get_none_traced_mask() & self.get_technique_type_mask(
+            TRANSITIVE_ID
+        )
+        best_techniques_df = get_best_rows(
+            data[query_mask],
+            metric_name,
+        )
+        return MetricTable(best_techniques_df)
+
+    def find_best_combined_techniques(self, metric_name=AP_COLNAME) -> "MetricTable":
+        """
+        Returns the set of indices corresponding to the best combined, non-traced techniques.
+        :param metric_name: the metric from which to decide a best
+        :return: Table
+        """
+        data = self.table.copy()
+        query_mask = self.get_none_traced_mask() & self.get_technique_type_mask(
+            COMBINED_ID
+        )
+        best_techniques_df = get_best_rows(
+            data[query_mask],
+            metric_name,
+        )
+        return MetricTable(best_techniques_df)
+
+    def get_direct_best_indices(self, metric_name=AP_COLNAME) -> List[int]:
+        """
+        Calculates the gain in metrics between the direct best of each dataset and the scores for given
+        techniques on each dataset
+        :param metric_name: the metric which to declare a best from.
+        TODO: How to deal with ties
+        :return: Table
+        """
+        best_rows = self.find_direct_best_techniques(metric_name=metric_name)
+        return best_rows.table.index
+
+    def get_transitive_best_indices(self, metric_name=AP_COLNAME) -> List[int]:
+        """
+        Calculates the gain in metrics between the direct best of each dataset and the scores for given
+        techniques on each dataset
+        :param metric_name: the metric from which to decide a best
+        :return: Table
+        """
+        data = self.table.copy()
+        query_mask = self.get_none_traced_mask() & self.get_technique_type_mask(
+            TRANSITIVE_ID
+        )
+        best_rows = get_best_rows(
+            data[query_mask],
+            metric_name,
+        )
+        return best_rows.index
+
+    def get_best_combined_no_traces_indices(self, metric_name=AP_COLNAME) -> List[int]:
+        """
+        Returns the set of indices corresponding to the best combined, non-traced techniques.
+        :param metric_name: the metric from which to decide a best
+        :return: Table
+        """
+
+        return self.find_best_combined_techniques(metric_name).table.index
+
+    def get_best_combined_traces_indices(self, metric_name=AP_COLNAME) -> List[int]:
+        """
+        Returns the set of indices corresponding to the best combined, traced techniques.
+        :param metric_name: the metric from which to decide a best
+        :return: Table
+        """
+        data = self.table.copy()
+        query_mask = ~self.get_none_traced_mask() & self.get_technique_type_mask(
+            COMBINED_ID
+        )
+        best_rows = get_best_rows(
+            data[query_mask],
+            metric_name,
+        )
+        return best_rows.index
+
+    def get_technique_indices(self, technique_definition: str) -> List[int]:
+        """
+        Calculates the gain between given technique and direct best
+        :param technique_definition:
+        :return:
+        """
+        return self.table[self.table[NAME_COLNAME] == technique_definition].index
+
+    def get_none_traced_mask(self) -> bool:
+        """
+        Returns boolean mask for all rows whose trace type is NONE (e.g. uses no transitive traces).
+        :return: boolean mask
+        """
+        return (
+            self.table[TRANSITIVE_TRACE_TYPE_COLNAME]
+            == ExperimentTraceType.NONE.value.lower()
+        )
+
+    def get_technique_type_mask(self, technique_type: str) -> bool:
+        """
+        Returns mask on table for rows which match given technique_type
+        :param technique_type:
+        :return:
+        """
+        return self.table[TECHNIQUE_TYPE_COLNAME] == technique_type
+
     def create_ranks(
         self, rank_col=AP_COLNAME, new_col_name=RANK_COLNAME
     ) -> "MetricTable":
@@ -75,113 +199,6 @@ class MetricTable(Table):
                     [aggregated_rank_df, values], ignore_index=True
                 )
         return MetricTable(aggregated_rank_df)
-
-    def get_technique_indices(self, technique_definition: str) -> List[int]:
-        """
-        Calculates the gain between given technique and direct best
-        :param technique_definition:
-        :return:
-        """
-        return self.table[self.table[NAME_COLNAME] == technique_definition].index
-
-    def get_direct_best_techniques(self, metric_name=AP_COLNAME):
-        """
-        Calculates the highest performing direct techniques.
-        :param metric_name: the metric which to declare a best from.
-        TODO: How to deal with ties
-        :return: Table
-        """
-        data = self.table.copy()
-        direct_data = data[self.get_technique_type_mask(DIRECT_ID)]
-        best_rows = get_best_rows(direct_data, metric_name)
-        return best_rows
-
-    def get_direct_best_indices(self, metric_name=AP_COLNAME) -> List[int]:
-        """
-        Calculates the gain in metrics between the direct best of each dataset and the scores for given
-        techniques on each dataset
-        :param metric_name: the metric which to declare a best from.
-        TODO: How to deal with ties
-        :return: Table
-        """
-        best_rows = self.get_direct_best_techniques(metric_name=metric_name)
-        return best_rows.index
-
-    def get_transitive_best_indices(self, metric_name=AP_COLNAME) -> List[int]:
-        """
-        Calculates the gain in metrics between the direct best of each dataset and the scores for given
-        techniques on each dataset
-        :param metric_name: the metric from which to decide a best
-        :return: Table
-        """
-        data = self.table.copy()
-        query_mask = self.get_none_traced_mask() & self.get_technique_type_mask(
-            TRANSITIVE_ID
-        )
-        best_rows = get_best_rows(
-            data[query_mask],
-            metric_name,
-        )
-        return best_rows.index
-
-    def get_best_combined_no_traces_indices(self, metric_name=AP_COLNAME) -> List[int]:
-        """
-        Returns the set of indices corresponding to the best combined, non-traced techniques.
-        :param metric_name: the metric from which to decide a best
-        :return: Table
-        """
-
-        return self.get_best_combined_no_traces_techniques(metric_name).table.index
-
-    def get_best_combined_no_traces_techniques(self, metric_name=AP_COLNAME) -> Table:
-        """
-        Returns the set of indices corresponding to the best combined, non-traced techniques.
-        :param metric_name: the metric from which to decide a best
-        :return: Table
-        """
-        data = self.table.copy()
-        query_mask = self.get_none_traced_mask() & self.get_technique_type_mask(
-            COMBINED_ID
-        )
-        best_rows = get_best_rows(
-            data[query_mask],
-            metric_name,
-        )
-        return Table(best_rows)
-
-    def get_best_combined_traces_indices(self, metric_name=AP_COLNAME) -> List[int]:
-        """
-        Returns the set of indices corresponding to the best combined, traced techniques.
-        :param metric_name: the metric from which to decide a best
-        :return: Table
-        """
-        data = self.table.copy()
-        query_mask = ~self.get_none_traced_mask() & self.get_technique_type_mask(
-            COMBINED_ID
-        )
-        best_rows = get_best_rows(
-            data[query_mask],
-            metric_name,
-        )
-        return best_rows.index
-
-    def get_none_traced_mask(self) -> bool:
-        """
-        Returns boolean mask for all rows whose trace type is NONE (e.g. uses no transitive traces).
-        :return: boolean mask
-        """
-        return (
-            self.table[TRANSITIVE_TRACE_TYPE_COLNAME]
-            == ExperimentTraceType.NONE.value.lower()
-        )
-
-    def get_technique_type_mask(self, technique_type: str) -> bool:
-        """
-        Returns mask on table for rows which match given technique_type
-        :param technique_type:
-        :return:
-        """
-        return self.table[TECHNIQUE_TYPE_COLNAME] == technique_type
 
     def calculate_gain(
         self, base_indices: List[int], target_indices: List[int]
@@ -218,7 +235,7 @@ class MetricTable(Table):
         return (
             MetricTable(gain_values)
             .melt_metrics(metric_value_col_name=RELATIVE_GAIN_COLNAME)
-            .sort_cols()
+            .sort()
         )
 
     def calculate_percent_best(self) -> Table:
@@ -261,7 +278,41 @@ class MetricTable(Table):
                 }
                 percent_best_df = percent_best_df.append(new_record, ignore_index=True)
 
-        return Table(percent_best_df).sort_cols()
+        return Table(percent_best_df).sort()
+
+    def create_correlation_table(self) -> "Table":
+        """
+        :return: Table containing columns describing the correlation and p-value for each dataset-metric combination.
+        """
+        data = self.melt_metrics().table
+        correlation_df = pd.DataFrame()
+        metrics = data[METRIC_COLNAME].unique()
+        datasets = data[DATASET_COLNAME].unique()
+
+        queryable = data.set_index([DATASET_COLNAME, METRIC_COLNAME])
+        for dataset_name in datasets:
+            for metric_name in metrics:
+                query = queryable.loc[dataset_name, metric_name]
+
+                metric_values: List[float] = list(query["value"])
+                percent_values: List[float] = list(query["percent"])
+
+                correlation, p_value = spearmanr(metric_values, percent_values)
+                correlation = (
+                    -1 * correlation if metric_name in INVERTED_METRICS else correlation
+                )
+                correlation_df = correlation_df.append(
+                    {
+                        DATASET_COLNAME: dataset_name,
+                        METRIC_COLNAME: metric_name,
+                        CORRELATION_COLNAME: round(correlation, N_SIG_FIGS),
+                        P_VALUE_COLNAME: "<0.001"
+                        if p_value < 0.001
+                        else str(round(p_value, N_SIG_FIGS)),
+                    },
+                    ignore_index=True,
+                )
+        return Table(correlation_df)
 
     def melt_metrics(
         self, metric_col_name=METRIC_COLNAME, metric_value_col_name="value"
@@ -329,54 +380,28 @@ class MetricTable(Table):
 
         return Table(agg_df)
 
-    def create_correlation_table(self) -> "Table":
-        """
-        :param x_col: str - the column which to vary
-        :return:
-        """
-        data = self.melt_metrics().table
-        correlation_df = pd.DataFrame()
-        metrics = data[METRIC_COLNAME].unique()
-        datasets = data[DATASET_COLNAME].unique()
-
-        queryable = data.set_index([DATASET_COLNAME, METRIC_COLNAME])
-        for dataset_name in datasets:
-            for metric_name in metrics:
-                query = queryable.loc[dataset_name, metric_name]
-
-                metric_values: List[float] = list(query["value"])
-                percent_values: List[float] = list(query["percent"])
-
-                correlation, p_value = spearmanr(metric_values, percent_values)
-                correlation = (
-                    -1 * correlation if metric_name in INVERTED_METRICS else correlation
-                )
-                correlation_df = correlation_df.append(
-                    {
-                        DATASET_COLNAME: dataset_name,
-                        METRIC_COLNAME: metric_name,
-                        CORRELATION_COLNAME: round(correlation, N_SIG_FIGS),
-                        P_VALUE_COLNAME: "<0.001"
-                        if p_value < 0.001
-                        else str(round(p_value, N_SIG_FIGS)),
-                    },
-                    ignore_index=True,
-                )
-        return Table(correlation_df)
-
     def create_lag_norm_inverted(
         self, remove_old_lag=True, new_metric_name=LAG_NORMALIZED_INVERTED_COLNAME
     ) -> "MetricTable":
         """
-        Creates a new metric, lag normalized and inverted, where the lag scores are first scaled to be between 0 and 1
-        then they are inverted so that 1 means an accurate score and 0 an inaccurate one. This new metric is stored in
-        a new column with the specified name.
+        For each dataset in table, Lag is normalized to be between [0,1] and then inverted so that an increase in score
+        correlates with an increase in accuracy. New metric is stored in a new column with the specified name.
         :param remove_old_lag: boolean - whether to remove original lag metric
         :param new_metric_name: str - what to call the new metric.
         :return: MetricTable - contains the new metric
         """
         data = self.table.copy()
-        data[new_metric_name] = 1 - minmax_scale(list(data[LAG_COLNAME]))
+        datasets = data[DATASET_COLNAME].unique()
+
+        intermediate_data = []
+        for dataset in datasets:
+            dataset_query = data[data[DATASET_COLNAME] == dataset].copy()
+            dataset_query[new_metric_name] = 1 - minmax_scale(
+                list(dataset_query[LAG_COLNAME])
+            )
+            intermediate_data.append(dataset_query)
+
+        data = pd.concat(intermediate_data).reset_index(drop=True)
         if remove_old_lag:
             data = data.drop(LAG_COLNAME, axis=1)
         return MetricTable(data)
@@ -401,6 +426,13 @@ class Metrics:  # pylint: disable=too-few-public-methods
         self.ap = ap  # pylint: disable=invalid-name
         self.auc = auc
         self.lag = lag
+
+    def __sub__(self, other):
+        ap_delta = self.ap - other.ap
+        auc_delta = self.auc - other.auc
+        lag_delta = self.lag - other.lag
+
+        return Metrics(ap_delta, auc_delta, lag_delta)
 
 
 def calculate_gain_between_techniques(base_metrics: Data, target_metrics: Data) -> Data:

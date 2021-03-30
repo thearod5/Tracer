@@ -64,6 +64,6 @@ class Tracer:
         n_queries = (
             1
             if summary_metrics
-            else len(dataset.artifacts.levels[technique.definition.source_level])
+            else len(dataset.artifacts[technique.definition.source_level])
         )
         return calculate_metrics_for_scoring_table(scoring_table, n_queries)

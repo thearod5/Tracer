@@ -1,6 +1,8 @@
 from igraph import Graph
 
-from api.datasets.builder.structure_definition import get_structure_definition
+from api.datasets.builder.dependency_graph_operations import get_all_paths
+from api.datasets.builder.structure_definition import DatasetStructureDefinition
+from api.datasets.builder.trace_matrix_builder import TraceMatrixBuilder
 from api.datasets.builder.trace_parser import (
     create_trace_matrix_values_from_trace_list,
     get_delimiter_in_segment,
@@ -10,10 +12,6 @@ from api.datasets.builder.trace_parser import (
     get_traces_in_trace_file_content,
     is_valid_trace_list,
     parse_trace_file,
-)
-from api.datasets.builder.transitive_trace_matrix_creator import (
-    create_trace_matrix_graph,
-    find_all_paths,
 )
 from api.extension.file_operations import get_index_after_number_with_extension
 from tests.res.smart_test import SmartTest
@@ -28,16 +26,16 @@ class TestTraceCreator(SmartTest):
         """
         Tests that get_document_delimiter is able to identify colons as a delimiters in an artifact definition file.
         """
-        dataset_name = "EasyClinic"
-        structure: dict = get_structure_definition(dataset_name)
+        dataset_name = "SAMPLE_EasyClinic"
+        structure: dict = DatasetStructureDefinition(dataset_name=dataset_name).json
         with open(structure["traces"]["0-1"]) as top_trace_file:
             delimiter = get_document_delimiter(top_trace_file.read())
             self.assertEqual(":", delimiter)
 
     def test_get_document_delimiter_tab(self):
-        dataset_name = "WARC"
+        dataset_name = "SAMPLE_WARC"
 
-        structure: dict = get_structure_definition(dataset_name)
+        structure: dict = DatasetStructureDefinition(dataset_name=dataset_name).json
         with open(structure["traces"]["1-2"]) as top_trace_file:
             delimiter = get_document_delimiter(top_trace_file.read())
             self.assertEqual("\t", delimiter)
@@ -93,12 +91,12 @@ class TestTraceCreator(SmartTest):
     """
 
     def test_get_traces_ec(self):
-        dataset_name = "EasyClinic"
+        dataset_name = "SAMPLE_EasyClinic"
         traces = assert_traces_for_dataset(dataset_name)
         assert len(traces) > 25, len(traces)
 
     def test_get_traces_warc(self):
-        dataset_name = "WARC"
+        dataset_name = "SAMPLE_WARC"
         assert_traces_for_dataset(dataset_name)
 
     """
@@ -186,39 +184,47 @@ class TestTraceCreator(SmartTest):
         """
 
     def test_find_all_paths_one(self):
-        graph: Graph = create_trace_matrix_graph([], 1)
-        paths = find_all_paths(graph, 0, 0)
+        graph: Graph = TraceMatrixBuilder.create_dependency_graph_with_trace_ids([], 1)
+        paths = get_all_paths(graph, 0, 0)
         self.assertEqual(1, len(paths))
         self.assertEqual(1, len(paths[0]))
         self.assertEqual(0, paths[0][0])
 
     def test_find_all_paths_two_complete(self):
-        graph: Graph = create_trace_matrix_graph(["0-1"], 2)
-        paths = find_all_paths(graph, 0, 1)
+        graph: Graph = TraceMatrixBuilder.create_dependency_graph_with_trace_ids(
+            ["0-1"], 2
+        )
+        paths = get_all_paths(graph, 0, 1)
         self.assertEqual(1, len(paths))
         self.assertEqual([0, 1], paths[0])
 
     def test_find_all_paths_two_empty(self):
-        graph: Graph = create_trace_matrix_graph([], 2)
-        paths = find_all_paths(graph, 0, 1)
+        graph: Graph = TraceMatrixBuilder.create_dependency_graph_with_trace_ids([], 2)
+        paths = get_all_paths(graph, 0, 1)
         self.assertEqual(0, len(paths))
 
     def test_find_all_paths_three_complete(self):
-        graph: Graph = create_trace_matrix_graph(["0-2", "0-1", "1-2"], 3)
-        paths = find_all_paths(graph, 0, 1)
+        graph: Graph = TraceMatrixBuilder.create_dependency_graph_with_trace_ids(
+            ["0-2", "0-1", "1-2"], 3
+        )
+        paths = get_all_paths(graph, 0, 1)
         self.assertEqual(2, len(paths))
         self.assertEqual([0, 1], paths[0])
         self.assertEqual([0, 2, 1], paths[1])
 
     def test_find_all_paths_three_incomplete(self):
-        graph: Graph = create_trace_matrix_graph(["0-2"], 3)
-        paths = find_all_paths(graph, 0, 1)
+        graph: Graph = TraceMatrixBuilder.create_dependency_graph_with_trace_ids(
+            ["0-2"], 3
+        )
+        paths = get_all_paths(graph, 0, 1)
         self.assertEqual(0, len(paths))
 
     def test_find_all_paths_four_incomplete(self):
         traces = ["1-2", "0-2", "2-3", "1-0", "0-3", "1-3"]
-        graph: Graph = create_trace_matrix_graph(traces, 4)
-        paths = find_all_paths(graph, 1, 2)
+        graph: Graph = TraceMatrixBuilder.create_dependency_graph_with_trace_ids(
+            traces, 4
+        )
+        paths = get_all_paths(graph, 1, 2)
         self.assertEqual(5, len(paths))
         self.assertTrue([1, 0, 2] in paths)
         self.assertTrue([1, 2] in paths)
@@ -228,7 +234,7 @@ class TestTraceCreator(SmartTest):
 
 
 def assert_traces_for_dataset(dataset_name: str):
-    structure: dict = get_structure_definition(dataset_name)
+    structure: dict = DatasetStructureDefinition(dataset_name=dataset_name).json
     traces = parse_trace_file(structure["traces"]["1-2"])
 
     for trace in traces:

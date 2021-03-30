@@ -7,9 +7,8 @@ from typing import List
 import numpy as np
 import pandas as pd
 
-from api.constants.paths import PATH_TO_DATASETS, PATH_TO_SAMPLE_DATASETS
-from api.datasets.multi_level_artifacts import MultiLevelArtifacts
-from api.extension.type_checks import to_string
+from api.constants.techniques import ArtifactLevel
+from api.datasets.builder.get_dataset_path import get_path_to_dataset
 
 
 class Dataset:
@@ -21,15 +20,13 @@ class Dataset:
         self.name = dataset_name
         self.path_to_dataset = get_path_to_dataset(dataset_name)
 
-        self.artifacts = MultiLevelArtifacts(self.path_to_dataset)
-        self.relations: pd.DataFrame = pd.read_csv(
-            os.path.join(self.path_to_dataset, "Oracles", "Relations.csv")  # TODO: NOW
-        )
+        self.artifacts = []
         self.traced_matrices = {}
 
+        self.load_artifact_levels()
         self.load_trace_matrices()
 
-        self.assert_valid_artifacts()  # implements D2
+        self.assert_valid_artifacts()
 
     def load_trace_matrices(self):
         """
@@ -47,6 +44,21 @@ class Dataset:
             path = os.path.join(path_to_traced_matrices, file_name)
             self.traced_matrices[trace_id] = np.load(path)
 
+    def load_artifact_levels(self):
+        """
+        Reads artifact level data frames in dataset folder.
+        :return: None
+        """
+        path_to_artifacts = os.path.join(self.path_to_dataset, "Artifacts")
+        artifact_files = list(
+            filter(lambda f: f[0] != ".", os.listdir(path_to_artifacts))
+        )
+        artifact_files.sort()
+        artifact_paths = list(
+            map(lambda f: os.path.join(path_to_artifacts, f), artifact_files)
+        )
+        self.artifacts: List[ArtifactLevel] = list(map(pd.read_csv, artifact_paths))
+
     def assert_valid_artifacts(self):
         """
         TODO
@@ -59,29 +71,10 @@ class Dataset:
         upper_trace_matrix_shape = self.traced_matrices["0-1"].shape
         lower_trace_matrix_shape = self.traced_matrices["1-2"].shape
 
-        n_relation_bottom_level = len(self.relations.columns) - 1
-
-        assert n_top_level == len(self.relations)
-        assert n_bottom_level == n_relation_bottom_level, "Expected %d saw %d" % (
-            n_bottom_level,
-            n_relation_bottom_level,
-        )
-        assert (
-            n_top_level == upper_trace_matrix_shape[0]
-        ), "# top artifacts %d, but trace matrix top artifacts %d" % (
-            n_top_level,
-            upper_trace_matrix_shape[0],
-        )
+        assert n_top_level == upper_trace_matrix_shape[0]
         assert n_middle_level == upper_trace_matrix_shape[1]
         assert n_middle_level == lower_trace_matrix_shape[0]
         assert n_bottom_level == lower_trace_matrix_shape[1]
-
-    def get_y_true(self) -> np.ndarray:
-        """
-        TODO
-        :return:
-        """
-        return self.relations.drop("id", axis=1).values.flatten()
 
     def get_oracle_matrix(self, source_level: int, target_level: int):
         """
@@ -100,22 +93,10 @@ class Dataset:
             return self.traced_matrices[r_oracle_id].T
         return self.traced_matrices[oracle_id]
 
-
-def get_path_to_dataset(dataset_name: str) -> str:
-    """
-    Returns the path to given dataset by looking in PATH_TO_DATASETS then in PATH_TO_SAMPLE_DATASETS if not found.
-    If not dataset exist,
-    :param dataset_name: The name of the folder containing the artifacts, traces, and structure.json file
-    :return: str - path to dataset
-    :raises:
-        ValueError: if no dataset is found in PATH_TO_DATASETS or PATH_TO_SAMPLE_DATASETS
-    """
-    possible_folders = [PATH_TO_DATASETS, PATH_TO_SAMPLE_DATASETS]
-    datasets_found: List[str] = []
-    for p_folder in possible_folders:
-        if not os.path.isdir(to_string(p_folder)):
-            continue
-        datasets_found = datasets_found + os.listdir(p_folder)
-        if dataset_name in datasets_found:
-            return os.path.join(to_string(p_folder), dataset_name)
-    raise ValueError("%s is not one of %s" % (dataset_name, ",".join(datasets_found)))
+    def get_n_artifacts(self, level_index: int):
+        """
+        Returns the number of artifact in level at given index.
+        :param level_index: index of artifact level
+        :return: number of artifacts
+        """
+        return len(self.artifacts[level_index])

@@ -2,105 +2,72 @@
 This module is used to parse raw datasets into Tracer-compatible datasets that are can be used by the generic functions
 established throughout the project. Note, datasets must have their top level artifacts as level 0 and their main target
 artifacts as level 2. This is due to the fact target artifacts without a connecting source artifact are ignored
-
-:TODO:
-    * Make a more consistent rule for dropping unlinked target artifacts.
 """
 import os
+from typing import Optional
 
-import numpy as np
-import pandas as pd
-from igraph import Graph
-
-from api.datasets.builder.dataset_exporter import clean_level
-from api.datasets.builder.level_parser import read_artifact_level
+from api.constants.techniques import ArtifactLevel
+from api.datasets.builder.artifact_level_builder import ArtifactLevelBuilder
+from api.datasets.builder.get_dataset_path import get_path_to_dataset
+from api.datasets.builder.ibuilder import IBuilder
 from api.datasets.builder.structure_definition import (
-    get_path_to_dataset,
-    get_structure_definition,
+    DatasetStructureDefinition,
 )
-from api.datasets.builder.transitive_trace_matrix_creator import (
-    TraceId2TraceMatrixMap,
-    create_trace_matrix_graph,
-    create_trace_matrix_map,
-    parse_trace_id,
+from api.datasets.builder.trace_matrix import TraceId2TraceMatrixMap
+from api.datasets.builder.trace_matrix_builder import (
+    TraceMatrixBuilder,
 )
 from api.extension.file_operations import create_if_not_exist
 
 
-class DatasetBuilder:
+class DatasetBuilder(IBuilder):
     """
-    Module Builds given dataset expected to be found in PATH_TO_DATASETS folder and to have a
-    `structure_definition.json` file telling the builder where the artifacts and traces are.
+    Module builds artifacts and corresponding trace matrices for given dataset using the paths found in
+    `structure.json` file telling the builder where the artifacts and traces are. Datasets are expected to be found
+    in PATH_TO_DATASETS or PATH_TO_SAMPLE_DATASETS.
     """
 
-    def __init__(self, dataset_name: str, create=False):
-        self.name = dataset_name
-        self.path = get_path_to_dataset(dataset_name)
-        self.levels = []
-        self.trace_matrices: TraceId2TraceMatrixMap = {}
-        self.structure_file = get_structure_definition(dataset_name)
-        self.defined_trace_matrices = [
-            key
-            for key in self.structure_file["traces"].keys()
-            if self.structure_file["traces"][key] is not None
-        ]
-        self.trace_graph: Graph = create_trace_matrix_graph(
-            self.defined_trace_matrices, len(self.structure_file["artifacts"])
+    def __init__(
+        self,
+        dataset_name: str,
+    ):
+        super().__init__()
+        self.path_to_dataset = get_path_to_dataset(dataset_name)
+        self.structure_definition = DatasetStructureDefinition(
+            dataset_name=dataset_name
         )
-        if create:
-            self.create_dataset()
+        self.artifact_builder: Optional[ArtifactLevelBuilder] = ArtifactLevelBuilder(
+            self.structure_definition
+        )
+        self.trace_matrix_builder: Optional[TraceMatrixBuilder] = TraceMatrixBuilder(
+            structure_definition=self.structure_definition
+        )
+        self.trace_matrix_map: Optional[TraceId2TraceMatrixMap] = None
+        self.artifacts: Optional[ArtifactLevel] = None
 
-    def create_dataset(self):
+    def build(self):
         """
-        Encapsulates all of the sub-operations required to parse and clean a dataset.
+        Builds artifacts levels and their corresponding trace matrices.
         :return: None
         """
-        self.create_levels()
-        # create trace matrices
-        trace_matrix_map, trace_graph = create_trace_matrix_map(
-            self.structure_file, self.levels
-        )
-        self.trace_matrices = trace_matrix_map
-        self.trace_graph = trace_graph
-        self.remove_unimplemented_requirements()
+        self.artifact_builder.build()
+        self.artifacts = self.artifact_builder.artifacts
+        self.trace_matrix_builder.set_artifact_levels(self.artifacts)
 
-        print(trace_matrix_map)
+        self.trace_matrix_builder.build()
+        self.trace_matrix_map = self.trace_matrix_builder.trace_matrix_map
 
-    def create_levels(self):
+    def export(self, path_to_dataset: Optional[str] = None):
         """
-        For each level defined in the structure.json file this parses, cleans, and stored the level.
+        Given a DatasetBuilder, this functions exports its artifacts and trace matrices into a standardized folder
+        system and naming scheme utilized by the Tracer project.
         :return: None
         """
+        self._create_dataset_export_folder()
+        self.artifact_builder.export(self.path_to_dataset)
+        self.trace_matrix_builder.export(self.path_to_dataset)
 
-        def create_level(path: str):
-            return read_artifact_level(self.structure_file["artifacts"][path])
-
-        level_indices = list(self.structure_file["artifacts"].keys())
-        level_indices.sort()
-
-        self.levels = list(map(create_level, level_indices))
-
-    def remove_unimplemented_requirements(self):  # Remove unimplemented requirements
-        """
-        Looks into the trace matrix between levels 0 and 2 and removes all the artifacts in level 2 which out a link
-        to level 0.
-        :return: None
-        """
-        implemented_requirements = self.trace_matrices["0-2"].matrix.sum(axis=1) > 0
-        for trace_id in self.trace_matrices.keys():
-            if "0-" in trace_id:
-                self.trace_matrices[trace_id].matrix = self.trace_matrices[
-                    trace_id
-                ].matrix[implemented_requirements, :]
-            elif "-0" in trace_id:
-                self.trace_matrices[trace_id].matrix = self.trace_matrices[
-                    trace_id
-                ].matrix[:, implemented_requirements]
-        self.levels[0] = (
-            self.levels[0][implemented_requirements].dropna().reset_index(drop=True)
-        )
-
-    def create_dataset_export_folder(self):
+    def _create_dataset_export_folder(self):
         """
         Creates the required folder structure for datasets including:
         * Artifacts
@@ -109,43 +76,9 @@ class DatasetBuilder:
         :return:
         """
         required_folder = [
-            os.path.join(self.path, "Artifacts"),
-            os.path.join(self.path, "Oracles"),
-            os.path.join(self.path, "Oracles", "TracedMatrices"),
+            os.path.join(self.path_to_dataset, "Artifacts"),
+            os.path.join(self.path_to_dataset, "Oracles"),
+            os.path.join(self.path_to_dataset, "Oracles", "TracedMatrices"),
         ]
         for folder in required_folder:
             create_if_not_exist(folder)
-
-    def export_dataset(self):
-        """
-        Given a DatasetBuilder, this functions exports its artifacts and trace matrices into a standardized folder
-        system and naming scheme utilized by the Tracer project.
-        :return: None
-        """
-        self.create_dataset_export_folder()
-
-        # Levels
-        for level_index, level in enumerate(self.levels):
-            level_export_path = os.path.join(
-                self.path, "Artifacts", "Level_%d.csv" % level_index
-            )
-            level_cleaned = clean_level(level)
-            level_cleaned.to_csv(level_export_path, index=False)
-
-        # Relations.csv - Level_1_to_Level_3
-        top_bottom_values = self.trace_matrices["0-2"].matrix
-        top_bottom_df = pd.DataFrame(top_bottom_values, columns=self.levels[2]["id"])
-        top_bottom_df["id"] = self.levels[0]["id"]
-        top_bottom_df.to_csv(
-            os.path.join(self.path, "Oracles", "Relations.csv"), index=False
-        )
-
-        # Trace Matrices
-        for trace_id in self.trace_matrices.keys():
-            a_index, b_index = parse_trace_id(trace_id)
-            matrix_file_name = "%d-%d.npy" % (a_index, b_index)
-            matrix_file_path = os.path.join(
-                self.path, "Oracles", "TracedMatrices", matrix_file_name
-            )
-            matrix = self.trace_matrices[trace_id].matrix
-            np.save(matrix_file_path, matrix)

@@ -7,85 +7,89 @@ TODO: Define what is required in structure.json file
 """
 import json
 import os
+from typing import Optional
 
-from api.datasets.dataset import get_path_to_dataset
+from api.datasets.builder.get_dataset_path import get_path_to_dataset
 
 STRUCTURE_FILE_NAME = "structure.json"
 
 
-def get_structure_definition(dataset_name: str):
+class DatasetStructureDefinition:  # pylint: disable=too-few-public-methods
     """
-    Reads and validates the structure.json file of the given dataset assumed to be in that "Datasets" root folder.
-    :param dataset_name: the name of the folder in "Datasets" root folder containing the dataset assets
-    :return: dict
-    """
-    path_to_dataset = get_path_to_dataset(dataset_name)
-    structure_json = read_structure_file(path_to_dataset)
+    Represents a class for parsing the structure files representing a machine-readable guide locating the
+    artifacts and trace matrices for a dataset. The following fields are required in a structure definition file:
 
-    top_level_branches = ["artifacts", "traces"]
-    for top_branch in top_level_branches:
-        assert top_branch in structure_json, "Could not find %s in %s" % (
-            top_branch,
-            dataset_name,
+    1. `artifacts` - dict - contains artifact level indices as indices and relative path to levels are values
+    2. `traces` - dict - contains [source_artifact_level]-[target_artifact_level] as keys and relative path to file
+    or folder containing trace links
+    """
+
+    ARTIFACT_KEY = "artifacts"
+    TRACES_KEY = "traces"
+
+    def __init__(self, dataset_name: Optional[str] = None, raw: Optional[dict] = None):
+        if raw is not None:
+            self.json = raw
+        else:
+            self.json = DatasetStructureDefinition._read_dataset_structure_file(
+                dataset_name
+            )
+
+    @staticmethod
+    def _read_dataset_structure_file(dataset_name: str) -> dict:
+        """
+        Reads and validates the structure.json file of the given dataset assumed to be in that "Datasets" root folder.
+        :param dataset_name: the name of the folder in "Datasets" root folder containing the dataset assets
+        :return: dict
+        """
+        path_to_dataset = get_path_to_dataset(dataset_name)
+        structure_json = DatasetStructureDefinition._read_structure_file(
+            path_to_dataset
         )
 
-    for key in structure_json["artifacts"]:
-        relative_path = structure_json["artifacts"][key]
-        final_path = (
-            None
-            if relative_path == ""
-            else os.path.join(path_to_dataset, relative_path)
-        )
-        structure_json["artifacts"][key] = final_path
+        top_level_branches = [
+            DatasetStructureDefinition.ARTIFACT_KEY,
+            DatasetStructureDefinition.TRACES_KEY,
+        ]
+        for top_branch in top_level_branches:
+            assert top_branch in structure_json, "Could not find %s in %s" % (
+                top_branch,
+                dataset_name,
+            )
 
-    for t_branch in structure_json["traces"]:
-        relative_path = structure_json["traces"][t_branch]
-        final_path = (
-            None
-            if relative_path == ""
-            else os.path.join(path_to_dataset, relative_path)
-        )
-        structure_json["traces"][t_branch] = final_path
-    return structure_json
+        for key in structure_json[DatasetStructureDefinition.ARTIFACT_KEY]:
+            relative_path = structure_json[DatasetStructureDefinition.ARTIFACT_KEY][key]
+            final_path = (
+                None
+                if relative_path == ""
+                else os.path.join(path_to_dataset, relative_path)
+            )
+            structure_json[DatasetStructureDefinition.ARTIFACT_KEY][key] = final_path
 
+        for t_branch in structure_json[DatasetStructureDefinition.TRACES_KEY]:
+            relative_path = structure_json[DatasetStructureDefinition.TRACES_KEY][
+                t_branch
+            ]
+            final_path = (
+                None
+                if relative_path == ""
+                else os.path.join(path_to_dataset, relative_path)
+            )
+            structure_json[DatasetStructureDefinition.TRACES_KEY][t_branch] = final_path
 
-def read_structure_file(path_to_dataset: str) -> dict:
-    """
-    Reads structure.json file in given path to dataset.
-    :param path_to_dataset: path to the parsed dataset containing a structure.json file
-    :return: dict containing the contents of the structure.json file.
-    """
-    path_to_structure_file = os.path.join(path_to_dataset, STRUCTURE_FILE_NAME)
-    with open(path_to_structure_file) as raw_structure_file:
-        structure_file: dict = json.loads(raw_structure_file.read())
-    return structure_file
+        return structure_json
 
+    @staticmethod
+    def _read_structure_file(path_to_dataset: str) -> dict:
+        """
+        Reads structure.json file in given path to dataset.
+        :param path_to_dataset: path to the parsed dataset containing a structure.json file
+        :return: dict containing the contents of the structure.json file.
+        """
+        path_to_structure_file = os.path.join(path_to_dataset, STRUCTURE_FILE_NAME)
+        with open(path_to_structure_file) as raw_structure_file:
+            structure_file: dict = json.loads(raw_structure_file.read())
+        return structure_file
 
-def is_valid_structure_file(structure_file: dict):
-    """
-    Returns whether given structure file contains all of required fields for structure.json files.
-    :param structure_file: the contents of a dataset's structure.json file
-    :return: boolean - true if valid, false otherwise
-    """
-    top_branches = ["datasets", "traces"]
-    artifact_branches = ["top", "middle", "bottom"]
-    trace_branches = ["top-middle", "middle-bottom", "top-bottom"]
-
-    return (
-            contains_fields(structure_file, top_branches)
-            and contains_fields(structure_file["datasets"], artifact_branches)
-            and contains_fields(structure_file["traces"], trace_branches)
-    )
-
-
-def contains_fields(some_dict: dict, required_fields: [str]):
-    """
-    Returns whether given dictionary contains required fields.
-    :param some_dict: a python dictionary
-    :param required_fields: list of fields that must be in given dictionary
-    :return: boolean
-    """
-    for a_branch in required_fields:
-        if a_branch not in some_dict:
-            return False
-    return True
+    def __getitem__(self, item):
+        return self.json[item]

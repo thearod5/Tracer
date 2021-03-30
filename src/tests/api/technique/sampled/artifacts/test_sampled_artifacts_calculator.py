@@ -1,7 +1,7 @@
 from api.datasets.dataset import Dataset
 from api.technique.definitions.sampled.artifacts.calculator import (
-    sample_matrices,
     SampledArtifactsTechniqueCalculator,
+    sample_matrices,
 )
 from api.technique.definitions.sampled.technique_data import SampledTechniqueData
 from api.technique.definitions.transitive.calculator import (
@@ -35,7 +35,7 @@ class TestSampledArtifactsCalculator(TestTechniqueHelper):
         calculator = SampledArtifactsTechniqueCalculator(
             self.get_sampled_technique_definition()
         )
-        data = calculator.calculate_technique_data(Dataset("EasyClinic"))
+        data = calculator.calculate_technique_data(Dataset("SAMPLE_EasyClinic"))
         self.assertGreater(data.similarity_matrix.sum(axis=1).sum(), 0)
 
     def test_sampled_transitive_technique_calculator_empty_data(self):

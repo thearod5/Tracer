@@ -5,7 +5,7 @@ from api.constants.paths import PATH_TO_SAMPLE_DATASETS
 from api.datasets.builder.dataset_builder import DatasetBuilder
 from tests.res.smart_test import SmartTest
 
-TIME_DELTA = 2  # tolerable time since last update
+MAXIMUM_TIME_SINCE_UPDATE = 2  # tolerable time since last update
 
 
 class TestDatasetExporter(SmartTest):
@@ -16,10 +16,11 @@ class TestDatasetExporter(SmartTest):
         """
         # Setup
         dataset_name = "MockDataset"
-        builder = DatasetBuilder(dataset_name, create=True)
+        dataset_builder = DatasetBuilder(dataset_name)
+        dataset_builder.build()
 
         # Work
-        builder.export_dataset()
+        dataset_builder.export()
         folders = ["Artifacts", "Oracles"]
         for folder_rel_path in folders:
             path_to_folder = os.path.join(
@@ -43,4 +44,6 @@ def check_folder_has_updated(path_to_folder):
             continue
         file_update_time = os.path.getmtime(path_to_file)
         time_since_update = abs(file_update_time - now)
-        assert time_since_update < TIME_DELTA
+        assert time_since_update < MAXIMUM_TIME_SINCE_UPDATE, (
+            "%s was not touched in export" % file_name
+        )

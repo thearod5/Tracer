@@ -3,7 +3,13 @@ TODO
 """
 from typing import Dict
 
+import pandas as pd
+
 from api.constants.dataset import SimilarityMatrix
+from api.datasets.builder.trace_parser import (
+    create_trace_matrix_values_from_trace_list,
+    parse_trace_file,
+)
 
 
 class TraceMatrix:  # pylint: disable=too-few-public-methods
@@ -47,6 +53,40 @@ class TraceMatrix:  # pylint: disable=too-few-public-methods
             bottom_artifact_ids=self.top_artifact_ids,
             matrix=self.matrix.T,
         )
+
+    @staticmethod
+    def create_trace_matrix_from_path(
+        source_artifact_ids: pd.Series,
+        source_artifact_level_index: int,
+        target_artifact_ids: pd.Series,
+        target_artifact_level_index: int,
+        path_to_trace_links: str,
+    ) -> "TraceMatrix":
+        """
+        Constructs trace matrix from trace links in path_to_trace_list whose source artifacts can be found in
+        top_artifact_ids and whose target artifact can be found in bottom_artifact_ids. If artifacts are not found then
+        they are ignored.
+        :param source_artifact_ids: the list of source artifact of trace links
+        :param source_artifact_level_index:
+        :param target_artifact_ids:
+        :param target_artifact_level_index:
+        :param path_to_trace_links:
+        :return:
+        """
+        trace_list = parse_trace_file(path_to_trace_links)
+        trace_matrix_values: SimilarityMatrix = (
+            create_trace_matrix_values_from_trace_list(
+                source_artifact_ids, target_artifact_ids, trace_list
+            )
+        )
+        trace_matrix = TraceMatrix(
+            source_artifact_level_index,
+            source_artifact_ids,
+            target_artifact_level_index,
+            target_artifact_ids,
+            trace_matrix_values,
+        )
+        return trace_matrix
 
 
 TraceId2TraceMatrixMap = Dict[
