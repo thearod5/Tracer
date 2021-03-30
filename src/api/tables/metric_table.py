@@ -173,10 +173,6 @@ class MetricTable(Table):
         """
         return self.table[TECHNIQUE_TYPE_COLNAME] == technique_type
 
-    """
-    Tables - the following methods are for constructing tables related to analyzing the best techniques
-    """
-
     def create_ranks(
         self, rank_col=AP_COLNAME, new_col_name=RANK_COLNAME
     ) -> "MetricTable":
@@ -317,10 +313,6 @@ class MetricTable(Table):
                     ignore_index=True,
                 )
         return Table(correlation_df)
-
-    """
-    METRICS - Operations related to manipulating the metrics
-    """
 
     def melt_metrics(
         self, metric_col_name=METRIC_COLNAME, metric_value_col_name="value"

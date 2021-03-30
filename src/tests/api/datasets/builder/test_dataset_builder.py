@@ -3,10 +3,10 @@ from typing import Tuple
 from pandas import DataFrame
 
 from api.constants.paths import PATH_TO_TEST_REQUIREMENTS
-from api.datasets.builder.artifact_builder import ArtifactBuilder
+from api.datasets.builder.artifact_level_builder import ArtifactLevelBuilder
 from api.datasets.builder.dataset_builder import DatasetBuilder
 from api.datasets.builder.structure_definition import (
-    DatasetStructure,
+    DatasetStructureDefinition,
 )
 from api.extension.file_operations import get_index_after_numbers
 from tests.res.smart_test import SmartTest
@@ -29,23 +29,25 @@ class TestDatasetBuilder(SmartTest):
 
     def test_read_level_in_dataset(self):
         dataset_name = "SAMPLE_EasyClinic"
-        structure: dict = DatasetStructure(dataset_name=dataset_name).json
+        structure: dict = DatasetStructureDefinition(dataset_name=dataset_name).json
 
-        level = ArtifactBuilder.read_artifact_level(structure["artifacts"]["0"])
+        level = ArtifactLevelBuilder.read_artifact_level(structure["artifacts"]["0"])
         assert len(level) > 0, "Could not load top datasets"
 
-        level = ArtifactBuilder.read_artifact_level(structure["artifacts"]["1"])
+        level = ArtifactLevelBuilder.read_artifact_level(structure["artifacts"]["1"])
         assert len(level) == 20, "Could not load middle datasets %d " % len(level)
 
-        level = ArtifactBuilder.read_artifact_level(structure["artifacts"]["2"])
+        level = ArtifactLevelBuilder.read_artifact_level(structure["artifacts"]["2"])
         assert len(level) == 47, "Could not load bottom datasets %d " % len(level)
 
     def test_read_level_in_dataset_txt_file(self):
         d_name = "MockDataset"
-        d_structure_def: dict = DatasetStructure(dataset_name=d_name).json
+        d_structure_def: dict = DatasetStructureDefinition(dataset_name=d_name).json
 
         # level 1
-        level = ArtifactBuilder.read_artifact_level(d_structure_def["artifacts"]["0"])
+        level = ArtifactLevelBuilder.read_artifact_level(
+            d_structure_def["artifacts"]["0"]
+        )
         self.assertEqual(len(level), 1, "Could not load top datasets: %d" % len(level))
         for col in self.level_cols:
             self.assertIn(
@@ -60,7 +62,7 @@ class TestDatasetBuilder(SmartTest):
 
     def test_parse_level_txt(self):
         path_to_level = PATH_TO_TEST_REQUIREMENTS
-        level = ArtifactBuilder.parse_artifact_txt_file(path_to_level)
+        level = ArtifactLevelBuilder.parse_artifact_txt_file(path_to_level)
         assert len(level) > 0, "Expected non-empty list: %d" % len(level)
         for col in self.level_cols:
             assert col in level.columns, "Expected %s in CACHE_COLUMNS: %s" % (

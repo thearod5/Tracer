@@ -1,22 +1,25 @@
+"""
+Contains a set of functions operating on trace dependency graphs.
+"""
 from typing import List, Optional
 
 from igraph import Graph
 
 from api.constants.dataset import GraphPath
-from api.datasets.builder.TraceIdMap import TraceIdMap
 from api.datasets.builder.graph_path_map import GraphPathMap
+from api.datasets.builder.trace_id_map import TraceIdMap
 
 
 def get_paths_to_complete_graph(
     trace_ids: List[str], dependency_graph: Graph, n_levels: int
 ) -> GraphPathMap:
     """
-    For every combination of nodes in graph, if no direct link exists between them then one is calculated using
-    the transitive paths between the defined edges in the graph.
+    For every combination of nodes in graph without an edge, all transitive paths between them are calculated and
+    returned.
     :param trace_ids: list of trace id representing the trace matrices defined in a dataset
     :param n_levels: how many levels exist in the dataset
     :param dependency_graph: the graph modeling trace dependencies
-    :return: TODO
+    :return: set of sets of transitive paths
     """
     missing_paths: GraphPathMap = TraceIdMap[GraphPathMap]()
     for a_index in range(n_levels):
@@ -24,7 +27,7 @@ def get_paths_to_complete_graph(
             trace_id = "%d-%d" % (a_index, b_index)
             if (
                 a_index != b_index
-                and not contains_trace_id(trace_ids, trace_id)
+                and not _contains_trace_id(trace_ids, trace_id)
                 and trace_id not in missing_paths
             ):
                 transitive_paths: List[List[int]] = get_all_paths(
@@ -85,7 +88,21 @@ def get_all_paths(
     return all_paths
 
 
-def id_exists_in_traces(
+def _contains_trace_id(
+    traces: List[str],
+    trace_id: str,
+):
+    """
+    TODO
+    :param traces:
+    :param trace_id:
+    :return:
+    """
+    index = _id_exists_in_traces(traces, trace_id)
+    return index != 0
+
+
+def _id_exists_in_traces(
     traces: List[str],
     trace_id: str,
 ):
@@ -101,17 +118,3 @@ def id_exists_in_traces(
     if id_r in traces:
         return -1
     return 0
-
-
-def contains_trace_id(
-    traces: List[str],
-    trace_id: str,
-):
-    """
-    TODO
-    :param traces:
-    :param trace_id:
-    :return:
-    """
-    index = id_exists_in_traces(traces, trace_id)
-    return index != 0

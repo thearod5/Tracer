@@ -9,12 +9,12 @@ import json
 import os
 from typing import Optional
 
-from api.datasets.builder.dataset_path import get_path_to_dataset
+from api.datasets.builder.get_dataset_path import get_path_to_dataset
 
 STRUCTURE_FILE_NAME = "structure.json"
 
 
-class DatasetStructure:
+class DatasetStructureDefinition:  # pylint: disable=too-few-public-methods
     """
     Represents a class for parsing the structure files representing a machine-readable guide locating the
     artifacts and trace matrices for a dataset. The following fields are required in a structure definition file:
@@ -31,7 +31,9 @@ class DatasetStructure:
         if raw is not None:
             self.json = raw
         else:
-            self.json = DatasetStructure._read_dataset_structure_file(dataset_name)
+            self.json = DatasetStructureDefinition._read_dataset_structure_file(
+                dataset_name
+            )
 
     @staticmethod
     def _read_dataset_structure_file(dataset_name: str) -> dict:
@@ -41,11 +43,13 @@ class DatasetStructure:
         :return: dict
         """
         path_to_dataset = get_path_to_dataset(dataset_name)
-        structure_json = DatasetStructure._read_structure_file(path_to_dataset)
+        structure_json = DatasetStructureDefinition._read_structure_file(
+            path_to_dataset
+        )
 
         top_level_branches = [
-            DatasetStructure.ARTIFACT_KEY,
-            DatasetStructure.TRACES_KEY,
+            DatasetStructureDefinition.ARTIFACT_KEY,
+            DatasetStructureDefinition.TRACES_KEY,
         ]
         for top_branch in top_level_branches:
             assert top_branch in structure_json, "Could not find %s in %s" % (
@@ -53,23 +57,25 @@ class DatasetStructure:
                 dataset_name,
             )
 
-        for key in structure_json[DatasetStructure.ARTIFACT_KEY]:
-            relative_path = structure_json[DatasetStructure.ARTIFACT_KEY][key]
+        for key in structure_json[DatasetStructureDefinition.ARTIFACT_KEY]:
+            relative_path = structure_json[DatasetStructureDefinition.ARTIFACT_KEY][key]
             final_path = (
                 None
                 if relative_path == ""
                 else os.path.join(path_to_dataset, relative_path)
             )
-            structure_json[DatasetStructure.ARTIFACT_KEY][key] = final_path
+            structure_json[DatasetStructureDefinition.ARTIFACT_KEY][key] = final_path
 
-        for t_branch in structure_json[DatasetStructure.TRACES_KEY]:
-            relative_path = structure_json[DatasetStructure.TRACES_KEY][t_branch]
+        for t_branch in structure_json[DatasetStructureDefinition.TRACES_KEY]:
+            relative_path = structure_json[DatasetStructureDefinition.TRACES_KEY][
+                t_branch
+            ]
             final_path = (
                 None
                 if relative_path == ""
                 else os.path.join(path_to_dataset, relative_path)
             )
-            structure_json[DatasetStructure.TRACES_KEY][t_branch] = final_path
+            structure_json[DatasetStructureDefinition.TRACES_KEY][t_branch] = final_path
 
         return structure_json
 

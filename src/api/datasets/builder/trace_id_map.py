@@ -7,7 +7,7 @@ The following module is responsible for providing an class that allows users to:
 """
 from typing import Dict, Generic, List, TypeVar
 
-from api.datasets.builder.ITranspose import Transposable
+from api.datasets.builder.transposable import Transposable
 from api.extension.type_checks import to_string
 
 MapValueType = TypeVar("MapValueType", bound=Transposable)
@@ -22,12 +22,6 @@ class TraceIdMap(Generic[MapValueType]):
     def __init__(self):
         self.trace_map: TraceIdDict = {}
 
-    def get_keys(self) -> List[str]:
-        return list(map(to_string, self.trace_map.keys()))
-
-    def update(self, new_map: "TraceIdMap[MapValueType]"):
-        self.trace_map.update(new_map)
-
     def __getitem__(self, trace_id: str) -> MapValueType:
         if trace_id in self.trace_map:
             return self.trace_map[trace_id]
@@ -35,7 +29,7 @@ class TraceIdMap(Generic[MapValueType]):
         if TraceIdMap.reverse_id(trace_id) in self.trace_map:
             return self.trace_map[r_id].transpose()
         raise ValueError(
-            "%s key not found in [%s]" % (trace_id, ",".join(self.get_keys()))
+            "%s key not found in [%s]" % (trace_id, ",".join(self.get_trace_ids()))
         )
 
     def __setitem__(self, trace_id: str, new_item: MapValueType):
@@ -52,8 +46,23 @@ class TraceIdMap(Generic[MapValueType]):
         )
 
     def __iter__(self):
-        for trace_id, object in self.trace_map.items():
-            yield trace_id, object
+        for trace_id, item in self.trace_map.items():
+            yield trace_id, item
+
+    def get_trace_ids(self) -> List[str]:
+        """
+        Returns list of trace ids defined in given map.
+        :return: list of strings representing trace ids
+        """
+        return list(map(to_string, self.trace_map.keys()))
+
+    def update(self, new_map: "TraceIdMap[MapValueType]"):
+        """
+        Trace matrices are replaced with those defined in given map. non-conflicting traces are kept.
+        :param new_map: map of updated traces matrices to replace current.
+        :return: None
+        """
+        self.trace_map.update(new_map)
 
     @staticmethod
     def reverse_id(trace_id: str):
@@ -68,9 +77,9 @@ class TraceIdMap(Generic[MapValueType]):
     @staticmethod
     def parse_trace_id(trace_id: str):
         """
-        TODO
-        :param trace_id:
-        :return:
+        Returns tuple of integers representing source and target artifact level indices.
+        :param trace_id: string in form [source_index]-[target_index]
+        :return: (int, int)
         """
         upper_level, lower_level = trace_id.split("-")
         return int(upper_level), int(lower_level)

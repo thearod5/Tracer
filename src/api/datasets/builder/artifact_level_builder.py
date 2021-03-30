@@ -7,34 +7,51 @@ from typing import List
 import pandas as pd
 
 from api.datasets.builder.ibuilder import IBuilder
-from api.datasets.builder.structure_definition import DatasetStructure
+from api.datasets.builder.structure_definition import DatasetStructureDefinition
 from api.datasets.builder.trace_parser import get_document_delimiter
 from api.datasets.cleaning.cleaners import clean_level
 from api.extension.file_operations import get_non_empty_lines
 
 
-class ArtifactBuilder(IBuilder):
+class ArtifactLevelBuilder(IBuilder):
     """
-    Responsible for building artifacts in a dataset.
+    Responsible for building artifact levels in datasets.
     """
 
-    def __init__(self, structure_definition: DatasetStructure):
+    def __init__(self, structure_definition: DatasetStructureDefinition):
         super().__init__()
         self.structure_definition = structure_definition
         self.artifacts: List[pd.DataFrame] = []
 
     def build(self):
-        def create_level(path: str):
-            return ArtifactBuilder.read_artifact_level(
-                self.structure_definition["artifacts"][path]
-            )
+        """
+        For each artifact level defined in dataset's structure definition, reads path to artifact level definition file
+        or folder and parses/cleans/stores level.
+        :return: None
+        """
 
-        level_indices = list(self.structure_definition["artifacts"].keys())
+        level_indices = list(
+            self.structure_definition[DatasetStructureDefinition.ARTIFACT_KEY].keys()
+        )
         level_indices.sort()
 
-        self.artifacts = list(map(create_level, level_indices))
+        self.artifacts = list(
+            map(
+                lambda path: ArtifactLevelBuilder.read_artifact_level(
+                    self.structure_definition[DatasetStructureDefinition.ARTIFACT_KEY][
+                        path
+                    ]
+                ),
+                level_indices,
+            )
+        )
 
     def export(self, path_to_dataset: str):
+        """
+        Saves all parsed artifact levels to dataset at given path under /Artifacts
+        :param path_to_dataset: path to dataset folder containing `Artifact` folder
+        :return:
+        """
         for level_index, level in enumerate(self.artifacts):
             level_export_path = os.path.join(
                 path_to_dataset, "Artifacts", "Level_%d.csv" % level_index
@@ -63,7 +80,7 @@ class ArtifactBuilder(IBuilder):
         """
         if os.path.isfile(path_to_artifacts):
             if ".txt" in path_to_artifacts:
-                artifact_level = ArtifactBuilder.parse_artifact_txt_file(
+                artifact_level = ArtifactLevelBuilder.parse_artifact_txt_file(
                     path_to_artifacts
                 )
             elif ".csv" in path_to_artifacts:

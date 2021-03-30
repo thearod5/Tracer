@@ -56,30 +56,34 @@ class TraceMatrix:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def create_trace_matrix_from_path(
-        top_artifacts_ids: pd.Series,
-        top_index: int,
-        bottom_artifacts_ids: pd.Series,
-        bottom_index: int,
-        path_to_trace_list: str,
+        source_artifact_ids: pd.Series,
+        source_artifact_level_index: int,
+        target_artifact_ids: pd.Series,
+        target_artifact_level_index: int,
+        path_to_trace_links: str,
     ) -> "TraceMatrix":
         """
-        TODO
-        :param top_artifacts_ids:
-        :param top_index:
-        :param bottom_artifacts_ids:
-        :param bottom_index:
-        :param path_to_trace_list:
+        Constructs trace matrix from trace links in path_to_trace_list whose source artifacts can be found in
+        top_artifact_ids and whose target artifact can be found in bottom_artifact_ids. If artifacts are not found then
+        they are ignored.
+        :param source_artifact_ids: the list of source artifact of trace links
+        :param source_artifact_level_index:
+        :param target_artifact_ids:
+        :param target_artifact_level_index:
+        :param path_to_trace_links:
         :return:
         """
-        trace_list = parse_trace_file(path_to_trace_list)
-        trace_matrix_values = create_trace_matrix_values_from_trace_list(
-            top_artifacts_ids, bottom_artifacts_ids, trace_list
+        trace_list = parse_trace_file(path_to_trace_links)
+        trace_matrix_values: SimilarityMatrix = (
+            create_trace_matrix_values_from_trace_list(
+                source_artifact_ids, target_artifact_ids, trace_list
+            )
         )
         trace_matrix = TraceMatrix(
-            top_index,
-            top_artifacts_ids,
-            bottom_index,
-            bottom_artifacts_ids,
+            source_artifact_level_index,
+            source_artifact_ids,
+            target_artifact_level_index,
+            target_artifact_ids,
             trace_matrix_values,
         )
         return trace_matrix

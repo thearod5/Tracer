@@ -1,3 +1,6 @@
+"""
+The central location from where to get the path to a dataset's folder.
+"""
 import os
 from typing import List
 

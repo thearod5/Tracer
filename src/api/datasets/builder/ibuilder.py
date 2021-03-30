@@ -20,9 +20,9 @@ class IBuilder:
         """
 
     @abstractmethod
-    def export(self, path: str):
+    def export(self, path_to_dataset: str):
         """
         Export built documents given path
-        :param path: paths details should be specified by child builders.
+        :param path_to_dataset: paths details should be specified by child builders.
         :return:
         """

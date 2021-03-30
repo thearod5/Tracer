@@ -7,11 +7,11 @@ import os
 from typing import Optional
 
 from api.constants.techniques import ArtifactLevel
-from api.datasets.builder.artifact_builder import ArtifactBuilder
-from api.datasets.builder.dataset_path import get_path_to_dataset
+from api.datasets.builder.artifact_level_builder import ArtifactLevelBuilder
+from api.datasets.builder.get_dataset_path import get_path_to_dataset
 from api.datasets.builder.ibuilder import IBuilder
 from api.datasets.builder.structure_definition import (
-    DatasetStructure,
+    DatasetStructureDefinition,
 )
 from api.datasets.builder.trace_matrix import TraceId2TraceMatrixMap
 from api.datasets.builder.trace_matrix_builder import (
@@ -33,8 +33,10 @@ class DatasetBuilder(IBuilder):
     ):
         super().__init__()
         self.path_to_dataset = get_path_to_dataset(dataset_name)
-        self.structure_definition = DatasetStructure(dataset_name=dataset_name)
-        self.artifact_builder: Optional[ArtifactBuilder] = ArtifactBuilder(
+        self.structure_definition = DatasetStructureDefinition(
+            dataset_name=dataset_name
+        )
+        self.artifact_builder: Optional[ArtifactLevelBuilder] = ArtifactLevelBuilder(
             self.structure_definition
         )
         self.trace_matrix_builder: Optional[TraceMatrixBuilder] = TraceMatrixBuilder(
@@ -50,12 +52,12 @@ class DatasetBuilder(IBuilder):
         """
         self.artifact_builder.build()
         self.artifacts = self.artifact_builder.artifacts
-        self.trace_matrix_builder.set_levels(self.artifacts)
+        self.trace_matrix_builder.set_artifact_levels(self.artifacts)
 
         self.trace_matrix_builder.build()
         self.trace_matrix_map = self.trace_matrix_builder.trace_matrix_map
 
-    def export(self, path: Optional[str] = None):
+    def export(self, path_to_dataset: Optional[str] = None):
         """
         Given a DatasetBuilder, this functions exports its artifacts and trace matrices into a standardized folder
         system and naming scheme utilized by the Tracer project.

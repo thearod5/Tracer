@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 
 from api.constants.techniques import ArtifactLevel
-from api.datasets.builder.dataset_path import get_path_to_dataset
+from api.datasets.builder.get_dataset_path import get_path_to_dataset
 
 
 class Dataset:
@@ -45,6 +45,10 @@ class Dataset:
             self.traced_matrices[trace_id] = np.load(path)
 
     def load_artifact_levels(self):
+        """
+        Reads artifact level data frames in dataset folder.
+        :return: None
+        """
         path_to_artifacts = os.path.join(self.path_to_dataset, "Artifacts")
         artifact_files = list(
             filter(lambda f: f[0] != ".", os.listdir(path_to_artifacts))
@@ -90,4 +94,9 @@ class Dataset:
         return self.traced_matrices[oracle_id]
 
     def get_n_artifacts(self, level_index: int):
+        """
+        Returns the number of artifact in level at given index.
+        :param level_index: index of artifact level
+        :return: number of artifacts
+        """
         return len(self.artifacts[level_index])
