@@ -8,8 +8,8 @@ from api.datasets.builder.trace_parser import (
     get_delimiter_in_segment,
     get_document_delimiter,
     get_index_of_next_alpha_char,
-    get_traces_in_line,
-    get_traces_in_trace_file_content,
+    get_trace_links_string,
+    get_traces_in_trace_link_definitions,
     is_valid_trace_list,
     parse_trace_file,
 )
@@ -99,27 +99,23 @@ class TestTraceCreator(SmartTest):
         dataset_name = "SAMPLE_WARC"
         assert_traces_for_dataset(dataset_name)
 
-    """
-    get_traces_in_trace_file_content
-    """
-
     def test_get_traces_in_trace_file_content_without_delimiter(self):
-        content = "13"
-        traces = get_traces_in_trace_file_content(content)
+        file_contents = "13"
+        traces = get_traces_in_trace_link_definitions(file_contents)
         self.assertEqual(0, len(traces))
 
     def test_get_traces_in_trace_file_content_with_delimiter(self):
-        content = "13 SomeClass.java"
-        traces = get_traces_in_trace_file_content(content)
+        file_contents = "13 SomeClass.java"
+        traces = get_traces_in_trace_link_definitions(file_contents)
         self.assertEqual(1, len(traces))
 
     def test_get_traces_in_trace_file_content_with_empty_lines(self):
-        content = "13 SomeClass.java\n\n"
-        traces = get_traces_in_trace_file_content(content)
+        file_contents = "13 SomeClass.java\n\n"
+        traces = get_traces_in_trace_link_definitions(file_contents)
         self.assertEqual(1, len(traces))
 
-        content = "abd def\n\nabc def"
-        traces = get_traces_in_trace_file_content(content)
+        file_contents = "abd def\n\nabc def"
+        traces = get_traces_in_trace_link_definitions(file_contents)
         self.assertEqual(2, len(traces))
 
     """
@@ -127,22 +123,22 @@ class TestTraceCreator(SmartTest):
     """
 
     def test_get_traces_in_line(self):
-        traces = get_traces_in_line("source.txt:target1.txt target2.txt")
+        traces = get_trace_links_string("source.txt:target1.txt target2.txt")
         self.assertEqual(2, len(traces))
         self.assert_traces(traces)
 
     def test_get_traces_in_line_space(self):
-        traces = get_traces_in_line("source.txt target1.txt target2.txt")
+        traces = get_trace_links_string("source.txt target1.txt target2.txt")
         self.assertEqual(2, len(traces))
         self.assert_traces(traces)
 
     def test_get_traces_in_line_missing_target(self):
-        traces = get_traces_in_line("source.txt: ")
+        traces = get_trace_links_string("source.txt: ")
         self.assertEqual(0, len(traces))
 
     def test_get_traces_in_linewith_tab(self):
         line = "ABCsd	DEF ABC"
-        traces = get_traces_in_line(line)
+        traces = get_trace_links_string(line)
         self.assertEqual(2, len(traces))
 
     def assert_traces(self, traces):

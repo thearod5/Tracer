@@ -2,6 +2,7 @@
 Responsible for parsing trace links in user-defined datasets.
 """
 import os
+from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
@@ -12,50 +13,58 @@ from api.extension.file_operations import (
 )
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
 
+TraceLink = Tuple[str, str]
+TraceLinks = List[TraceLink]
+TRACE_LINK_DELIMITERS = [" ", "\t", ":"]
 
-def parse_trace_file(path_to_trace_file):
+
+def parse_trace_file(path_to_trace_file: str) -> TraceLinks:
     """
-    TODO
-    :param path_to_trace_file:
-    :return:
+    Reads file at path and parses trace links for each line in the file.
+    Returns list of trace links.
+    :param path_to_trace_file: path to trace link definition file
+    :return: list of trace links found in file
     """
     assert os.path.isfile(path_to_trace_file), path_to_trace_file
 
     with open(path_to_trace_file) as trace_file:
         trace_file_contents = trace_file.read()
-        traces = get_traces_in_trace_file_content(trace_file_contents)
+        traces = get_traces_in_trace_link_definitions(trace_file_contents)
+    print("TRACE FILE:", traces)
     return traces
 
 
-def get_traces_in_trace_file_content(trace_file_content: str):
+def get_traces_in_trace_link_definitions(
+    trace_link_definitions: str,
+) -> TraceLinks:
     """
-    TODO
-    :param trace_file_content:
-    :return:
+    Returns list of trace links found in trace link definition file.
+    :param trace_link_definitions: a string defining a list of trace links between source and target arifacts.
+    :return: list of tuples in the form ([source artifact], [target artifact])
     """
-    file_lines = get_non_empty_lines(trace_file_content)
-    traces = []
+    file_lines = get_non_empty_lines(trace_link_definitions)
+    traces: TraceLinks = []
     for trace_line in file_lines:
-        traces = traces + get_traces_in_line(trace_line)
+        traces = traces + get_trace_links_string(trace_line)
     return traces
 
 
-def get_traces_in_line(trace_line):
+def get_trace_links_string(trace_line) -> List[Tuple[str, str]]:
     """
-    TODO
-    :param trace_line:
-    :return:
+    Given a line a in trace definition file returns list of tuples in the form ([source artifact], [target artifact])
+    :param trace_line: string containing a source artifact and zero or many target artifacts
+    :return: list of trace links
     """
-    traces = []
-    identifiers = get_non_empty_lines(trace_line, [" ", "\t", ":"])
+    trace_links: TraceLinks = []
+    identifiers = get_non_empty_lines(trace_line, TRACE_LINK_DELIMITERS)
 
     if len(identifiers) < 2:
         return []
 
     source_id = identifiers[0]
     for target_id in identifiers[1:]:
-        traces.append((source_id, target_id))
-    return traces
+        trace_links.append((source_id, target_id))
+    return trace_links
 
 
 def is_valid_trace_list(trace_list):
