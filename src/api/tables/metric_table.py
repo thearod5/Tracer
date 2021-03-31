@@ -284,7 +284,7 @@ class MetricTable(Table):
         """
         :return: Table containing columns describing the correlation and p-value for each dataset-metric combination.
         """
-        data = self.melt_metrics().table
+        data = self.table.copy()
         correlation_df = pd.DataFrame()
         metrics = data[METRIC_COLNAME].unique()
         datasets = data[DATASET_COLNAME].unique()
@@ -304,7 +304,7 @@ class MetricTable(Table):
                 correlation_df = correlation_df.append(
                     {
                         DATASET_COLNAME: dataset_name,
-                        METRIC_COLNAME: metric_name,
+                        METRIC_COLNAME: metric_name.lower(),
                         CORRELATION_COLNAME: round(correlation, N_SIG_FIGS),
                         P_VALUE_COLNAME: "<0.001"
                         if p_value < 0.001
@@ -312,7 +312,7 @@ class MetricTable(Table):
                     },
                     ignore_index=True,
                 )
-        return Table(correlation_df)
+        return Table(correlation_df).sort()
 
     def melt_metrics(
         self, metric_col_name=METRIC_COLNAME, metric_value_col_name="value"

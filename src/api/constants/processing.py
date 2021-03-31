@@ -74,7 +74,7 @@ COLUMN_ORDER = (
     + CORRELATION_COL_ORDER
     + [NAME_COLNAME]
 )
-DATASET_COLUMN_ORDER = ["WARC", "Drone", "EasyClinic", "TrainController", "EBT"]
+DATASET_COLUMN_ORDER = ["WARC", "Drone", "TrainController", "EasyClinic", "EBT"]
 
 TRANSITIVE_TRACE_TYPE_ORDER = [tt.value for tt in ExperimentTraceType]
 Data = pd.DataFrame

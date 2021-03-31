@@ -25,7 +25,9 @@ def aggregate_techniques(
     :return: similarity matrix of the same shape all the ones given after being aggregated
     """
 
-    flatten_matrices = list(map(lambda m: m.flatten(), technique_similarity_matrices))
+    flatten_matrices = list(
+        map(lambda m: minmax_scale(m.flatten()), technique_similarity_matrices)
+    )
     aggregation_data = np.vstack(flatten_matrices).T
     if aggregation_method == AggregationMethod.PCA:
         values = aggregate_pca(aggregation_data)

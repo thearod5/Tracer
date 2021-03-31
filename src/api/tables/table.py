@@ -183,7 +183,6 @@ class Table(ITable):
                 data[col_name].dtype not in ["int64", "float64"]
                 and col_name not in exclude
             ):
-                print(col_name, data[col_name])
                 data[col_name] = data[col_name].apply(split_and_format)
         data.columns = list(map(split_and_format, data.columns))
         return Table(data)
