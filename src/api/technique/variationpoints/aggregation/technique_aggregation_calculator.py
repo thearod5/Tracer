@@ -26,7 +26,12 @@ def aggregate_techniques(
     """
 
     flatten_matrices = list(
-        map(lambda m: minmax_scale(m.flatten()), technique_similarity_matrices)
+        map(
+            lambda sim_scores: sim_scores
+            if len(sim_scores) <= 1
+            else minmax_scale(sim_scores),
+            map(lambda m: m.flatten(), technique_similarity_matrices),
+        )
     )
     aggregation_data = np.vstack(flatten_matrices).T
     if aggregation_method == AggregationMethod.PCA:
@@ -35,6 +40,6 @@ def aggregate_techniques(
         arithmetic_function = arithmetic_aggregation_functions[aggregation_method]
         values = np.apply_along_axis(arithmetic_function, axis=1, arr=aggregation_data)
 
-        if values.max() > 1:
-            values = minmax_scale(values)
+    if values.max() > 1:
+        values = minmax_scale(values)
     return np.reshape(values, newshape=technique_similarity_matrices[0].shape)
