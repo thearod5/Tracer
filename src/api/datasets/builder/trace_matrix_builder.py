@@ -161,6 +161,7 @@ class TraceMatrixBuilder(IBuilder):
         updated_trace_matrix_map: TraceMatrixMap = (
             self.create_transitive_trace_matrices_for_paths(direct_path_map)
         )
+
         self.trace_matrix_map.update(updated_trace_matrix_map)
 
     def export(self, path_to_dataset: str):
@@ -229,11 +230,11 @@ class TraceMatrixBuilder(IBuilder):
         """
         transitive_aggregation = AggregationMethod.MAX
         result_matrices = {}
-        for transitive_path_key, transitive_paths in graph_paths:
+        for trace_id, paths_between_artifact_levels in graph_paths:
             transitive_similarity_matrices = []
-            for transitive_path in transitive_paths:
+            for path in paths_between_artifact_levels:
                 matrices_to_multiply = self.trace_matrix_map.get_trace_matrices_in_path(
-                    transitive_path
+                    path
                 )
                 transitive_similarity_matrix = (
                     perform_transitive_aggregation_on_component_techniques(
@@ -244,7 +245,7 @@ class TraceMatrixBuilder(IBuilder):
             aggregated_matrix = aggregate_techniques(
                 transitive_similarity_matrices, transitive_aggregation
             )
-            result_matrices[transitive_path_key] = aggregated_matrix
+            result_matrices[trace_id] = aggregated_matrix
         return result_matrices
 
     @staticmethod

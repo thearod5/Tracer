@@ -1,7 +1,7 @@
 from api.technique.definitions.combined.technique import (
-    CombinedTechniqueDefinition,
+    HybridTechniqueDefinition,
     create_technique,
-    COMBINED_COMMAND_SYMBOL,
+    HYBRID_COMMAND_SYMBOL,
 )
 from tests.res.test_technique_helper import TestTechniqueHelper
 
@@ -12,7 +12,7 @@ class TestCombinedDefinition(TestTechniqueHelper):
     """
 
     def test_parse(self):
-        definition = CombinedTechniqueDefinition(
+        definition = HybridTechniqueDefinition(
             self.combined_parameters, self.combined_components
         )
         self.assertEqual(
@@ -23,20 +23,18 @@ class TestCombinedDefinition(TestTechniqueHelper):
         self.assertEqual(2, len(component_technique))
 
     def test_symbol(self):
-        self.assertEqual(
-            COMBINED_COMMAND_SYMBOL, CombinedTechniqueDefinition.get_symbol()
-        )
+        self.assertEqual(HYBRID_COMMAND_SYMBOL, HybridTechniqueDefinition.get_symbol())
 
     def test_parse_with_wrong_parameters(self):
         self.assertRaises(
             Exception,
-            lambda: CombinedTechniqueDefinition(["GLOBAL"], self.combined_components),
+            lambda: HybridTechniqueDefinition(["GLOBAL"], self.combined_components),
         )
 
     def test_parse_with_wrong_components(self):
         self.assertRaises(
             Exception,
-            lambda: CombinedTechniqueDefinition(
+            lambda: HybridTechniqueDefinition(
                 self.combined_parameters, self.combined_components[:1]
             ),
         )

@@ -32,9 +32,11 @@ from api.constants.processing import (
     TRANSITIVE_TRACE_TYPE_COLNAME,
     VARIATION_POINT_COLNAME,
 )
-from api.constants.techniques import COMBINED_ID, DIRECT_ID, TRANSITIVE_ID
+from api.constants.techniques import DIRECT_ID, HYBRID_ID, TRANSITIVE_ID
 from api.extension.experiment_types import ExperimentTraceType
 from api.tables.table import Table
+
+ESPILON = 0.001
 
 
 class MetricTable(Table):
@@ -86,7 +88,7 @@ class MetricTable(Table):
         """
         data = self.table.copy()
         query_mask = self.get_none_traced_mask() & self.get_technique_type_mask(
-            COMBINED_ID
+            HYBRID_ID
         )
         best_techniques_df = get_best_rows(
             data[query_mask],
@@ -139,7 +141,7 @@ class MetricTable(Table):
         """
         data = self.table.copy()
         query_mask = ~self.get_none_traced_mask() & self.get_technique_type_mask(
-            COMBINED_ID
+            HYBRID_ID
         )
         best_rows = get_best_rows(
             data[query_mask],
@@ -185,7 +187,11 @@ class MetricTable(Table):
         data = self.table.copy()
         aggregated_rank_df = None
 
-        rank_groups = [DATASET_COLNAME, TRANSITIVE_TRACE_TYPE_COLNAME]
+        rank_groups = [
+            DATASET_COLNAME,
+            TECHNIQUE_TYPE_COLNAME,
+            TRANSITIVE_TRACE_TYPE_COLNAME,
+        ]
         rank_groups_in_data = [col for col in rank_groups if col in self.table.columns]
 
         for _, values in data.groupby(rank_groups_in_data):
@@ -232,10 +238,8 @@ class MetricTable(Table):
         )
         gain_values[DATASET_COLNAME] = dataset_order
 
-        return (
-            MetricTable(gain_values)
-            .melt_metrics(metric_value_col_name=RELATIVE_GAIN_COLNAME)
-            .sort()
+        return MetricTable(gain_values).melt_metrics(
+            metric_value_col_name=RELATIVE_GAIN_COLNAME
         )
 
     def calculate_percent_best(self) -> Table:
@@ -248,7 +252,9 @@ class MetricTable(Table):
 
         # 1. extract variation points (e.g. AlgebraicModel, TraceType, ect.)
         non_vp_columns = (
-            ALL_METRIC_NAMES + META_COLS + [RANK_COLNAME, TRANSITIVE_TRACE_TYPE_COLNAME]
+            ALL_METRIC_NAMES
+            + META_COLS
+            + [RANK_COLNAME, TECHNIQUE_TYPE_COLNAME, TRANSITIVE_TRACE_TYPE_COLNAME]
         )
         vp_cols = [col for col in data.columns if col not in non_vp_columns]
 
@@ -259,9 +265,18 @@ class MetricTable(Table):
             else 1
         )
 
+        group_by_cols_in_dataset = [
+            col
+            for col in [
+                TRANSITIVE_TRACE_TYPE_COLNAME,
+                TECHNIQUE_TYPE_COLNAME,
+            ]
+            if col in data.columns
+        ]
+
         for variation_point in vp_cols:
-            for (trace_type, vp_technique), group_data in data.groupby(
-                [TRANSITIVE_TRACE_TYPE_COLNAME, variation_point]
+            for group_id, group_data in data.groupby(
+                [variation_point] + group_by_cols_in_dataset
             ):
                 best_rank_query = group_data[group_data[RANK_COLNAME] == 1]
                 n_datasets_in_query = (
@@ -271,20 +286,26 @@ class MetricTable(Table):
                 )
                 vp_freq = n_datasets_in_query / n_datasets
                 new_record = {
-                    TRANSITIVE_TRACE_TYPE_COLNAME: trace_type,
                     VARIATION_POINT_COLNAME: variation_point,
-                    TECHNIQUE_COLNAME: vp_technique,
+                    TECHNIQUE_COLNAME: group_id[0],
                     PERCENT_BEST_COLNAME: vp_freq,
                 }
+
+                if len(group_id) >= 2:
+                    new_record.update({TRANSITIVE_TRACE_TYPE_COLNAME: group_id[1]})
+
+                if len(group_id) >= 3:
+                    new_record.update({TECHNIQUE_TYPE_COLNAME: group_id[2]})
+
                 percent_best_df = percent_best_df.append(new_record, ignore_index=True)
 
-        return Table(percent_best_df).sort()
+        return Table(percent_best_df)
 
     def create_correlation_table(self) -> "Table":
         """
         :return: Table containing columns describing the correlation and p-value for each dataset-metric combination.
         """
-        data = self.melt_metrics().table
+        data = self.table.copy()
         correlation_df = pd.DataFrame()
         metrics = data[METRIC_COLNAME].unique()
         datasets = data[DATASET_COLNAME].unique()
@@ -304,7 +325,7 @@ class MetricTable(Table):
                 correlation_df = correlation_df.append(
                     {
                         DATASET_COLNAME: dataset_name,
-                        METRIC_COLNAME: metric_name,
+                        METRIC_COLNAME: metric_name.lower(),
                         CORRELATION_COLNAME: round(correlation, N_SIG_FIGS),
                         P_VALUE_COLNAME: "<0.001"
                         if p_value < 0.001
@@ -415,6 +436,24 @@ class MetricTable(Table):
         data[METRIC_COLNAME] = data[METRIC_COLNAME].apply(lambda m: m.upper())
         return MetricTable(data)
 
+    def calculate_gain_between(
+        self, source_col: str, base_col: str, gain_col_name: str
+    ) -> "MetricTable":
+        """
+        Calculates the relative gain between source score and target score
+        :param source_col: the columns being compared
+        :param base_col: the values being compare to
+        :param gain_col_name: name of column containing relative gain scores
+        :return:
+        """
+        is_inverted: bool = source_col in INVERTED_METRICS
+        data = self.table.copy()
+        if is_inverted:
+            data[gain_col_name] = (data[base_col] - data[source_col]) / data[base_col]
+        else:
+            data[gain_col_name] = (data[source_col] - data[base_col]) / data[base_col]
+        return MetricTable(data)
+
 
 class Metrics:  # pylint: disable=too-few-public-methods
     """
@@ -427,12 +466,16 @@ class Metrics:  # pylint: disable=too-few-public-methods
         self.auc = auc
         self.lag = lag
 
-    def __sub__(self, other):
-        ap_delta = self.ap - other.ap
-        auc_delta = self.auc - other.auc
-        lag_delta = self.lag - other.lag
-
-        return Metrics(ap_delta, auc_delta, lag_delta)
+    def gain(self, base: "Metrics"):
+        """
+        Calculates the gain of these metrics to given base metrics
+        :param base: base metrics to use for comparison
+        :return:
+        """
+        ap_gain = (self.ap - base.ap) / base.ap
+        auc_gain = (self.auc - base.auc) / base.auc
+        lag_gain = (base.lag - self.lag) / base.lag if base.lag != 0 else None
+        return Metrics(ap_gain, auc_gain, lag_gain)
 
 
 def calculate_gain_between_techniques(base_metrics: Data, target_metrics: Data) -> Data:

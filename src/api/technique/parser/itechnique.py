@@ -1,5 +1,5 @@
 """
-TODO
+The following module defines an interface for dealing with any information retrieval technique.
 """
 from abc import ABC, abstractmethod
 

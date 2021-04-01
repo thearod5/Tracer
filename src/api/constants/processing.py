@@ -3,7 +3,7 @@ This module stores the constants regarding the names of columns for any pre or p
 """
 import pandas as pd
 
-from api.constants.techniques import COMBINED_ID, DIRECT_ID, TRANSITIVE_ID
+from api.constants.techniques import DIRECT_ID, HYBRID_ID, TRANSITIVE_ID
 from api.extension.experiment_types import ExperimentTraceType, SamplingExperiment
 
 N_SIG_FIGS = 3
@@ -33,7 +33,7 @@ TRANSITIVE_AGGREGATION_COLNAME = "transitive_aggregation"
 TECHNIQUE_AGGREGATION_COLNAME = "technique_aggregation"
 TRANSITIVE_TRACE_TYPE_COLNAME = "transitive_trace_type"
 TECHNIQUE_TYPE_COLNAME = "technique_type"
-TECHNIQUE_TYPE_SORT_ORDER = [DIRECT_ID, TRANSITIVE_ID, COMBINED_ID]
+TECHNIQUE_TYPE_SORT_ORDER = [DIRECT_ID, TRANSITIVE_ID, HYBRID_ID]
 
 VARIATION_POINT_COLNAME = "variation_point"
 RELATIVE_GAIN_COLNAME = "relative_gain"
@@ -74,7 +74,6 @@ COLUMN_ORDER = (
     + CORRELATION_COL_ORDER
     + [NAME_COLNAME]
 )
-DATASET_COLUMN_ORDER = ["WARC", "Drone", "EasyClinic", "TrainController", "EBT"]
 
 TRANSITIVE_TRACE_TYPE_ORDER = [tt.value for tt in ExperimentTraceType]
 Data = pd.DataFrame

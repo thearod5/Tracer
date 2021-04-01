@@ -2,7 +2,7 @@ import numpy as np
 
 from api.technique.definitions.combined.technique import (
     CombinedTechniqueData,
-    CombinedTechniqueCalculator,
+    HybridTechniqueCalculator,
     turn_aggregated_values_into_matrix,
 )
 from tests.res.test_technique_helper import TestTechniqueHelper, SimilarityMatrixMock
@@ -18,7 +18,7 @@ class TestCombinedCalculationPipeline(TestTechniqueHelper):
             self.combined_technique_name
         )
         pipeline_funcs = [counter_func, counter_func]
-        pipeline = CombinedTechniqueCalculator(
+        pipeline = HybridTechniqueCalculator(
             self.get_combined_definition(), pipeline_funcs
         )
         pipeline.run_pipeline_on_dataset(self.dataset)
@@ -29,7 +29,7 @@ class TestCombinedCalculationPipeline(TestTechniqueHelper):
     """
 
     def test_combined_technique_calculator(self):
-        calculator = CombinedTechniqueCalculator(self.get_combined_definition())
+        calculator = HybridTechniqueCalculator(self.get_combined_definition())
         technique_data = calculator.calculate_technique_data(self.dataset)
         matrix = technique_data.similarity_matrix
         self.assert_valid_fake_dataset_similarity_matrix(matrix)
@@ -39,7 +39,7 @@ class TestCombinedCalculationPipeline(TestTechniqueHelper):
             data.similarity_table = SimilarityMatrixMock()
 
         pipeline_funcs = [counter_func]
-        calculator = CombinedTechniqueCalculator(
+        calculator = HybridTechniqueCalculator(
             self.get_combined_definition(), pipeline_funcs
         )
         sim_table = calculator.calculate_technique_data(self.dataset)

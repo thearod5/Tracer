@@ -25,10 +25,10 @@ from api.technique.variationpoints.aggregation.technique_aggregation_calculator 
 )
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
 
-COMBINED_COMMAND_SYMBOL: str = "o"
+HYBRID_COMMAND_SYMBOL: str = "o"
 
 
-class CombinedTechniqueDefinition(ITechniqueDefinition):
+class HybridTechniqueDefinition(ITechniqueDefinition):
     """
     TODO
     """
@@ -85,7 +85,7 @@ class CombinedTechniqueDefinition(ITechniqueDefinition):
         TODO
         :return:
         """
-        return COMBINED_COMMAND_SYMBOL
+        return HYBRID_COMMAND_SYMBOL
 
     def get_component_techniques(self) -> List[ITechniqueDefinition]:
         """
@@ -117,7 +117,7 @@ class CombinedTechniqueData(TechniqueData):
     TODO
     """
 
-    def __init__(self, dataset: Dataset, technique: CombinedTechniqueDefinition):
+    def __init__(self, dataset: Dataset, technique: HybridTechniqueDefinition):
         super().__init__(dataset, technique)
 
 
@@ -139,10 +139,10 @@ def perform_technique_aggregation(data: CombinedTechniqueData):
     data.similarity_matrix = aggregated_matrix
 
 
-COMBINED_TECHNIQUE_PIPELINE = [perform_technique_aggregation]
+HYBRID_TECHNIQUE_PIPELINE = [perform_technique_aggregation]
 
 
-class CombinedTechniqueCalculator(ITechniqueCalculator[CombinedTechniqueData]):
+class HybridTechniqueCalculator(ITechniqueCalculator[CombinedTechniqueData]):
     """
     A technique resulting from the combination of multiple techniques.
     Each each technique should be able to create a similarity matrix between the top and bottom datasets.
@@ -150,12 +150,10 @@ class CombinedTechniqueCalculator(ITechniqueCalculator[CombinedTechniqueData]):
     technique_matrices.
     """
 
-    def __init__(
-        self, technique_definition: CombinedTechniqueDefinition, pipeline=None
-    ):
+    def __init__(self, technique_definition: HybridTechniqueDefinition, pipeline=None):
         super().__init__(technique_definition, pipeline)
         if pipeline is None:
-            pipeline = COMBINED_TECHNIQUE_PIPELINE
+            pipeline = HYBRID_TECHNIQUE_PIPELINE
         self.pipeline = pipeline
 
     def create_pipeline_data(self, dataset: Dataset) -> CombinedTechniqueData:
@@ -191,21 +189,21 @@ class CombinedTechnique(ITechnique):
 
     def create_definition(
         self, parameters: [str], components: [str]
-    ) -> CombinedTechniqueDefinition:
+    ) -> HybridTechniqueDefinition:
         """
         TODO
         :param parameters:
         :param components:
         :return:
         """
-        return CombinedTechniqueDefinition(parameters, components)
+        return HybridTechniqueDefinition(parameters, components)
 
-    def create_calculator(self) -> CombinedTechniqueCalculator:
+    def create_calculator(self) -> HybridTechniqueCalculator:
         """
         TODO
         :return:
         """
-        return CombinedTechniqueCalculator(self.definition)
+        return HybridTechniqueCalculator(self.definition)
 
     @staticmethod
     def get_symbol() -> str:
@@ -213,7 +211,7 @@ class CombinedTechnique(ITechnique):
         TODO
         :return:
         """
-        return CombinedTechniqueDefinition.get_symbol()
+        return HybridTechniqueDefinition.get_symbol()
 
 
 TECHNIQUES = [

@@ -1,7 +1,7 @@
 from api.technique.definitions.combined.technique import (
     create_technique,
     CombinedTechnique,
-    COMBINED_COMMAND_SYMBOL,
+    HYBRID_COMMAND_SYMBOL,
 )
 from api.technique.definitions.direct.definition import DIRECT_COMMAND_SYMBOL
 from api.technique.definitions.direct.technique import DirectTechnique
@@ -19,7 +19,7 @@ class TestCombinedTechnique(TestTechniqueHelper):
         combined_technique = CombinedTechnique(
             ["SUM"], [self.direct_definition, self.transitive_technique_definition]
         )
-        self.assertEqual(COMBINED_COMMAND_SYMBOL, combined_technique.get_symbol())
+        self.assertEqual(HYBRID_COMMAND_SYMBOL, combined_technique.get_symbol())
 
     """
     parse_technique
