@@ -9,12 +9,8 @@ import pandas as pd
 
 from api.constants.processing import (
     ALL_METRIC_NAMES,
-    AP_COLNAME,
-    AUC_COLNAME,
     COLUMN_ORDER,
     DATASET_COLNAME,
-    DATASET_COLUMN_ORDER,
-    LAG_NORMALIZED_INVERTED_COLNAME,
     METRIC_COLNAME,
     N_SIG_FIGS,
     TECHNIQUE_TYPE_COLNAME,
@@ -82,7 +78,7 @@ class Table(ITable):
         self.table = self.table.append(entries_dict, ignore_index=True)
         return self.table
 
-    def sort(self) -> "Table":
+    def sort(self, dataset_column_order: List[str]) -> "Table":
         """
         Sorts values by dataset, technique_type, and metrics then sorts columns
         Sort orders are defined by the constants in api/constants
@@ -101,7 +97,7 @@ class Table(ITable):
             )
             data = data.sort_values(group_names=[TECHNIQUE_TYPE_COLNAME], axis=0)
         if DATASET_COLNAME in self.table.columns:
-            data = data.to_categorical(DATASET_COLNAME, DATASET_COLUMN_ORDER)
+            data = data.to_categorical(DATASET_COLNAME, dataset_column_order)
             data = data.sort_values(group_names=[DATASET_COLNAME], axis=0)
 
         defined_columns_in_sort_order = [
@@ -122,42 +118,6 @@ class Table(ITable):
         :return:
         """
         return Table(self.table.sort_values(by=group_names, axis=axis))
-
-    def format_table(self, names_title_case=False) -> "Table":
-        """
-        1. Sorts datasets using constants defined in api/constants
-        2. Sorts column order of data
-        3. Formats numerical data to a fixed amount of sig figs (see api/constants)
-        4. Splits
-        :param data: the source data
-        :param names_title_case: whether the names of metrics and columns should be lower case
-        :return: DataFrame with modifications specified
-        """
-
-        data = self.sort().table
-
-        if names_title_case:
-            presentation_map = {
-                AP_COLNAME: "mAP",
-                AUC_COLNAME: "AUC",
-                LAG_NORMALIZED_INVERTED_COLNAME: "LagNormInverted",
-            }
-            if METRIC_COLNAME in data.columns:
-                data[METRIC_COLNAME] = data[METRIC_COLNAME].replace(presentation_map)
-            else:
-                raise ValueError(
-                    "for_presentation flag set but could not find column:"
-                    % METRIC_COLNAME
-                )
-
-            data.columns = list(
-                map(
-                    lambda s: "".join(list(map(lambda s_0: s_0.title(), s.split("_")))),
-                    data.columns,
-                )
-            )
-
-        return Table(data).round()
 
     def to_categorical(self, col_name: str, col_value_order: List[str]) -> "Table":
         """

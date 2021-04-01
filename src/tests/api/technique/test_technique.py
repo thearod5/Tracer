@@ -1,4 +1,4 @@
-from api.technique.definitions.combined.technique import CombinedTechniqueDefinition
+from api.technique.definitions.combined.technique import HybridTechniqueDefinition
 from api.technique.definitions.direct.definition import DirectTechniqueDefinition
 from api.technique.parser.itechnique_definition import stringify_paths
 from tests.res.test_technique_helper import TestTechniqueHelper
@@ -6,7 +6,7 @@ from tests.res.test_technique_helper import TestTechniqueHelper
 
 class TestTechnique(TestTechniqueHelper):
     def test_use_case(self):
-        test_technique: CombinedTechniqueDefinition = self.get_combined_definition()
+        test_technique: HybridTechniqueDefinition = self.get_combined_definition()
         self.assertEqual(2, len(test_technique.get_component_techniques()))
 
         component_techniques = test_technique.get_component_techniques()

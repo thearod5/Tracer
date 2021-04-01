@@ -30,7 +30,6 @@ def parse_trace_file(path_to_trace_file: str) -> TraceLinks:
     with open(path_to_trace_file) as trace_file:
         trace_file_contents = trace_file.read()
         traces = get_traces_in_trace_link_definitions(trace_file_contents)
-    print("TRACE FILE:", traces)
     return traces
 
 

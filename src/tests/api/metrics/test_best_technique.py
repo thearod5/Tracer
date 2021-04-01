@@ -88,7 +88,10 @@ class TestBestTechnique(SmartTest):
         among both datasets as displayed in the data.
         :return:
         """
-        percent_best_table = MetricTable(self.data).calculate_percent_best().table
+        percent_best_table = (
+            MetricTable(self.data).calculate_percent_best().sort(["D1", "D2"]).table
+        )
+
         percent_best_table = percent_best_table.set_index(
             [TRANSITIVE_TRACE_TYPE_COLNAME, TECHNIQUE_COLNAME]
         )

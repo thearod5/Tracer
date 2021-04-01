@@ -1,6 +1,6 @@
 from api.datasets.builder.dataset_builder import DatasetBuilder
 from api.datasets.dataset import Dataset
-from api.technique.definitions.combined.technique import CombinedTechniqueDefinition
+from api.technique.definitions.combined.technique import HybridTechniqueDefinition
 from api.technique.definitions.direct.definition import (
     DIRECT_COMMAND_SYMBOL,
     DirectTechniqueDefinition,
@@ -191,8 +191,8 @@ class TestTechniqueHelper(SmartTest):
             self.traced_parameters, self.traced_components
         )
 
-    def get_combined_definition(self) -> CombinedTechniqueDefinition:
-        return CombinedTechniqueDefinition(
+    def get_combined_definition(self) -> HybridTechniqueDefinition:
+        return HybridTechniqueDefinition(
             self.combined_parameters, self.combined_components
         )
 
@@ -201,8 +201,8 @@ class TestTechniqueHelper(SmartTest):
             self.sampled_parameters, self.sampled_components
         )
 
-    def get_combined_sampled_artifacts_definition(self) -> CombinedTechniqueDefinition:
-        return CombinedTechniqueDefinition(
+    def get_combined_sampled_artifacts_definition(self) -> HybridTechniqueDefinition:
+        return HybridTechniqueDefinition(
             self.combined_parameters, self.combined_sampled_artifacts_components
         )
 
