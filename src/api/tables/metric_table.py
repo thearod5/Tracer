@@ -36,6 +36,8 @@ from api.constants.techniques import DIRECT_ID, HYBRID_ID, TRANSITIVE_ID
 from api.extension.experiment_types import ExperimentTraceType
 from api.tables.table import Table
 
+ESPILON = 0.001
+
 
 class MetricTable(Table):
     """
@@ -453,9 +455,6 @@ class MetricTable(Table):
         return MetricTable(data)
 
 
-epsilon = 0.001
-
-
 class Metrics:  # pylint: disable=too-few-public-methods
     """
     Stores all metrics for some query.
@@ -468,6 +467,11 @@ class Metrics:  # pylint: disable=too-few-public-methods
         self.lag = lag
 
     def gain(self, base: "Metrics"):
+        """
+        Calculates the gain of these metrics to given base metrics
+        :param base: base metrics to use for comparison
+        :return:
+        """
         ap_gain = (self.ap - base.ap) / base.ap
         auc_gain = (self.auc - base.auc) / base.auc
         lag_gain = (base.lag - self.lag) / base.lag if base.lag != 0 else None
