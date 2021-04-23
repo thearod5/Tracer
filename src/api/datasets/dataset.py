@@ -2,7 +2,7 @@
 TODO
 """
 import os
-from typing import List
+from typing import List, Union
 
 import numpy as np
 import pandas as pd
@@ -20,8 +20,8 @@ class Dataset:
         self.name = dataset_name
         self.path_to_dataset = get_path_to_dataset(dataset_name)
 
-        self.artifacts = []
-        self.traced_matrices = {}
+        self.artifacts: List[ArtifactLevel] = []
+        self.traced_matrices = {}  # TODO: rename to traced matrices
 
         self.load_artifact_levels()
         self.load_trace_matrices()
@@ -100,3 +100,15 @@ class Dataset:
         :return: number of artifacts
         """
         return len(self.artifacts[level_index])
+
+    def get_artifact_level_index(self, artifact_id: Union[str, int]):
+        """
+        Returns the index that contains given artifact id.
+        :param artifact_id:
+        :return:
+        """
+        for level_index, artifact_level in enumerate(self.artifacts):
+            query = artifact_level[artifact_level["id"] == artifact_id]
+            if len(query) > 0:
+                artifact_index = int(query.index[0])
+                return level_index, artifact_index

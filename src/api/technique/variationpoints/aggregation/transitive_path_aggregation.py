@@ -15,7 +15,7 @@ from api.technique.variationpoints.algebraicmodel import models
 from api.technique.variationpoints.algebraicmodel.models import (
     SimilarityMatrix,
 )
-from api.technique.variationpoints.scalers import scalers
+from api.technique.variationpoints.scalers.scalers import scale_matrix
 
 
 def apply_transitive_aggregation(
@@ -31,7 +31,7 @@ def apply_transitive_aggregation(
         x_train = create_transitive_aggregation_training_data(similarity_matrices)
         similarities: Similarities = aggregate_pca(x_train)
         scaled_similarities = np.apply_along_axis(
-            arr=similarities, axis=0, func1d=scalers.minmax_scale
+            arr=similarities, axis=0, func1d=scale_matrix
         )
         new_shape = (
             similarity_matrices.upper.shape[0],

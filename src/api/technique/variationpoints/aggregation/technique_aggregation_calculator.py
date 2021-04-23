@@ -2,7 +2,7 @@
 TODO
 """
 import numpy as np
-from sklearn.preprocessing import minmax_scale
+from sklearn.preprocessing import scale
 
 from api.technique.variationpoints.aggregation.aggregation_functions import (
     arithmetic_aggregation_functions,
@@ -12,6 +12,7 @@ from api.technique.variationpoints.aggregation.aggregation_method import (
 )
 from api.technique.variationpoints.aggregation.pca_aggregation import aggregate_pca
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
+from api.technique.variationpoints.scalers.scalers import scale_matrix
 
 
 def aggregate_techniques(
@@ -29,7 +30,7 @@ def aggregate_techniques(
         map(
             lambda sim_scores: sim_scores
             if len(sim_scores) <= 1
-            else minmax_scale(sim_scores),
+            else scale(sim_scores),
             map(lambda m: m.flatten(), technique_similarity_matrices),
         )
     )
@@ -41,5 +42,5 @@ def aggregate_techniques(
         values = np.apply_along_axis(arithmetic_function, axis=1, arr=aggregation_data)
 
     if values.max() > 1:
-        values = minmax_scale(values)
+        values = scale_matrix(values)
     return np.reshape(values, newshape=technique_similarity_matrices[0].shape)

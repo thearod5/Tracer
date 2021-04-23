@@ -25,7 +25,9 @@ def get_algebraic_model(techniques: [DirectTechnique]):
         if algebraic_model is None:
             algebraic_model = technique.definition.algebraic_model
         elif algebraic_model != technique.definition.algebraic_model:
-            raise ValueError("expected algebraic technique_matrices to be the same")
+            raise ValueError(
+                "Transitive technique expected algebraic models to be the same"
+            )
     return algebraic_model
 
 

@@ -1,7 +1,7 @@
 """
 TODO
 """
-from typing import List, Callable
+from typing import Callable, List
 
 import numpy as np
 
@@ -10,8 +10,8 @@ from api.technique.definitions.sampled.definition import SampledTechniqueDefinit
 from api.technique.definitions.sampled.sampler import sample_indices
 from api.technique.definitions.sampled.technique_data import SampledTechniqueData
 from api.technique.definitions.transitive.calculator import (
+    TRANSITIVE_TECHNIQUE_PIPELINE,
     TransitiveTechniqueCalculator,
-    INTERMEDIATE_TECHNIQUE_PIPELINE,
 )
 from api.technique.variationpoints.algebraicmodel.models import SimilarityMatrix
 
@@ -132,7 +132,7 @@ def copy_values(
     return sampled_matrices
 
 
-SAMPLED_TRACES_PIPELINE = INTERMEDIATE_TECHNIQUE_PIPELINE.copy()
+SAMPLED_TRACES_PIPELINE = TRANSITIVE_TECHNIQUE_PIPELINE.copy()
 SAMPLED_TRACES_PIPELINE.insert(1, sample_transitive_matrices)
 
 
