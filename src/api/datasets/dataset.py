@@ -112,3 +112,4 @@ class Dataset:
             if len(query) > 0:
                 artifact_index = int(query.index[0])
                 return level_index, artifact_index
+        raise Exception(f"Could not find {artifact_id} in dataset {self.name}.")

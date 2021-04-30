@@ -34,7 +34,7 @@ def global_scaling(matrices: [SimilarityMatrix]) -> [SimilarityMatrix]:
     flatten_matrices = list(map(lambda m: m.flatten(), matrices))
     n_matrix_values = list(map(lambda m: m.size, flatten_matrices))
     aggregate_matrix = np.concatenate(flatten_matrices, axis=0)
-    scaled_aggregate = scale_matrix(aggregate_matrix)
+    scaled_aggregate = minmax_scale(aggregate_matrix)
 
     scaled_matrices = []
     start_index = 0
@@ -57,12 +57,8 @@ def independent_scaling(matrices: [SimilarityMatrix]) -> [SimilarityMatrix]:
     """
     scaled_matrices = []
     for matrix in matrices:
-        scaled_values = scale_matrix(matrix.flatten())
+        scaled_values = minmax_scale(matrix.flatten())
         scaled_matrix = np.reshape(scaled_values, newshape=matrix.shape)
         scaled_matrices.append(scaled_matrix)
 
     return scaled_matrices
-
-
-def scale_matrix(matrix: SimilarityMatrix):
-    return minmax_scale(matrix)

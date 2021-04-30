@@ -7,7 +7,7 @@ from typing import Dict, List, Optional, Tuple
 
 import pandas as pd
 from scipy.stats import spearmanr
-from sklearn.preprocessing import scale
+from sklearn.preprocessing import minmax_scale, scale
 
 from api.constants.processing import (
     ALL_METRIC_NAMES,
@@ -36,7 +36,6 @@ from api.constants.processing import (
 from api.constants.techniques import DIRECT_ID, HYBRID_ID, TRANSITIVE_ID
 from api.extension.experiment_types import ExperimentTraceType
 from api.tables.table import Table
-from api.technique.variationpoints.scalers.scalers import scale_matrix
 
 ESPILON = 0.001
 
@@ -53,7 +52,7 @@ class MetricTable(Table):
     ):
         super().__init__(table, path_to_table=path_to_table)
 
-    def find_direct_best_techniques(self) -> "MetricTable":
+    def find_best_direct_techniques(self) -> "MetricTable":
         """
         Fins the highest performing direct techniques
         :return: Table
@@ -87,16 +86,46 @@ class MetricTable(Table):
         )
         return find_best_techniques(data[query_mask])
 
-    def get_best_combined_no_traces_indices(
-        self, metric_names=BEST_TECHNIQUE_AGGREGATE_METRICS
-    ) -> List[int]:
+    def find_worst_direct_techniques(self) -> "MetricTable":
+        """
+        Fins the highest performing direct techniques
+        :return: Table
+        """
+        data = self.table.copy()
+        direct_mask = self.get_technique_type_mask(DIRECT_ID)
+        return find_worst_techniques(data[direct_mask])
+
+    def find_worst_transitive_techniques(self) -> "MetricTable":
+        """
+        Finds the transitive techniques that performed the best on given metric table.
+        Note, only techniques without transitive traces are considered.
+        :return: Table
+        """
+        data = self.table.copy()
+        query_mask = self.get_none_traced_mask() & self.get_technique_type_mask(
+            TRANSITIVE_ID
+        )
+
+        return find_worst_techniques(data[query_mask])
+
+    def find_worst_hybrid_techniques(self) -> "MetricTable":
         """
         Returns the set of indices corresponding to the best combined, non-traced techniques.
-        :param metric_names: the metrics whose sum will determine the best techniques
         :return: Table
         """
 
-        return self.find_best_hybrid_techniques(metric_names).table.index
+        data = self.table.copy()
+        query_mask = self.get_none_traced_mask() & self.get_technique_type_mask(
+            HYBRID_ID
+        )
+        return find_worst_techniques(data[query_mask])
+
+    def get_best_combined_no_traces_indices(self) -> List[int]:
+        """
+        Returns the set of indices corresponding to the best combined, non-traced techniques.
+        """
+
+        return self.find_best_hybrid_techniques().table.index
 
     def get_technique_indices(self, technique_definition: str) -> List[int]:
         """
@@ -321,7 +350,7 @@ class MetricTable(Table):
         intermediate_data = []
         for dataset in datasets:
             dataset_query = data[data[DATASET_COLNAME] == dataset].copy()
-            dataset_query[new_metric_name] = 1 - scale_matrix(
+            dataset_query[new_metric_name] = 1 - minmax_scale(
                 list(dataset_query[LAG_COLNAME])
             )
             intermediate_data.append(dataset_query)
@@ -439,8 +468,8 @@ def calculate_gain(base_value: float, new_value: float, inverted=False):
     :param inverted: whether to return how much new_value is less than base_value
     :return:
     """
-    assert isinstance(base_value, float) or isinstance(base_value, int), base_value
-    assert isinstance(new_value, float) or isinstance(new_value, int), base_value
+    assert isinstance(base_value, (int, float))
+    assert isinstance(new_value, (int, float))
 
     base_value = 1.0 * base_value
     new_value = 1.0 * new_value
@@ -455,6 +484,11 @@ AGGREGATE_METRIC_COLNAME = (
 
 
 def find_best_techniques(data: Data):
+    """
+    Returns rows in data containing highest sum of map, auc, and lag_normalized_inverted (after standardization).
+    :param data: DataFrame containing columns: map, auc, and lag_normalized_inverted
+    :return:  Subset DataFrame of given Data
+    """
     data = data.copy()
     metric_table = MetricTable(data)
     data = metric_table.create_lag_norm_inverted().table
@@ -465,7 +499,43 @@ def find_best_techniques(data: Data):
     return MetricTable(best_techniques_df)
 
 
+def find_worst_techniques(data: Data):
+    """
+    Returns rows in data containing lowest sum of map, auc, and lag_normalized_inverted (after standardization).
+    :param data: DataFrame containing columns: map, auc, and lag_normalized_inverted
+    :return: Subset DataFrame of given Data
+    """
+    data = data.copy()
+    metric_table = MetricTable(data)
+    data = metric_table.create_lag_norm_inverted().table
+    best_techniques_df = get_worst_rows(
+        data,
+        BEST_TECHNIQUE_AGGREGATE_METRICS,
+    )
+    return MetricTable(best_techniques_df)
+
+
 def get_best_rows(data: Data, metrics: List[str]):
+    """
+    Returns copy of data containing only the rows with the highest score for given metric
+    :param data: DataFrame - containing metric column
+    :param metrics: the metric used to decide which row is "best"
+    :return: DataFrame
+    """
+    return query_agg_metric(data, metrics, max)
+
+
+def get_worst_rows(data: Data, metrics: List[str]):
+    """
+    Returns copy of data containing only the rows with the highest score for given metric
+    :param data: DataFrame - containing metric column
+    :param metrics: the metric used to decide which row is "best"
+    :return: DataFrame
+    """
+    return query_agg_metric(data, metrics, min)
+
+
+def query_agg_metric(data: Data, metrics: List[str], function):
     """
     Returns copy of data containing only the rows with the highest score for given metric
     :param data: DataFrame - containing metric column
@@ -483,7 +553,7 @@ def get_best_rows(data: Data, metrics: List[str]):
         )
     data[AGGREGATE_METRIC_COLNAME] = aggregate_metric_values
     query = data[
-        data.groupby([DATASET_COLNAME])[AGGREGATE_METRIC_COLNAME].transform(max)
+        data.groupby([DATASET_COLNAME])[AGGREGATE_METRIC_COLNAME].transform(function)
         == data[AGGREGATE_METRIC_COLNAME]
     ]
     return query.drop(AGGREGATE_METRIC_COLNAME, axis=1)
