@@ -70,7 +70,7 @@ def calculate_ap(y_true, y_pred):
 
 
 def calculate_metrics_for_scoring_table(
-    scoring_table: ScoringTable, n_queries: int
+    scoring_table: ScoringTable, n_queries: int, summary_metrics: bool
 ) -> [Metrics]:
     """
     Returns list of Metrics per query in scoring table
@@ -87,27 +87,50 @@ def calculate_metrics_for_scoring_table(
         n_queries,
         len(y_true),
     )
-    query_length = int(len(y_true) / n_queries)
-    assert query_length != 0, "length of y true %d" % len(y_true)
-    m_entries = []
 
-    for query_index in range(n_queries):
-        start_i = query_index * query_length
-        end_i = start_i + query_length
+    def get_query_values(query_index: int, q_length: int):
+        start_i = query_index * q_length
+        end_i = start_i + q_length
         query_y_pred = y_pred[start_i:end_i]
         query_length = len(query_y_pred)
         start_index = query_index * query_length
         end_index = start_index + query_length
         query_y_true = y_true[start_index:end_index]
+        return query_y_true, query_y_pred
 
-        if 1 not in query_y_true:
-            continue
+    query_length = int(len(y_true) / n_queries)
+    assert query_length != 0, "length of y true %d" % len(y_true)
+    m_entries = []
 
+    if summary_metrics:
+        ap_scores = []
+
+        for query_index in range(n_queries):
+            query_y_true, query_y_pred = get_query_values(query_index, query_length)
+            if 1 not in query_y_true:
+                continue
+            ap_scores.append(calculate_ap(query_y_true, query_y_pred))
+        y_true, y_pred = get_query_values(0, len(y_true))
         m_entry = Metrics(
-            ap=calculate_ap(query_y_true, query_y_pred),
-            auc=calculate_auc(query_y_true, query_y_pred),
-            lag=calculate_lag(query_y_true, query_y_pred),
+            ap=np.mean(ap_scores),
+            auc=calculate_auc(y_true, y_pred),
+            lag=calculate_lag(y_true, y_pred),
+            query_id=0,
         )
-
         m_entries.append(m_entry)
+    else:
+        for query_index in range(n_queries):
+            query_y_true, query_y_pred = get_query_values(query_index, query_length)
+
+            if 1 not in query_y_true:
+                continue
+
+            m_entry = Metrics(
+                ap=calculate_ap(query_y_true, query_y_pred),
+                auc=calculate_auc(query_y_true, query_y_pred),
+                lag=calculate_lag(query_y_true, query_y_pred),
+                query_id=query_index,
+            )
+
+            m_entries.append(m_entry)
     return m_entries

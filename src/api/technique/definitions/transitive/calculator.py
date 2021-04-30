@@ -1,6 +1,7 @@
 """
 TODO
 """
+
 from api.datasets.dataset import Dataset
 from api.technique.definitions.direct.calculator import DirectTechniqueCalculator
 from api.technique.definitions.transitive.definition import (
@@ -18,7 +19,9 @@ from api.technique.variationpoints.algebraicmodel.models import (
     SimilarityMatrices,
     SimilarityMatrix,
 )
-from api.technique.variationpoints.scalers.scalers import scale_with_technique
+from api.technique.variationpoints.scalers.scalers import (
+    scale_with_technique,
+)
 
 
 class TransitiveTechniqueData(TechniqueData):
@@ -89,7 +92,7 @@ def perform_transitive_aggregation_on_component_techniques(
     return aggregate_matrix
 
 
-INTERMEDIATE_TECHNIQUE_PIPELINE = [
+TRANSITIVE_TECHNIQUE_PIPELINE = [
     append_direct_component_matrices,
     scale_transitive_matrices,
     perform_transitive_aggregation,
@@ -109,7 +112,7 @@ class TransitiveTechniqueCalculator(ITechniqueCalculator[TransitiveTechniqueData
     ):
         super().__init__(technique_definition, pipeline)
         if pipeline is None:
-            pipeline = INTERMEDIATE_TECHNIQUE_PIPELINE
+            pipeline = TRANSITIVE_TECHNIQUE_PIPELINE
         self.pipeline = pipeline
 
     def create_pipeline_data(self, dataset: Dataset) -> TransitiveTechniqueData:

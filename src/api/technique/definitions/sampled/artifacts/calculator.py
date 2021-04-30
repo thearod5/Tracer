@@ -6,7 +6,7 @@ from api.technique.definitions.sampled.definition import SampledTechniqueDefinit
 from api.technique.definitions.sampled.sampler import sample_indices
 from api.technique.definitions.sampled.technique_data import SampledTechniqueData
 from api.technique.definitions.transitive.calculator import (
-    INTERMEDIATE_TECHNIQUE_PIPELINE,
+    TRANSITIVE_TECHNIQUE_PIPELINE,
     TransitiveTechniqueCalculator,
 )
 
@@ -39,7 +39,7 @@ def sample_matrices(data: SampledTechniqueData):
         ][boundary_indices, :]
 
 
-SAMPLED_ARTIFACTS_PIPELINE = INTERMEDIATE_TECHNIQUE_PIPELINE.copy()
+SAMPLED_ARTIFACTS_PIPELINE = TRANSITIVE_TECHNIQUE_PIPELINE.copy()
 SAMPLED_ARTIFACTS_PIPELINE.insert(1, sample_matrices)
 
 

@@ -212,7 +212,12 @@ class Table(ITable):
         :return: Table - combined values of this table (on top) and other (on bottom)
         """
         assert isinstance(other, Table), "is not of type Table"
-        return Table(pd.concat([self.table, other.table], axis=1))
+        intersecting_columns = [
+            c for c in self.table.columns if c in other.table.columns
+        ]
+        copy = self.table.copy()
+        joined = copy.merge(other.table, on=intersecting_columns)
+        return Table(joined)
 
     def drop_duplicate_columns(self):
         """
