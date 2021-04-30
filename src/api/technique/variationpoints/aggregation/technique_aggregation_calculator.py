@@ -18,18 +18,20 @@ from api.technique.variationpoints.scalers.scalers import scale_matrix
 def aggregate_techniques(
     technique_similarity_matrices: [SimilarityMatrix],
     aggregation_method: AggregationMethod,
+    standardize_scores=True,
 ) -> SimilarityMatrix:
     """
     Performs an element-wise aggregation on similarity technique_matrices (representing techniques) with given method
     :param technique_similarity_matrices: all the similarity technique_matrices assumed to be of same shape
     :param aggregation_method: the element-wise operations
+    :param standardize_scores: whether to standardize scores into unit variance centered around 0
     :return: similarity matrix of the same shape all the ones given after being aggregated
     """
 
     flatten_matrices = list(
         map(
             lambda sim_scores: sim_scores
-            if len(sim_scores) <= 1
+            if len(sim_scores) <= 1 or not standardize_scores
             else scale(sim_scores),
             map(lambda m: m.flatten(), technique_similarity_matrices),
         )

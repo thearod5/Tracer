@@ -95,7 +95,7 @@ class HybridTechniqueDefinition(ITechniqueDefinition):
         return self._component_techniques
 
 
-def create_technique_by_name(name: str) -> ITechnique:
+def create_technique_from_name(name: str) -> ITechnique:
     """
     TODO
     :param name:

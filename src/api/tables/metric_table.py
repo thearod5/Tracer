@@ -439,13 +439,19 @@ def calculate_gain(base_value: float, new_value: float, inverted=False):
     :param inverted: whether to return how much new_value is less than base_value
     :return:
     """
-    assert isinstance(base_value, float), base_value
+    assert isinstance(base_value, float) or isinstance(base_value, int), base_value
+    assert isinstance(new_value, float) or isinstance(new_value, int), base_value
+
+    base_value = 1.0 * base_value
+    new_value = 1.0 * new_value
     if inverted:
         return (base_value - new_value) / base_value
-    return (new_value - base_value) / base_value
+    return (new_value - base_value) / base_value * 1.0
 
 
-aggregate_metric_colname = "aggregate_metric"
+AGGREGATE_METRIC_COLNAME = (
+    "aggregate_metric"  # the metric used to determine the best techniques.
+)
 
 
 def find_best_techniques(data: Data):
@@ -475,9 +481,9 @@ def get_best_rows(data: Data, metrics: List[str]):
             if aggregate_metric_values is None
             else aggregate_metric_values + data[metric]
         )
-    data[aggregate_metric_colname] = aggregate_metric_values
+    data[AGGREGATE_METRIC_COLNAME] = aggregate_metric_values
     query = data[
-        data.groupby([DATASET_COLNAME])[aggregate_metric_colname].transform(max)
-        == data[aggregate_metric_colname]
+        data.groupby([DATASET_COLNAME])[AGGREGATE_METRIC_COLNAME].transform(max)
+        == data[AGGREGATE_METRIC_COLNAME]
     ]
-    return query.drop(aggregate_metric_colname, axis=1)
+    return query.drop(AGGREGATE_METRIC_COLNAME, axis=1)

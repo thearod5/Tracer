@@ -1,3 +1,8 @@
+"""
+The following module is responsible for testing that the aggregation (combination) of technique scores
+is doing so considering scores may have entirely different meaning and so different ranges
+(e.g. negative numbers may be valid for some but invalid in others).
+"""
 import numpy as np
 
 from api.technique.variationpoints.aggregation.aggregation_method import (
@@ -11,7 +16,6 @@ from tests.res.smart_test import SmartTest
 
 class TestTechniqueAggregationCalculator(SmartTest):
     """
-    Source Class: TechniqueAggregationCalculator
     Creates a series of techniques, represented by similarity technique_matrices, and tests the aggregation into a single
     technique.
     """
@@ -24,12 +28,16 @@ class TestTechniqueAggregationCalculator(SmartTest):
     )
 
     def test_sum(self):
-        result = aggregate_techniques(self.technique_matrices, AggregationMethod.SUM)
+        result = aggregate_techniques(
+            self.technique_matrices, AggregationMethod.SUM, standardize_scores=False
+        )
         self.assertEqual(self.technique_matrices[0].shape, result.shape)
         self.assertEqual(1, result[0][1])
 
     def test_pca(self):
-        result = aggregate_techniques(self.technique_matrices, AggregationMethod.PCA)
+        result = aggregate_techniques(
+            self.technique_matrices, AggregationMethod.PCA, standardize_scores=False
+        )
         self.assertEqual(self.technique_matrices[0].shape, result.shape)
         self.assertEqual(0, result[0][0])
         self.assertEqual(1, result[0][1])

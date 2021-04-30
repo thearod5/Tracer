@@ -1,7 +1,7 @@
 import pandas as pd
 
 from api.constants.processing import (
-    ALGEBRAIC_MODEL_COLNAME,
+    TRANSITIVE_ALGEBRAIC_MODEL_COLNAME,
     AP_COLNAME,
     DATASET_COLNAME,
     LAG_COLNAME,
@@ -20,7 +20,7 @@ def create_entry(dataset):
     return {
         DATASET_COLNAME: dataset,
         TRANSITIVE_TRACE_TYPE_COLNAME: DIRECT_ID,
-        ALGEBRAIC_MODEL_COLNAME: "VSM",
+        TRANSITIVE_ALGEBRAIC_MODEL_COLNAME: "VSM",
         AP_COLNAME: 0.5,
         LAG_COLNAME: 0.5,
     }
