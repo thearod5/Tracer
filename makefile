@@ -3,7 +3,8 @@ type-hint:
 test:
 	cd src && ../env/bin/python3 tests/runner.py
 test-coverage:
-	cd src && ../env/bin/python3 tests/runner.py --with-coverage --cover-package=api --cover-min-percentage=90
+	cd src && ../env/bin/python3 tests/runner.py --with-coverage --cover-package=api  --cover-min-percentage=90
+	rm src/.coverage
 lint:
 	env/bin/pylint src/api
 format:
