@@ -8,5 +8,4 @@ lint:
 	env/bin/pylint src/api
 format:
 	env/bin/black src/**/*.py
-checklist:
-	format lint typehint test-coverage
+checklist: format lint test-coverage
