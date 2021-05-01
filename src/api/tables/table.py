@@ -81,7 +81,7 @@ class Table(ITable):
     def sort(self, dataset_column_order: List[str]) -> "Table":
         """
         Sorts values by dataset, technique_type, and metrics then sorts columns
-        Sort orders are defined by the constants in api/constants
+        Sort orders are defined by the constants in src/constants
         :return: Table - copy of this table but with sort applied
         """
         data = Table(self.table.copy())

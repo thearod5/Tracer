@@ -525,27 +525,28 @@ def get_best_rows(data: Data, metrics: List[str]):
     return query_agg_metric(data, metrics, max)
 
 
-def get_worst_rows(data: Data, metrics: List[str]):
+def get_worst_rows(data: Data, metric_names: List[str]):
     """
     Returns copy of data containing only the rows with the highest score for given metric
     :param data: DataFrame - containing metric column
-    :param metrics: the metric used to decide which row is "best"
+    :param metric_names: the metric used to decide which row is "best"
     :return: DataFrame
     """
-    return query_agg_metric(data, metrics, min)
+    return query_agg_metric(data, metric_names, min)
 
 
-def query_agg_metric(data: Data, metrics: List[str], function):
+def query_agg_metric(data: Data, metric_names: List[str], function):
     """
     Returns copy of data containing only the rows with the highest score for given metric
     :param data: DataFrame - containing metric column
-    :param metric_name: the metric used to decide which row is "best"
+    :param metric_names: the metric used to decide which row is "best"
+    :param function:
     :return: DataFrame
     """
     data = data.copy()
 
     aggregate_metric_values = None
-    for metric in metrics:
+    for metric in metric_names:
         aggregate_metric_values = (
             scale(data[metric])
             if aggregate_metric_values is None
