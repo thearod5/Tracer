@@ -3,7 +3,7 @@ This module is responsible to creating a proxy-class encapsulating all pre/post-
 on a metric table.
 """
 
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 import pandas as pd
 from scipy.stats import spearmanr
@@ -54,7 +54,8 @@ class MetricTable(Table):
 
     def find_best_direct_techniques(self) -> "MetricTable":
         """
-        Fins the highest performing direct techniques
+        Finds the highest performing direct techniques in table containing dataset
+        name and technique type identifiers
         :return: Table
         """
         data = self.table.copy()
@@ -135,11 +136,14 @@ class MetricTable(Table):
         """
         return self.table[self.table[NAME_COLNAME] == technique_definition].index
 
-    def get_none_traced_mask(self) -> bool:
+    def get_none_traced_mask(self) -> Union[bool, List[bool]]:
         """
         Returns boolean mask for all rows whose trace type is NONE (e.g. uses no transitive traces).
+        If columns does not exist than table is assumed to be traced.
         :return: boolean mask
         """
+        if TRANSITIVE_TRACE_TYPE_COLNAME not in self.table.columns:
+            return [True] * len(self.table)
         return (
             self.table[TRANSITIVE_TRACE_TYPE_COLNAME]
             == ExperimentTraceType.NONE.value.lower()
@@ -347,7 +351,7 @@ class MetricTable(Table):
         data = self.table.copy()
         datasets = data[DATASET_COLNAME].unique()
 
-        intermediate_data = []
+        intermediate_data = [] if len(datasets) > 0 else data
         for dataset in datasets:
             dataset_query = data[data[DATASET_COLNAME] == dataset].copy()
             dataset_query[new_metric_name] = 1 - minmax_scale(
@@ -373,10 +377,9 @@ class MetricTable(Table):
         self, dataset_comparison: Dict[str, Tuple[str, str]]
     ) -> "MetricTable":
         """
-        Calculates the relative gain between source score and target score
-        :param source_col: the columns being compared
-        :param base_col: the values being compare to
-        :param gain_col_name: name of column containing relative gain scores
+        Calculates the relative gain each tuple in the value of each key.
+        :param dataset_comparison: Dictionary containing dataset names as keys and the
+        names of the techniques to compare in a tuple
         :return:
         """
         data = self.table.copy()
@@ -424,17 +427,6 @@ class Metrics:  # pylint: disable=too-few-public-methods
         self.auc = auc
         self.lag = lag
 
-    def gain(self, base: "Metrics"):
-        """
-        Calculates the gain of these metrics to given base metrics
-        :param base: base metrics to use for comparison
-        :return:
-        """
-        ap_gain = (self.ap - base.ap) / base.ap
-        auc_gain = (self.auc - base.auc) / base.auc
-        lag_gain = (base.lag - self.lag) / base.lag if base.lag != 0 else None
-        return Metrics(ap_gain, auc_gain, lag_gain)
-
 
 def calculate_gain_between_metrics(base_metrics: Data, target_metrics: Data) -> Data:
     """
@@ -474,13 +466,29 @@ def calculate_gain(base_value: float, new_value: float, inverted=False):
     base_value = 1.0 * base_value
     new_value = 1.0 * new_value
     if inverted:
-        return (base_value - new_value) / base_value
+        return (base_value - new_value) / base_value * 1.0
     return (new_value - base_value) / base_value * 1.0
 
 
 AGGREGATE_METRIC_COLNAME = (
     "aggregate_metric"  # the metric used to determine the best techniques.
 )
+
+
+def process_for_best_technique_evaluation(data: Data):
+    """
+    Creates the necessary normalized metrics (e.g. for lag) to be able to compare
+    rows.
+    :param data:
+    :return:
+    """
+    metric_table = MetricTable(data)
+    data = (
+        data
+        if LAG_NORMALIZED_INVERTED_COLNAME in data
+        else metric_table.create_lag_norm_inverted().table
+    )
+    return data
 
 
 def find_best_techniques(data: Data):
@@ -490,8 +498,7 @@ def find_best_techniques(data: Data):
     :return:  Subset DataFrame of given Data
     """
     data = data.copy()
-    metric_table = MetricTable(data)
-    data = metric_table.create_lag_norm_inverted().table
+    data = process_for_best_technique_evaluation(data)
     best_techniques_df = get_best_rows(
         data,
         BEST_TECHNIQUE_AGGREGATE_METRICS,
@@ -506,8 +513,7 @@ def find_worst_techniques(data: Data):
     :return: Subset DataFrame of given Data
     """
     data = data.copy()
-    metric_table = MetricTable(data)
-    data = metric_table.create_lag_norm_inverted().table
+    data = process_for_best_technique_evaluation(data)
     best_techniques_df = get_worst_rows(
         data,
         BEST_TECHNIQUE_AGGREGATE_METRICS,
@@ -525,35 +531,37 @@ def get_best_rows(data: Data, metrics: List[str]):
     return query_agg_metric(data, metrics, max)
 
 
-def get_worst_rows(data: Data, metrics: List[str]):
+def get_worst_rows(data: Data, metric_names: List[str]):
     """
     Returns copy of data containing only the rows with the highest score for given metric
     :param data: DataFrame - containing metric column
-    :param metrics: the metric used to decide which row is "best"
+    :param metric_names: the metric used to decide which row is "best"
     :return: DataFrame
     """
-    return query_agg_metric(data, metrics, min)
+    return query_agg_metric(data, metric_names, min)
 
 
-def query_agg_metric(data: Data, metrics: List[str], function):
+def query_agg_metric(data: Data, metric_names: List[str], agg_func):
     """
     Returns copy of data containing only the rows with the highest score for given metric
     :param data: DataFrame - containing metric column
-    :param metric_name: the metric used to decide which row is "best"
+    :param metric_names: the metric used to decide which row is "best"
+    :param agg_func:
+    :param scale_func:
     :return: DataFrame
     """
     data = data.copy()
 
     aggregate_metric_values = None
-    for metric in metrics:
+    for metric in metric_names:
         aggregate_metric_values = (
             scale(data[metric])
             if aggregate_metric_values is None
-            else aggregate_metric_values + data[metric]
+            else aggregate_metric_values + scale(data[metric])
         )
     data[AGGREGATE_METRIC_COLNAME] = aggregate_metric_values
     query = data[
-        data.groupby([DATASET_COLNAME])[AGGREGATE_METRIC_COLNAME].transform(function)
+        data.groupby([DATASET_COLNAME])[AGGREGATE_METRIC_COLNAME].transform(agg_func)
         == data[AGGREGATE_METRIC_COLNAME]
     ]
     return query.drop(AGGREGATE_METRIC_COLNAME, axis=1)

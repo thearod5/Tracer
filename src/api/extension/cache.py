@@ -47,7 +47,7 @@ class Cache:
     """
     Represents a module to reading and storing SimilarityMatrix produced by techniques when applying them to specified
     Datasets. The cache folder is predetermined to be an ignored folder inside of the root directory. Its path can
-    be found in api.constants.paths.
+    be found in src.constants.paths.
 
     Example:
         When running an extension using intermediate techniques it is recommended to use the cache for performance
