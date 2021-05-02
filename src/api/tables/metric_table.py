@@ -446,7 +446,7 @@ def calculate_gain_between_metrics(base_metrics: Data, target_metrics: Data) -> 
             target_score = target_metrics.iloc[i][metric]
             is_inverted = metric in INVERTED_METRICS
             gain = calculate_gain(base_score, target_score, inverted=is_inverted)
-            entry.update({metric: gain})
+            entry.update({metric: round(gain, 3)})
         gain_df = gain_df.append(entry, ignore_index=True)
     return gain_df
 

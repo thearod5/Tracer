@@ -11,6 +11,7 @@ from api.constants.processing import (
     LAG_COLNAME,
     LAG_NORMALIZED_INVERTED_COLNAME,
     NAME_COLNAME,
+    N_SIG_FIGS,
 )
 from api.constants.techniques import DIRECT_ID, HYBRID_ID, TRANSITIVE_ID
 from api.tables.metric_table import MetricTable
@@ -85,4 +86,4 @@ class TestGainBetweenMetrics(SmartTest):
         gain_entry = gain.iloc[0]
 
         for m_name, e_value in expected_values:
-            self.assertEqual(e_value, gain_entry[m_name])
+            self.assertEqual(round(e_value, N_SIG_FIGS), gain_entry[m_name])
