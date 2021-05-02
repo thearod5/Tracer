@@ -51,7 +51,9 @@ class TestMetricTable(SmartTest):
 
     def test_metric_table(self):
         scoring_table = ScoringTable(self.values[:, 0], self.values[:, 1])
-        metrics = calculate_metrics_for_scoring_table(scoring_table, self.n_queries)
+        metrics = calculate_metrics_for_scoring_table(
+            scoring_table, self.n_queries, False
+        )
 
         test_file_name = "test.csv"
         export_path = os.path.join(self.export_path, test_file_name)
@@ -74,7 +76,7 @@ class TestMetricTable(SmartTest):
     def test_metrics(self):
         scoring_table = ScoringTable(self.values[:, 0], self.values[:, 1])
         query_metrics = calculate_metrics_for_scoring_table(
-            scoring_table, self.n_queries
+            scoring_table, self.n_queries, False
         )
         mt = query_metrics[0]
         self.assertEqual(self.expected_lag, mt.lag, "lag")

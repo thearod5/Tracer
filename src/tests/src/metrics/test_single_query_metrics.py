@@ -1,3 +1,7 @@
+"""
+The following module is responsible for testing that metric calculations are abstracted to include measuring
+the performance of individual queries.
+"""
 import numpy as np
 from sklearn.metrics import average_precision_score
 
@@ -14,6 +18,11 @@ from tests.res.smart_test import SmartTest
 
 
 class TestMetricTable(SmartTest):
+    """
+    The following class constructs tables for 3 queries across 2 artifacts.
+    These are used to test the metrics for the 3 individual queries.
+    """
+
     t_name = "(x (SUM GLOBAL) ((. (VSM NT) (0 1)) (. (VSM NT) (1 2))))"
     component_a = [".", ["VSM", "NT"], [0, 1]]
     component_b = [".", ["VSM", "NT"], [1, 2]]
@@ -41,6 +50,9 @@ class TestMetricTable(SmartTest):
 
     n_queries = 2
     query_length = values.shape[0] // n_queries
+    """
+    Construct the expected metric values manually
+    """
     a_query_map = average_precision_score(
         values[:query_length, 1], values[:query_length, 0]
     )
@@ -56,7 +68,7 @@ class TestMetricTable(SmartTest):
     def test_single_metrics(self):
         scoring_table = ScoringTable(self.values[:, 0], self.values[:, 1])
         query_metrics = calculate_metrics_for_scoring_table(
-            scoring_table, self.n_queries
+            scoring_table, self.n_queries, False
         )
         self.assertEqual(self.n_queries, len(query_metrics))
 

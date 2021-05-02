@@ -243,7 +243,9 @@ class TraceMatrixBuilder(IBuilder):
                 )
                 transitive_similarity_matrices.append(transitive_similarity_matrix)
             aggregated_matrix = aggregate_techniques(
-                transitive_similarity_matrices, transitive_aggregation
+                transitive_similarity_matrices,
+                transitive_aggregation,
+                standardize_scores=False,
             )
             result_matrices[trace_id] = aggregated_matrix
         return result_matrices

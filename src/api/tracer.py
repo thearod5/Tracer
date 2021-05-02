@@ -6,7 +6,7 @@ from typing import List
 from api.datasets.dataset import Dataset
 from api.metrics.calculator import calculate_metrics_for_scoring_table
 from api.tables.metric_table import Metrics
-from api.technique.definitions.combined.technique import create_technique_by_name
+from api.technique.definitions.combined.technique import create_technique_from_name
 from api.technique.parser.data import TechniqueData
 
 
@@ -41,7 +41,7 @@ class Tracer:
         :return:
         """
         dataset: Dataset = self.get_dataset(dataset_name)
-        technique = create_technique_by_name(technique_name)
+        technique = create_technique_from_name(technique_name)
 
         return technique.calculate_technique_data(dataset)
 
@@ -56,7 +56,7 @@ class Tracer:
         :return: list of metrics, one per query. If summary_metrics is True, then list will contain a single item.
         """
         dataset: Dataset = self.get_dataset(dataset_name)
-        technique = create_technique_by_name(technique_name)
+        technique = create_technique_from_name(technique_name)
 
         technique_data = technique.calculate_technique_data(dataset)
         scoring_table = technique_data.get_scoring_table()

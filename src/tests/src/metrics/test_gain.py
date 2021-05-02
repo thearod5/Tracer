@@ -1,3 +1,6 @@
+"""
+The following module is responsible for testing that calculating the relative gain between techniques is accurate.
+"""
 import pandas as pd
 
 from api.constants.processing import (
