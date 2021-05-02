@@ -4,15 +4,15 @@ from api.extension.cache import Cache
 from api.technique.definitions.direct.calculator import DirectTechniqueData
 from api.technique.definitions.transitive.calculator import (
     TransitiveTechniqueCalculator,
-    perform_transitive_aggregation_on_component_techniques,
     TransitiveTechniqueData,
-    perform_transitive_aggregation,
     append_direct_component_matrices,
+    perform_transitive_aggregation,
+    perform_transitive_aggregation_on_component_techniques,
 )
 from api.technique.variationpoints.aggregation.aggregation_method import (
     AggregationMethod,
 )
-from tests.res.test_technique_helper import TestTechniqueHelper, SimilarityMatrixMock
+from tests.res.test_technique_helper import SimilarityMatrixMock, TestTechniqueHelper
 
 
 class TestIntermediateCalculationPipeline(TestTechniqueHelper):
