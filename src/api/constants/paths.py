@@ -43,6 +43,3 @@ PATH_TO_SOURCE_CODE = os.path.join(PATH_TO_RESOURCES, "SourceCode")
 
 # Cache
 PATH_TO_CACHE_TEMP = os.path.join(PATH_TO_ROOT, "cache")
-
-# SEProject
-PATH_TO_SE_PROJECTS = os.path.join(PATH_TO_ROOT, ".old", "SEProjects")
