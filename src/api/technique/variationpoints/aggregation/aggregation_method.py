@@ -13,6 +13,6 @@ class AggregationMethod(Enum):
     2. Aggregation two (or more) techniques into a single technique represented as a similarity matrix.
     """
 
-    PCA = "PCA"
     SUM = "SUM"
+    PCA = "PCA"
     MAX = "MAX"
