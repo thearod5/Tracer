@@ -8,11 +8,10 @@ from api.constants.dataset import SimilarityMatrix
 
 class AlgebraicModel(Enum):
     """
-    TODO: Docs
+    The vectorization method for each artifact in the system.
     """
-
-    LSI = "LSI"
     VSM = "VSM"
+    LSI = "LSI"
 
 
 class SimilarityMatrices:  # pylint: disable=too-few-public-methods
